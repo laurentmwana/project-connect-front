@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { BaseLayoutComponent } from './layouts/base-layout/base-layout.component';
 import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [BaseLayoutComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
 
   ngOnInit(): void {
-    //alert('Hello World!')
-    initFlowbite();
+     initFlowbite();
   }
 }
