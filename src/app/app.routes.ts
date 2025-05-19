@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
-import CreateComponent from './pages/project/create/create.component' ;
-
+import { CreateComponent } from './pages/project/create/create.component' ;
 
 export const routes: Routes = [
   {

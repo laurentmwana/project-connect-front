@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BaseLayoutComponent } from './layouts/base-layout/base-layout.component';
+import { BaseLayoutComponent } from '@/layouts/base-layout/base-layout.component';
 import { initFlowbite } from 'flowbite';
 import { RouterOutlet } from '@angular/router';
 
