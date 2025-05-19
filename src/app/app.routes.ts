@@ -1,9 +1,34 @@
 import { Routes } from '@angular/router';
-import { CreateComponent } from './pages/project/create/create.component' ;
+import { CreateComponent } from './pages/project/create/create.component';
+import { LoginComponent } from './pages/auth/login/login.component';
+import { BaseLayoutComponent } from './layouts/base-layout/base-layout.component';
+import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 
 export const routes: Routes = [
   {
-    path: 'project/create',
-    component: CreateComponent,
+    path: '',
+    component: BaseLayoutComponent,
+    children: [
+      {
+        path: 'project',
+        children: [
+          {
+            path: 'create',
+            component: CreateComponent,
+          },
+        ],
+      },
+    ],
+  },
+
+  {
+    path: '',
+    component: AuthLayoutComponent,
+    children: [
+      {
+        path: 'login',
+        component: LoginComponent,
+      },
+    ],
   },
 ];

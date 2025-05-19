@@ -6,7 +6,6 @@ import { RouterOutlet } from '@angular/router';
   selector: 'app-base-layout',
   imports: [NavbarComponent,RouterOutlet],
   templateUrl: './base-layout.component.html',
-  styleUrl: './base-layout.component.css',
 })
 export class BaseLayoutComponent {
 
