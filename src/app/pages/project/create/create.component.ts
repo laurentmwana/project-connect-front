@@ -11,10 +11,11 @@ import {
 import { ProjectService } from '@/services/project.service';
 import { Project } from '@/model/project';
 import { NgFor, NgIf } from '@angular/common';
+import { BaseLayoutComponent } from '@/layouts/base-layout/base-layout.component';
 
 @Component({
   selector: 'app-create',
-  imports: [ReactiveFormsModule, FormsModule, NgIf, NgFor],
+  imports: [ReactiveFormsModule, FormsModule, NgIf, NgFor, BaseLayoutComponent],
   templateUrl: './create.component.html',
   styleUrl: './create.component.css',
 })
