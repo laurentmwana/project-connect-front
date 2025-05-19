@@ -8,8 +8,8 @@ import {
   FormsModule,
 } from '@angular/forms';
 
-import { ProjectService } from '../../../services/project.service';
-import { Project } from '../../../model/project';
+import { ProjectService } from '@/services/project.service';
+import { Project } from '@/model/project';
 import { NgFor, NgIf } from '@angular/common';
 
 @Component({
@@ -18,7 +18,7 @@ import { NgFor, NgIf } from '@angular/common';
   templateUrl: './create.component.html',
   styleUrl: './create.component.css',
 })
-export default class CreateComponent {
+export class CreateComponent {
   projectForm: FormGroup;
 
   availableDomains: string[] = [];
