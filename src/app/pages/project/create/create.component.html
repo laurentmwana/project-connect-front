@@ -1,360 +1,360 @@
-  <div class="max-w-4xl mx-auto my-8">
-    <h1 class="text-3xl font-bold text-foreground mb-8">Nouveau projet</h1>
+<div class="max-w-4xl mx-auto my-8">
+  <h1 class="text-3xl font-bold text-foreground mb-8">Nouveau projet</h1>
 
-    <!-- Formulaire principal -->
-    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="space-y-8">
-      <!-- Message d'erreur global -->
-      <div
-        *ngIf="formError"
-        class="bg-destructive/10 border border-destructive text-destructive px-4 py-3 rounded relative"
-      >
-        {{ formError }}
+  <!-- Formulaire principal -->
+  <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="space-y-8">
+    <!-- Message d'erreur global -->
+    <div
+      *ngIf="formError"
+      class="bg-destructive/10 border border-destructive text-destructive px-4 py-3 rounded relative"
+    >
+      {{ formError }}
+    </div>
+
+    <!-- Informations de base -->
+    <div class="space-y-4">
+      <!-- Titre -->
+      <div>
+        <label for="title" class="block text-foreground font-medium"
+          >Titre</label
+        >
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
+          placeholder="Entrez le titre du projet"
+          required
+        />
+        <div
+          *ngIf="formSubmitted && projectForm.get('title')?.errors?.['required']"
+          class="text-destructive text-sm mt-1"
+        >
+          Le titre est requis
+        </div>
       </div>
 
-      <!-- Informations de base -->
-      <div class="space-y-4">
-        <!-- Titre -->
+      <!-- Description -->
+      <div>
+        <label for="description" class="block text-foreground font-medium"
+          >Description</label
+        >
+        <textarea
+          id="description"
+          formControlName="description"
+          class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm min-h-[120px] bg-background text-foreground"
+          placeholder="Décrivez votre projet"
+          required
+        ></textarea>
+        <div
+          *ngIf="formSubmitted && projectForm.get('description')?.errors?.['required']"
+          class="text-destructive text-sm mt-1"
+        >
+          La description est requise
+        </div>
+      </div>
+
+      <!-- Dates -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label for="title" class="block text-foreground font-medium"
-            >Titre</label
+          <label for="date_start" class="block text-foreground font-medium"
+            >Date de début</label
           >
           <input
-            id="title"
-            type="text"
-            formControlName="title"
+            id="date_start"
+            type="datetime-local"
+            formControlName="date_start"
             class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
-            placeholder="Entrez le titre du projet"
             required
           />
           <div
-            *ngIf="formSubmitted && projectForm.get('title')?.errors?.['required']"
+            *ngIf="formSubmitted && projectForm.get('date_start')?.errors?.['required']"
             class="text-destructive text-sm mt-1"
           >
-            Le titre est requis
+            La date de début est requise
           </div>
         </div>
 
-        <!-- Description -->
         <div>
-          <label for="description" class="block text-foreground font-medium"
-            >Description</label
+          <label for="date_end" class="block text-foreground font-medium"
+            >Date de fin</label
           >
-          <textarea
-            id="description"
-            formControlName="description"
-            class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm min-h-[120px] bg-background text-foreground"
-            placeholder="Décrivez votre projet"
+          <input
+            id="date_end"
+            type="datetime-local"
+            formControlName="date_end"
+            class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
             required
-          ></textarea>
+          />
           <div
-            *ngIf="formSubmitted && projectForm.get('description')?.errors?.['required']"
+            *ngIf="formSubmitted && projectForm.get('date_end')?.errors?.['required']"
             class="text-destructive text-sm mt-1"
           >
-            La description est requise
+            La date de fin est requise
           </div>
         </div>
+      </div>
 
-        <!-- Dates -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="date_start" class="block text-foreground font-medium"
-              >Date de début</label
-            >
-            <input
-              id="date_start"
-              type="datetime-local"
-              formControlName="date_start"
-              class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
-              required
-            />
-            <div
-              *ngIf="formSubmitted && projectForm.get('date_start')?.errors?.['required']"
-              class="text-destructive text-sm mt-1"
-            >
-              La date de début est requise
-            </div>
-          </div>
-
-          <div>
-            <label for="date_end" class="block text-foreground font-medium"
-              >Date de fin</label
-            >
-            <input
-              id="date_end"
-              type="datetime-local"
-              formControlName="date_end"
-              class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
-              required
-            />
-            <div
-              *ngIf="formSubmitted && projectForm.get('date_end')?.errors?.['required']"
-              class="text-destructive text-sm mt-1"
-            >
-              La date de fin est requise
-            </div>
-          </div>
-        </div>
-
-        <!-- Budget et Lieu -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="budget" class="block text-foreground font-medium"
-              >Budget (€)</label
-            >
-            <input
-              id="budget"
-              type="number"
-              formControlName="budget"
-              class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
-              required
-            />
-            <div
-              *ngIf="formSubmitted && projectForm.get('budget')?.errors?.['required']"
-              class="text-destructive text-sm mt-1"
-            >
-              Le budget est requis
-            </div>
-          </div>
-
-          <div>
-            <label for="location" class="block text-foreground font-medium"
-              >Lieu</label
-            >
-            <input
-              id="location"
-              type="text"
-              formControlName="location"
-              class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
-              placeholder="Ex: Remote, Paris, etc."
-              required
-            />
-            <div
-              *ngIf="formSubmitted && projectForm.get('location')?.errors?.['required']"
-              class="text-destructive text-sm mt-1"
-            >
-              Le lieu est requis
-            </div>
-          </div>
-        </div>
-
-        <!-- Visibilité -->
+      <!-- Budget et Lieu -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-foreground font-medium">Visibilité</label>
-          <div class="flex space-x-4 mt-2">
-            <div class="flex items-center space-x-2">
-              <input
-                id="public"
-                type="radio"
-                value="public"
-                formControlName="visibility"
-                class="text-primary border-border focus:ring-primary"
-              />
-              <label for="public" class="text-foreground">Public</label>
-            </div>
-            <div class="flex items-center space-x-2">
-              <input
-                id="private"
-                type="radio"
-                value="private"
-                formControlName="visibility"
-                class="text-primary border-border focus:ring-primary"
-              />
-              <label for="private" class="text-foreground">Privé</label>
-            </div>
+          <label for="budget" class="block text-foreground font-medium"
+            >Budget (€)</label
+          >
+          <input
+            id="budget"
+            type="number"
+            formControlName="budget"
+            class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
+            required
+          />
+          <div
+            *ngIf="formSubmitted && projectForm.get('budget')?.errors?.['required']"
+            class="text-destructive text-sm mt-1"
+          >
+            Le budget est requis
+          </div>
+        </div>
+
+        <div>
+          <label for="location" class="block text-foreground font-medium"
+            >Lieu</label
+          >
+          <input
+            id="location"
+            type="text"
+            formControlName="location"
+            class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
+            placeholder="Ex: Remote, Paris, etc."
+            required
+          />
+          <div
+            *ngIf="formSubmitted && projectForm.get('location')?.errors?.['required']"
+            class="text-destructive text-sm mt-1"
+          >
+            Le lieu est requis
           </div>
         </div>
       </div>
 
-      <!-- Domaines -->
+      <!-- Visibilité -->
       <div>
-        <label class="block text-foreground font-medium">Domaines</label>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mt-2">
-          <div
-            *ngFor="let domain of availableDomains"
-            class="flex items-center space-x-2"
-          >
+        <label class="block text-foreground font-medium">Visibilité</label>
+        <div class="flex space-x-4 mt-2">
+          <div class="flex items-center space-x-2">
             <input
-              [id]="'domain-' + domain"
-              type="checkbox"
-              [checked]="isDomainSelected(domain)"
-              (change)="toggleDomain(domain)"
-              class="text-primary border-border focus:ring-primary rounded"
+              id="public"
+              type="radio"
+              value="public"
+              formControlName="visibility"
+              class="text-primary border-border focus:ring-primary"
             />
-            <label [for]="'domain-' + domain" class="text-foreground">{{
-              domain
-            }}</label>
+            <label for="public" class="text-foreground">Public</label>
+          </div>
+          <div class="flex items-center space-x-2">
+            <input
+              id="private"
+              type="radio"
+              value="private"
+              formControlName="visibility"
+              class="text-primary border-border focus:ring-primary"
+            />
+            <label for="private" class="text-foreground">Privé</label>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Rôles et Compétences -->
-      <div>
-        <div class="flex justify-between items-center mb-4">
-          <label class="text-foreground font-medium text-lg"
-            >Rôles et Compétences</label
-          >
-          <button
-            type="button"
-            (click)="addRoleSkill()"
-            class="bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-1 rounded-md flex items-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4 mr-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="16"></line>
-              <line x1="8" y1="12" x2="16" y2="12"></line>
-            </svg>
-            Ajouter un rôle
-          </button>
-        </div>
-
-        <p
-          *ngIf="roleSkillsArray.length === 0"
-          class="text-light-500 italic text-sm"
+    <!-- Domaines -->
+    <div>
+      <label class="block text-foreground font-medium">Domaines</label>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mt-2">
+        <div
+          *ngFor="let domain of availableDomains"
+          class="flex items-center space-x-2"
         >
-          Aucun rôle ajouté. Cliquez sur le bouton ci-dessus pour ajouter un rôle.
-        </p>
+          <input
+            [id]="'domain-' + domain"
+            type="checkbox"
+            [checked]="isDomainSelected(domain)"
+            (change)="toggleDomain(domain)"
+            class="text-primary border-border focus:ring-primary rounded"
+          />
+          <label [for]="'domain-' + domain" class="text-foreground">{{
+            domain
+          }}</label>
+        </div>
+      </div>
+    </div>
 
-        <div class="space-y-4" formArrayName="role_skills">
-          <div
-            *ngFor="let roleSkill of roleSkillsArray.controls; let i = index"
-            [formGroupName]="i"
-            class="border border-border rounded-lg p-6 bg-background shadow-sm"
+    <!-- Rôles et Compétences -->
+    <div>
+      <div class="flex justify-between items-center mb-4">
+        <label class="text-foreground font-medium text-lg"
+          >Rôles et Compétences</label
+        >
+        <button
+          type="button"
+          (click)="addRoleSkill()"
+          class="bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-1 rounded-md flex items-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 mr-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            <div class="flex flex-col space-y-4">
-              <!-- Rôle -->
-              <div class="flex items-center justify-between">
-                <div class="w-full">
-                  <label
-                    [for]="'role-' + i"
-                    class="block text-foreground font-medium"
-                    >Rôle</label
-                  >
-                  <input
-                    [id]="'role-' + i"
-                    type="text"
-                    formControlName="role"
-                    class="w-full border-border focus:ring-primary rounded-md shadow-sm text-foreground bg-background"
-                    placeholder="Entrez un rôle ou sélectionnez-en un"
-                    [attr.list]="'role-options-' + i"
-                    (change)="onRoleChange(i, roleSkill.get('role')?.value)"
-                  />
-                  <datalist [id]="'role-options-' + i">
-                    <option
-                      *ngFor="let role of availableRoles"
-                      [value]="role"
-                    ></option>
-                  </datalist>
-                  <div
-                    *ngIf="formSubmitted && roleSkill.get('role')?.errors?.['required']"
-                    class="text-destructive text-sm mt-1"
-                  >
-                    Le rôle est requis
-                  </div>
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+          Ajouter un rôle
+        </button>
+      </div>
+
+      <p
+        *ngIf="roleSkillsArray.length === 0"
+        class="text-light-500 italic text-sm"
+      >
+        Aucun rôle ajouté. Cliquez sur le bouton ci-dessus pour ajouter un rôle.
+      </p>
+
+      <div class="space-y-4" formArrayName="role_skills">
+        <div
+          *ngFor="let roleSkill of roleSkillsArray.controls; let i = index"
+          [formGroupName]="i"
+          class="border border-border rounded-lg p-6 bg-background shadow-sm"
+        >
+          <div class="flex flex-col space-y-4">
+            <!-- Rôle -->
+            <div class="flex items-center justify-between">
+              <div class="w-full">
+                <label
+                  [for]="'role-' + i"
+                  class="block text-foreground font-medium"
+                  >Rôle</label
+                >
+                <input
+                  [id]="'role-' + i"
+                  type="text"
+                  formControlName="role"
+                  class="w-full border-border focus:ring-primary rounded-md shadow-sm text-foreground bg-background"
+                  placeholder="Entrez un rôle ou sélectionnez-en un"
+                  [attr.list]="'role-options-' + i"
+                  (change)="onRoleChange(i, roleSkill.get('role')?.value)"
+                />
+                <datalist [id]="'role-options-' + i">
+                  <option
+                    *ngFor="let role of availableRoles"
+                    [value]="role"
+                  ></option>
+                </datalist>
+                <div
+                  *ngIf="formSubmitted && roleSkill.get('role')?.errors?.['required']"
+                  class="text-destructive text-sm mt-1"
+                >
+                  Le rôle est requis
                 </div>
+              </div>
+              <button
+                type="button"
+                (click)="removeRoleSkill(i)"
+                class="text-destructive hover:text-red-700 hover:bg-red-50 p-2 rounded-full"
+              >
+                ✕
+              </button>
+            </div>
+
+            <!-- Description du rôle -->
+            <div *ngIf="roleSkill.get('role')?.value">
+              <label
+                [for]="'role-description-' + i"
+                class="block text-foreground font-medium"
+                >Description du rôle</label
+              >
+              <textarea
+                [id]="'role-description-' + i"
+                formControlName="description"
+                class="w-full border-border focus:ring-primary rounded-md shadow-sm min-h-[80px] text-foreground bg-background"
+                placeholder="Décrivez les responsabilités et attentes pour ce rôle"
+              ></textarea>
+            </div>
+
+            <!-- Compétences -->
+            <div *ngIf="roleSkill.get('role')?.value">
+              <label
+                [for]="'skill-' + i"
+                class="block text-foreground font-medium"
+                >Compétences</label
+              >
+              <div class="flex gap-2">
+                <input
+                  [id]="'skill-' + i"
+                  type="text"
+                  [(ngModel)]="newSkills[i]"
+                  [ngModelOptions]="{ standalone: true }"
+                  class="flex-1 border-border focus:ring-primary rounded-md shadow-sm text-foreground bg-background"
+                  placeholder="Entrez une compétence et appuyez sur Entrée"
+                  [attr.list]="'skill-options-' + i"
+                  (keydown)="onKeyDown($event, i)"
+                />
+                <datalist [id]="'skill-options-' + i">
+                  <option
+                    *ngFor="
+                      let skill of skillsByRole[roleSkill.get('role')?.value] ||
+                        []
+                    "
+                    [value]="skill"
+                  ></option>
+                </datalist>
                 <button
                   type="button"
-                  (click)="removeRoleSkill(i)"
-                  class="text-destructive hover:text-red-700 hover:bg-red-50 p-2 rounded-full"
+                  (click)="addSkillToRole(i)"
+                  class="bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-1 rounded-md"
                 >
-                  ✕
+                  Ajouter
                 </button>
               </div>
 
-              <!-- Description du rôle -->
-              <div *ngIf="roleSkill.get('role')?.value">
-                <label
-                  [for]="'role-description-' + i"
-                  class="block text-foreground font-medium"
-                  >Description du rôle</label
+              <!-- Liste des compétences -->
+              <div class="flex flex-wrap gap-2 mt-3">
+                <p
+                  *ngIf="roleSkill.get('skill')?.value?.length === 0"
+                  class="text-muted italic text-sm"
                 >
-                <textarea
-                  [id]="'role-description-' + i"
-                  formControlName="description"
-                  class="w-full border-border focus:ring-primary rounded-md shadow-sm min-h-[80px] text-foreground bg-background"
-                  placeholder="Décrivez les responsabilités et attentes pour ce rôle"
-                ></textarea>
-              </div>
-
-              <!-- Compétences -->
-              <div *ngIf="roleSkill.get('role')?.value">
-                <label
-                  [for]="'skill-' + i"
-                  class="block text-foreground font-medium"
-                  >Compétences</label
+                  Aucune compétence ajoutée.
+                </p>
+                <div
+                  *ngFor="let skill of roleSkill.get('skill')?.value"
+                  class="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 px-2 py-1 rounded-full flex items-center gap-1"
                 >
-                <div class="flex gap-2">
-                  <input
-                    [id]="'skill-' + i"
-                    type="text"
-                    [(ngModel)]="newSkills[i]"
-                    [ngModelOptions]="{ standalone: true }"
-                    class="flex-1 border-border focus:ring-primary rounded-md shadow-sm text-foreground bg-background"
-                    placeholder="Entrez une compétence et appuyez sur Entrée"
-                    [attr.list]="'skill-options-' + i"
-                    (keydown)="onKeyDown($event, i)"
-                  />
-                  <datalist [id]="'skill-options-' + i">
-                    <option
-                      *ngFor="
-                        let skill of skillsByRole[roleSkill.get('role')?.value] ||
-                          []
-                      "
-                      [value]="skill"
-                    ></option>
-                  </datalist>
+                  {{ skill }}
                   <button
                     type="button"
-                    (click)="addSkillToRole(i)"
-                    class="bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-1 rounded-md"
+                    (click)="removeSkillFromRole(i, skill)"
+                    class="text-primary hover:text-primary-foreground ml-1 h-4 w-4 rounded-full flex items-center justify-center"
                   >
-                    Ajouter
+                    ×
                   </button>
-                </div>
-
-                <!-- Liste des compétences -->
-                <div class="flex flex-wrap gap-2 mt-3">
-                  <p
-                    *ngIf="roleSkill.get('skill')?.value?.length === 0"
-                    class="text-muted italic text-sm"
-                  >
-                    Aucune compétence ajoutée.
-                  </p>
-                  <div
-                    *ngFor="let skill of roleSkill.get('skill')?.value"
-                    class="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 px-2 py-1 rounded-full flex items-center gap-1"
-                  >
-                    {{ skill }}
-                    <button
-                      type="button"
-                      (click)="removeSkillFromRole(i, skill)"
-                      class="text-primary hover:text-primary-foreground ml-1 h-4 w-4 rounded-full flex items-center justify-center"
-                    >
-                      ×
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Bouton de soumission -->
-      <div class="pt-4">
-        <button
-          type="submit"
-          [disabled]="submitting"
-          class="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 text-lg rounded-md shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
-        >
-          <span *ngIf="submitting">Création en cours...</span>
-          <span *ngIf="!submitting">Créer le Projet</span>
-        </button>
-      </div>
-    </form>
-  </div>
+    <!-- Bouton de soumission -->
+    <div class="pt-4">
+      <button
+        type="submit"
+        [disabled]="submitting"
+        class="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 text-lg rounded-md shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
+      >
+        <span *ngIf="submitting">Création en cours...</span>
+        <span *ngIf="!submitting">Créer le Projet</span>
+      </button>
+    </div>
+  </form>
+</div>
