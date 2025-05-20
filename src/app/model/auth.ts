@@ -13,3 +13,14 @@ export interface Authenticate {
 export interface ForgotPasswordUser {
   status: string;
 }
+
+export interface PasswordResetUser {
+  status: string;
+}
+
+export interface PasswordResetData {
+  email: string;
+  password: string;
+  password_confirmation: string;
+  token: string
+}

@@ -1,4 +1,10 @@
-import { Authenticate, ForgotPasswordUser, LoginUser } from '@/model/auth';
+import {
+  Authenticate,
+  ForgotPasswordUser,
+  LoginUser,
+  PasswordResetData,
+  PasswordResetUser,
+} from '@/model/auth';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Environment } from 'environments/environment';
@@ -33,5 +39,16 @@ export class AuthService {
         },
       }
     );
+  }
+
+  async passwordReset(data: PasswordResetData) {
+    const url = `${Environment.apiUrl}/reset-password`;
+
+    return this.http.post<PasswordResetUser>(url, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
   }
 }
