@@ -1,0 +1,61 @@
+<div
+  class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+  role="alert"
+  *ngIf="error"
+>
+  {{ error }}
+</div>
+
+<div
+  class="bg-card text-card-foreground flex flex-col gap-6 rounded-md border py-6 shadow-sm"
+>
+  <div class="px-10 pt-8 pb-0 text-center">
+    <h2 class="leading-none font-semibold mb-3">Mot de passe oublié</h2>
+
+    <p class="text-sm text-muted-foreground" *ngIf="!isSend">
+      Entrez votre e-mail pour recevoir un lien de réinitialisation
+    </p>
+    <p class="text-sm text-muted-foreground" *ngIf="isSend">
+      Nous vous avons envoyé un e-mail de réinitialisation de mot de passe 🙂
+    </p>
+  </div>
+
+  <div class="px-6">
+    <form
+      (ngSubmit)="onSubmit()"
+      class="space-y-8"
+      [formGroup]="forgotForm"
+      *ngIf="!isSend"
+    >
+      <div class="space-y-2">
+        <label class="label-form" for="email">Adresse e-mail</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="johndoe@gmail.com"
+          class="input-field"
+          formControlName="email"
+        />
+        <div
+          *ngIf="isSubmit && forgotForm.get('email')?.errors?.['required']"
+          class="text-destructive text-xs mt-1"
+        >
+          L'adresse est requis
+        </div>
+      </div>
+
+      <button type="submit" class="button-primary-sm">
+        <span *ngIf="!isPending">Envoyer</span>
+        <app-loader *ngIf="isPending" />
+      </button>
+    </form>
+  </div>
+
+  <div class="px-10 py-8">
+    <div class="text-muted-foreground text-center text-sm mt-3">
+      Ou, retour ?
+      <a href="/login" class="text-link" tabindex="5"> à la connexion </a>
+    </div>
+  </div>
+</div>

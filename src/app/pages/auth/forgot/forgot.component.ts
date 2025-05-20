@@ -1,6 +1,7 @@
 import { AuthService } from '@/services/auth/auth.service';
-import { LoginUser } from '@/model/auth';
+import { LoaderComponent } from '@/shared/loader/loader.component';
 import { NgIf } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import {
   FormBuilder,
@@ -9,62 +10,57 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
-import { LoaderComponent } from '@/shared/loader/loader.component';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-login',
-  imports: [NgIf, ReactiveFormsModule, LoaderComponent],
-  templateUrl: './login.component.html',
+  selector: 'app-forgot',
+  imports: [NgIf, LoaderComponent, ReactiveFormsModule],
+  templateUrl: './forgot.component.html',
 })
-export class LoginComponent {
-  loginForm: FormGroup;
-
+export class ForgotComponent {
   isPending: boolean = false;
-
+  forgotForm: FormGroup;
   isSubmit: boolean = false;
-
   error: string | null = null;
+  isSend: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService,
-    private router: Router
+    private authService: AuthService
   ) {
-    this.loginForm = this.formBuilder.group({
+    this.forgotForm = this.formBuilder.group({
       email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required]),
     });
   }
 
   onSubmit() {
     this.isSubmit = true;
 
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
+    if (this.forgotForm.invalid) {
+      this.forgotForm.markAllAsTouched();
       return;
     }
 
-    const credentials: LoginUser = this.loginForm.getRawValue();
+    const { email }: { email: string } = this.forgotForm.value;
 
     this.isPending = true;
 
-    this.authService.authenticate(credentials).then((observer) => {
+    this.authService.forgotPassword(email).then((observer) => {
       observer.subscribe({
         next: (response) => {
-          if (response.token) {
-            localStorage.setItem('user', JSON.stringify(response));
-            this.router.navigate(['/']);
+          if (response.status) {
+            this.isSend = true;
+          } else {
+            this.error = response.status;
           }
+
+          this.isPending = false;
+          this.error = null;
         },
         error: (response: HttpErrorResponse) => {
           this.isPending = false;
           this.isSubmit = false;
 
           this.error = (response.error as { message: string }).message;
-
-          this.loginForm.patchValue({ password: '' });
         },
         complete: () => {
           this.isPending = false;
