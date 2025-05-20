@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.css',
   imports: [ThemeToggleComponent, RouterLink],
 })
 export class NavbarComponent {
