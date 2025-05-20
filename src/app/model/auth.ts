@@ -9,3 +9,8 @@ export interface Authenticate  {
   email_verified_at: string | null
   token: string
 }
+
+export interface ForgotUser {
+  message: string
+  status: string
+}
