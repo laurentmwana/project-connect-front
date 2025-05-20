@@ -22,5 +22,13 @@ export interface PasswordResetData {
   email: string;
   password: string;
   password_confirmation: string;
-  token: string
+  token: string;
+}
+
+export interface RegisterData {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+  token: string;
 }

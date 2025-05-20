@@ -4,6 +4,7 @@ import {
   LoginUser,
   PasswordResetData,
   PasswordResetUser,
+  RegisterData,
 } from '@/model/auth';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -43,6 +44,17 @@ export class AuthService {
 
   async passwordReset(data: PasswordResetData) {
     const url = `${Environment.apiUrl}/reset-password`;
+
+    return this.http.post<PasswordResetUser>(url, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+  }
+
+  async register(data: RegisterData) {
+    const url = `${Environment.apiUrl}/register`;
 
     return this.http.post<PasswordResetUser>(url, data, {
       headers: {

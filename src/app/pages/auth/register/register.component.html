@@ -1,0 +1,127 @@
+<div
+  class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+  role="alert"
+  *ngIf="error"
+>
+  {{ error }}
+</div>
+
+<div
+  class="bg-card text-card-foreground flex flex-col gap-6 rounded-md border py-6 shadow-sm"
+>
+  <div class="px-10 pt-8 pb-0 text-center">
+    <h2 class="leading-none font-semibold mb-3">Créer un nouveau compte</h2>
+
+    <p class="text-sm text-muted-foreground">
+      Entrez vos informations pour créer un compte.
+    </p>
+  </div>
+
+  <div class="px-6">
+    <form (ngSubmit)="onSubmit()" class="space-y-8" [formGroup]="registerForm">
+      <div class="space-y-2">
+        <label class="label-form" for="name">Nom</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          placeholder="Votre nom"
+          class="input-field"
+          formControlName="name"
+        />
+        <div
+          *ngIf="isSubmit && registerForm.get('name')?.errors?.['required']"
+          class="text-destructive text-xs mt-1"
+        >
+          Le nom est requis.
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="label-form" for="email">Adresse e-mail</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="exemple@domaine.com"
+          class="input-field"
+          formControlName="email"
+        />
+        <div
+          *ngIf="isSubmit && registerForm.get('email')?.errors?.['required']"
+          class="text-destructive text-xs mt-1"
+        >
+          L'adresse e-mail est requise.
+        </div>
+        <div
+          *ngIf="isSubmit && registerForm.get('email')?.errors?.['email']"
+          class="text-destructive text-xs mt-1"
+        >
+          Veuillez entrer une adresse e-mail valide.
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="label-form" for="password">Mot de passe</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          placeholder="Votre mot de passe"
+          class="input-field"
+          formControlName="password"
+        />
+        <div
+          *ngIf="isSubmit && registerForm.get('password')?.errors?.['required']"
+          class="text-destructive text-xs mt-1"
+        >
+          Le mot de passe est requis.
+        </div>
+        <div
+          *ngIf="isSubmit && registerForm.get('password')?.errors?.['minlength']"
+          class="text-destructive text-xs mt-1"
+        >
+          Le mot de passe doit contenir au moins 8 caractères.
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="label-form" for="password_confirmation"
+          >Confirmer le mot de passe</label
+        >
+        <input
+          id="password_confirmation"
+          name="password_confirmation"
+          type="password"
+          placeholder="Confirmez votre mot de passe"
+          class="input-field"
+          formControlName="password_confirmation"
+        />
+        <div
+          *ngIf="isSubmit && registerForm.get('password_confirmation')?.errors?.['required']"
+          class="text-destructive text-xs mt-1"
+        >
+          La confirmation du mot de passe est requise.
+        </div>
+        <div
+          *ngIf="isSubmit && registerForm.get('password_confirmation')?.errors?.['minlength']"
+          class="text-destructive text-xs mt-1"
+        >
+          La confirmation du mot de passe doit contenir au moins 8 caractères.
+        </div>
+      </div>
+
+      <button type="submit" class="button-primary-sm">
+        <span *ngIf="!isPending">S'inscrire</span>
+        <app-loader *ngIf="isPending" />
+      </button>
+    </form>
+  </div>
+
+  <div class="px-10 py-8">
+    <div class="text-muted-foreground text-center text-sm mt-3">
+      Vous avez déjà un compte ?
+      <a href="/login" class="text-link" tabindex="5">Retour à la connexion</a>
+    </div>
+  </div>
+</div>

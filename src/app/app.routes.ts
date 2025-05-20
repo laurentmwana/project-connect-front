@@ -5,6 +5,7 @@ import { BaseLayoutComponent } from './layouts/base-layout/base-layout.component
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { ForgotComponent } from './pages/auth/forgot/forgot.component';
 import { PasswordResetComponent } from './pages/auth/password-reset/password-reset.component';
+import { RegisterComponent } from './pages/auth/register/register.component';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,11 @@ export const routes: Routes = [
       {
         path: 'password-reset/:token',
         component: PasswordResetComponent,
+      },
+
+      {
+        path: 'register',
+        component: RegisterComponent,
       },
     ],
   },
