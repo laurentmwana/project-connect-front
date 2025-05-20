@@ -18,7 +18,7 @@ import { NgFor, NgIf } from '@angular/common';
   templateUrl: './create.component.html',
   styleUrl: './create.component.css',
 })
-export default class CreateComponent {
+export class CreateComponent {
   projectForm: FormGroup;
 
   availableDomains: string[] = [];
