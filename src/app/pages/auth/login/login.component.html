@@ -1,3 +1,7 @@
+<div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert" *ngIf="error">
+  {{ error }}
+</div>
+
 <div class="bg-card text-card-foreground flex flex-col gap-6 rounded-md border py-6 shadow-sm">
   <div class="px-10 pt-8 pb-0 text-center">
     <h2 class="leading-none font-semibold mb-3">
@@ -51,7 +55,7 @@
         class="button-primary-sm"
       >
         <span *ngIf="!isPending">Se connecter</span>
-        <span *ngIf="isPending">Chargement...</span>
+        <app-loader *ngIf="isPending" />
       </button>
     </form>
   </div>

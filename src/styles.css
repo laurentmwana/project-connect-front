@@ -5,7 +5,7 @@
 @plugin "flowbite/plugin";
 
 @source "../node_modules/flowbite";
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
@@ -67,14 +67,12 @@
   If we ever want to remove these styles, we need to add an explicit border
   color utility to any element that depends on these defaults.
 */
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
-  }
+*,
+::after,
+::before,
+::backdrop,
+::file-selector-button {
+  border-color: var(--color-gray-200, currentColor);
 }
 
 :root {
@@ -122,9 +120,9 @@
   --ring: hsl(20.5, 90.2%, 48.2%);
 }
 
-  * {
-    @apply border-border;
-  }
+* {
+  @apply border-border;
+}
 
   body {
     @apply bg-background text-foreground;

@@ -4,10 +4,12 @@ import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoaderComponent } from '@/shared/loader/loader.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
-  imports: [NgIf, ReactiveFormsModule],
+  imports: [NgIf, ReactiveFormsModule, LoaderComponent],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
@@ -17,6 +19,8 @@ export class LoginComponent {
   isPending: boolean = false
 
   isSubmit: boolean = false
+
+  error: string | null = null
 
   constructor(private formBuilder: FormBuilder, private loginService : LoginService, private router: Router) {
     this.loginForm = this.formBuilder.group({
@@ -36,25 +40,36 @@ export class LoginComponent {
     }
 
     const credentials: LoginUser = this.loginForm.getRawValue()
-    
+
     this.isPending = true;
 
     this.loginService.authenticate(credentials).then(observer => {
       observer.subscribe({
-        next: (response => {
+        next: ((response) => {
           if (response.token) {
             localStorage.setItem('user', JSON.stringify(response))
             this.router.navigate(['/'])
           }
         }),
-        error: (response => {
-          console.log(response)
+        error: ((response: HttpErrorResponse) => {
+          this.isPending = false;
+
+          this.isSubmit = false
+
+          if (response.status === 401 && response.error) {
+            this.error =  (response.error as { message: string }).message
+          }
+
+          this.loginForm.patchValue({password: ''})
+
         }),
         complete: () => {
           this.isPending = false;
-        }
+        },
+
       })
     })
+
 
   }
 

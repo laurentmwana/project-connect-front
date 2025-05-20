@@ -1,8 +1,7 @@
-import { apiRoute } from '@/lib/route';
 import { Authenticate, LoginUser } from '@/model/auth';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+import { Environment } from 'environments/environment';
 
 
 @Injectable({
@@ -14,7 +13,9 @@ export class LoginService {
   }
 
   async authenticate(data: LoginUser) {
-    return this.http.post<Authenticate>(apiRoute('login'), data, {
+    const url = `${Environment.apiUrl}/login`
+
+    return this.http.post<Authenticate>(url, data, {
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
