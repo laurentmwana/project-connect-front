@@ -2,13 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Project } from '../model/project';
+import { Domain } from '@/model/domain';
+import { Environment } from 'environments/environment';
+import { Role } from '@/model/role';
+import { Skill } from '@/model/skill';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectService {
   // URL de base de l'API (à remplacer par votre URL réelle)
-  private apiUrl = 'https://api.example.com/projects';
+  private url = `${Environment.apiUrl}/`;
 
   // Données prédéfinies pour les domaines, rôles et compétences
   private availableDomains: string[] = [];
@@ -23,16 +27,16 @@ export class ProjectService {
    * Récupère la liste des domaines disponibles
    * @returns Observable contenant la liste des domaines
    */
-  getAvailableDomains(): Observable<string[]> {
-    return of(this.availableDomains);
+  getAvailableDomains(): Observable<{ data: Domain[] }> {
+    return this.http.get<{ data: Domain[] }>(this.url + 'domains');
   }
 
   /**
    * Récupère la liste des rôles disponibles
    * @returns Observable contenant la liste des rôles
    */
-  getAvailableRoles(): Observable<string[]> {
-    return of(this.availableRoles);
+  getAvailableRoles(): Observable<{ data: Role[] }> {
+    return this.http.get<{ data: Role[] }>(this.url + 'roles');
   }
 
   /**
@@ -40,8 +44,8 @@ export class ProjectService {
    * @param role Le rôle pour lequel récupérer les compétences
    * @returns Observable contenant la liste des compétences pour ce rôle
    */
-  getSkillsByRole(role: string): Observable<string[]> {
-    return of(this.skillsByRole[role] || []);
+  getAvaillableSkills(): Observable<{ data: Skill[] }> {
+    return this.http.get<{ data: Skill[] }>(this.url + 'skills');
   }
 
   /**
@@ -49,27 +53,20 @@ export class ProjectService {
    * @param projectData Les données du projet à créer
    * @returns Observable contenant la réponse de l'API
    */
-  createProject(projectData: Project): Observable<any> {
-    // Dans un environnement réel, cette méthode ferait un appel HTTP POST
-    console.log('Création du projet:', projectData);
-
-    // Simulation d'un appel API réussi
-    return of({
-      success: true,
-      message: 'Projet créé avec succès',
-      data: projectData,
-    });
+  createProject(data: Project){
+    return this.http.post(this.url + 'projects', data);
+  };
 
     // Implémentation réelle avec HttpClient:
     // return this.http.post<any>(this.apiUrl, projectData);
-  }
+  
 
   /**
    * Récupère un projet par son ID
    * @param id L'identifiant du projet
    * @returns Observable contenant les données du projet
    */
-  getProjectById(id: string): Observable<Project> {
+  getProjectById(id: string): Observable<any> {
     // Dans un environnement réel, cette méthode ferait un appel HTTP GET
     // return this.http.get<ProjectData>(`${this.apiUrl}/${id}`);
 
