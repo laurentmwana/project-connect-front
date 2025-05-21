@@ -15,8 +15,8 @@ export interface RoleSkill {
 export interface Project {
   title: string
   description: string
-  date_start: string
-  date_end: string
+  date_start: Date
+  date_end: Date
   budget: number
   location: string
   visibility: "public" | "private"
@@ -24,7 +24,6 @@ export interface Project {
   role_skills: RoleSkill[]
 }
 
-export interface Role{
-  role: string,
-  description: string
-}
+
+
+
