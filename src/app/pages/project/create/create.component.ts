@@ -23,7 +23,7 @@ export class CreateComponent {
 
   availableDomains: string[] = [];
   availableRoles: string[] = [];
-  skillsByRole: Record<string, string[]> = {};
+  availableSkills: string[] = [];
 
   newSkills: string[] = [];
 
@@ -38,7 +38,7 @@ export class CreateComponent {
       date_start: ['', Validators.required],
       date_end: ['', Validators.required],
       budget: [0, [Validators.required, Validators.min(0)]],
-      location: ['Remote', Validators.required],
+      location: ['Kinshasa', Validators.required],
       visibility: ['private', Validators.required],
       domains: [[]],
       role_skills: this.fb.array([]),
@@ -50,7 +50,7 @@ export class CreateComponent {
     this.loadFormData();
 
     const now = new Date();
-    const formattedDate = now.toISOString().slice(0, 16);
+    const formattedDate = now.toISOString().slice(0, 10);
 
     this.projectForm.patchValue({
       date_start: formattedDate,
@@ -59,19 +59,20 @@ export class CreateComponent {
   }
 
   loadFormData(): void {
-    this.projectService.getAvailableDomains().subscribe((domains) => {
-      this.availableDomains = domains;
+    this.projectService.getAvailableDomains().subscribe((response) => {
+      this.availableDomains = response.data.map((domain) => domain.name);
+      console.log(this.availableDomains);
     });
 
-    this.projectService.getAvailableRoles().subscribe((roles) => {
-      this.availableRoles = roles;
+    this.projectService.getAvailableRoles().subscribe((response) => {
+      this.availableRoles = response.data.map((role) => role.name);
+      console.log(this.availableRoles);
+    });
 
-      // Charger les compétences pour chaque rôle après avoir récupéré les rôles
-      roles.forEach((role) => {
-        this.projectService.getSkillsByRole(role).subscribe((skills) => {
-          this.skillsByRole[role] = skills;
-        });
-      });
+    // Charger les compétences
+    this.projectService.getAvaillableSkills().subscribe((response) => {
+      this.availableSkills = response.data.map((skill) => skill.name);
+      console.log(this.availableSkills);
     });
   }
 
@@ -140,9 +141,9 @@ export class CreateComponent {
 
     this.submitting = true;
 
-    const projectData: Project = this.projectForm.value;
+    const data: Project = this.projectForm.value;
 
-    this.projectService.createProject(projectData).subscribe({
+    this.projectService.createProject(data).subscribe({
       next: (response) => {
         console.log('Projet créé avec succès:', response);
         this.submitting = false;

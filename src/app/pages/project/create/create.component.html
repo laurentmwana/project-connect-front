@@ -62,7 +62,7 @@
           >
           <input
             id="date_start"
-            type="datetime-local"
+            type="date"
             formControlName="date_start"
             class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
             required
@@ -81,7 +81,7 @@
           >
           <input
             id="date_end"
-            type="datetime-local"
+            type="date"
             formControlName="date_end"
             class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
             required
@@ -301,13 +301,11 @@
                 />
                 <datalist [id]="'skill-options-' + i">
                   <option
-                    *ngFor="
-                      let skill of skillsByRole[roleSkill.get('role')?.value] ||
-                        []
-                    "
+                    *ngFor="let skill of availableSkills"
                     [value]="skill"
                   ></option>
                 </datalist>
+
                 <button
                   type="button"
                   (click)="addSkillToRole(i)"
