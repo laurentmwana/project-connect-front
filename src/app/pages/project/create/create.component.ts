@@ -6,6 +6,8 @@ import {
   Validators,
   ReactiveFormsModule,
   FormsModule,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 
 import { ProjectService } from '../../../services/project.service';
@@ -30,22 +32,43 @@ export class CreateComponent {
   submitting = false;
   formSubmitted = false;
   formError = '';
+  successMessage = '';
 
   constructor(private fb: FormBuilder, private projectService: ProjectService) {
-    this.projectForm = this.fb.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
-      date_start: ['', Validators.required],
-      date_end: ['', Validators.required],
-      budget: [0, [Validators.required, Validators.min(0)]],
-      location: ['Kinshasa', Validators.required],
-      visibility: ['private', Validators.required],
-      domains: [[]],
-      role_skills: this.fb.array([]),
-    });
+    this.projectForm = this.fb.group(
+      {
+        title: ['', Validators.required],
+        description: ['', Validators.required],
+        date_start: ['', Validators.required],
+        date_end: ['', Validators.required],
+        budget: [0, [Validators.required, Validators.min(0)]],
+        location: ['', Validators.required],
+        visibility: ['public', Validators.required],
+        domains: [[], this.atLeastOneDomainValidator],
+        role_skills: this.fb.array([]),
+      },
+      { validators: [this.dateRangeValidator] }
+    );
     this.newSkills = [];
   }
+  private atLeastOneDomainValidator(
+    control: AbstractControl
+  ): ValidationErrors | null {
+    const value = control.value;
+    return Array.isArray(value) && value.length > 0
+      ? null
+      : { atLeastOneDomain: true };
+  }
+  private dateRangeValidator(group: AbstractControl): ValidationErrors | null {
+    const start = group.get('date_start')?.value;
+    const end = group.get('date_end')?.value;
 
+    if (start && end && new Date(start) > new Date(end)) {
+      return { invalidDateRange: true };
+    }
+
+    return null;
+  }
   ngOnInit(): void {
     this.loadFormData();
 
@@ -55,6 +78,11 @@ export class CreateComponent {
     this.projectForm.patchValue({
       date_start: formattedDate,
       date_end: formattedDate,
+    });
+    this.projectForm.valueChanges.subscribe(() => {
+      if (this.formError) {
+        this.formError = '';
+      }
     });
   }
 
@@ -136,6 +164,9 @@ export class CreateComponent {
 
     if (this.projectForm.invalid) {
       this.formError = 'Veuillez corriger les erreurs dans le formulaire.';
+      setTimeout(() => {
+        this.formError = '';
+      }, 5000);
       return;
     }
 
@@ -147,7 +178,10 @@ export class CreateComponent {
       next: (response) => {
         console.log('Projet créé avec succès:', response);
         this.submitting = false;
-        alert('Projet créé avec succès!');
+        this.successMessage = 'Projet créé avec succès!';
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 5000);
         this.resetForm();
       },
       error: (error) => {
