@@ -3,10 +3,18 @@
 
   <!-- Formulaire principal -->
   <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="space-y-8">
+    <!-- Toast succès -->
+    <div
+      *ngIf="successMessage"
+      class="fixed top-8 right-4 z-50 bg-green-100 border border-green-500 text-green-700 px-4 py-3 rounded shadow-lg transition-opacity duration-300 ease-in-out"
+    >
+      {{ successMessage }}
+    </div>
+
     <!-- Message d'erreur global -->
     <div
       *ngIf="formError"
-      class="bg-destructive/10 border border-destructive text-destructive px-4 py-3 rounded relative"
+      class="fixed bottom-4 right-4 z-50 bg-destructive/10 border border-destructive text-destructive px-4 py-3 rounded shadow-lg transition-opacity duration-300 ease-in-out"
     >
       {{ formError }}
     </div>
@@ -91,6 +99,12 @@
             class="text-destructive text-sm mt-1"
           >
             La date de fin est requise
+          </div>
+          <div
+            *ngIf="projectForm.errors?.['invalidDateRange'] && formSubmitted"
+            class="text-destructive text-sm mt-1"
+          >
+            La date de fin doit être postérieure ou égale à la date de début.
           </div>
         </div>
       </div>
@@ -185,6 +199,12 @@
           }}</label>
         </div>
       </div>
+      <div
+        *ngIf="projectForm.get('domains')?.errors?.['atLeastOneDomain'] && formSubmitted"
+        class="text-destructive text-sm mt-1"
+      >
+        Veuillez sélectionner au moins un domaine.
+      </div>
     </div>
 
     <!-- Rôles et Compétences -->
@@ -278,10 +298,12 @@
                 formControlName="description"
                 class="w-full border-border focus:ring-primary rounded-md shadow-sm min-h-[80px] text-foreground bg-background"
                 placeholder="Décrivez les responsabilités et attentes pour ce rôle"
+                required
               ></textarea>
             </div>
 
             <!-- Compétences -->
+
             <div *ngIf="roleSkill.get('role')?.value">
               <label
                 [for]="'skill-' + i"
