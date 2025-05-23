@@ -20,7 +20,9 @@
             <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
             <rect width="20" height="14" x="2" y="6" rx="2"></rect>
           </svg>
-          <span class="hidden font-bold text-xl sm:inline-block">ProjectConnect</span>
+          <span class="hidden font-bold text-xl sm:inline-block"
+            >ProjectConnect</span
+          >
         </a>
       </div>
     </div>
@@ -105,26 +107,55 @@
           </svg>
         </a>
 
-        <a
-          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10 text-muted-foreground"
-          href="/profile"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-user h-5 w-5 text-gray-400"
+        <div>
+          <button
+            id="dropdownHoverButton"
+            data-dropdown-toggle="dropdownHover"
+            data-dropdown-trigger="hover"
+            class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10 text-muted-foreground"
+            type="button"
           >
-            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-        </a>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-user h-5 w-5 text-gray-400"
+            >
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </button>
+
+          <!-- Dropdown menu -->
+          <div
+            id="dropdownHover"
+            class="z-10 hidden border rounded-lg shadow-md w-44"
+          >
+            <ul class="py-2 text-sm" aria-labelledby="dropdownHoverButton">
+              <li>
+                <a
+                  href="/profile"
+                  class="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-accent"
+                  >Mon Profil</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-accent"
+                >
+                  Se déconnecter
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
 
         <app-theme-toggle></app-theme-toggle>
 

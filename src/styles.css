@@ -1,6 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
-@import "flowbite/src/themes/default";
 
 @plugin "flowbite/plugin";
 
@@ -124,33 +123,39 @@
   @apply border-border;
 }
 
-  body {
-    @apply bg-background text-foreground;
-  }
+body {
+  @apply bg-background text-foreground;
+}
 
-  .container {
-    @apply mx-auto w-full max-w-5xl px-2 lg:px-4;
-  }
+.container {
+  @apply mx-auto w-full max-w-5xl px-2 lg:px-4;
+}
 
-
-  .input-field {
-    @apply file:text-foreground placeholder:text-muted-foreground
+.input-field {
+  @apply file:text-foreground placeholder:text-muted-foreground
       selection:bg-primary selection:text-primary-foreground
       dark:bg-input/30 border-input flex h-9 w-full min-w-0
       rounded-md border bg-transparent px-3 py-1 text-base shadow-xs
       transition-[color,box-shadow] outline-none file:inline-flex file:h-7
       file:border-0 file:bg-transparent file:text-sm file:font-medium
-      disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50
+      disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-80
       md:text-sm focus-visible:border-ring focus-visible:ring-ring/50
       focus-visible:ring-[3px] aria-invalid:ring-destructive/20
       dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive;
-  }
+}
 
+.label-form {
+  @apply flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50;
+}
 
-  .label-form {
-    @apply flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50
-  }
+.button-primary-sm {
+  @apply h-8 w-full text-sm rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 cursor-pointer border bg-primary text-primary-foreground shadow-xs hover:bg-primary/90;
+}
 
-  .button-primary-sm  {
-    @apply h-8 w-full text-sm rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 cursor-pointer bg-primary text-primary-foreground shadow-xs hover:bg-primary/90
-  }
+.button-outline-sm {
+  @apply h-8 w-full text-sm rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 cursor-pointer bg-accent text-accent-foreground shadow-xs hover:bg-accent/90;
+}
+
+.text-link {
+  @apply text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500;
+}
