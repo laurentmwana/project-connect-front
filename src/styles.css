@@ -149,7 +149,11 @@ body {
 }
 
 .button-primary-sm {
-  @apply h-8 w-full text-sm rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 cursor-pointer bg-primary text-primary-foreground shadow-xs hover:bg-primary/90;
+  @apply h-8 w-full text-sm rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 cursor-pointer border bg-primary text-primary-foreground shadow-xs hover:bg-primary/90;
+}
+
+.button-outline-sm {
+  @apply h-8 w-full text-sm rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 cursor-pointer bg-accent text-accent-foreground shadow-xs hover:bg-accent/90;
 }
 
 .text-link {

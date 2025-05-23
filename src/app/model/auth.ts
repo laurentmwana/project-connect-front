@@ -31,3 +31,7 @@ export interface RegisterData {
   password: string;
   password_confirmation: string;
 }
+
+export interface VerifyEmailData {
+  status: 'verification-link-success' | 'verification-link-already';
+}

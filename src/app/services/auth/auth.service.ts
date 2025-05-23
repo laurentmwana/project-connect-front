@@ -1,3 +1,4 @@
+import { VerifyEmailData } from '@/model/auth';
 import {
   Authenticate,
   ForgotPasswordUser,
@@ -63,5 +64,31 @@ export class AuthService {
       },
     });
   }
-  
+
+  async verifyEmail(callbackUrl: string) {
+    return this.http.post<VerifyEmailData>(callbackUrl, null, {
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+  }
+
+  logoutUser(): boolean {
+    const user = this.getUser();
+
+    if (user) {
+      localStorage.removeItem('user');
+    }
+    return true;
+  }
+
+  getUser(): Authenticate | null {
+    const data = localStorage.getItem('user');
+
+    if (!data) return null;
+
+    const user: Authenticate = JSON.parse(data);
+
+    return user;
+  }
 }
