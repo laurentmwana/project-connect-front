@@ -61,7 +61,7 @@ export class RegisterComponent {
           this.isPending = false;
 
           this.router.navigate(['/login'], {
-            queryParams: { 'new-user': 1 },
+            queryParams: { 'new-register': 1 },
           });
         },
         error: (response: HttpErrorResponse) => {

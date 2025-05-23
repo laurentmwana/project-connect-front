@@ -43,6 +43,12 @@
         >
           L'adresse est requis
         </div>
+        <div
+          *ngIf="isSubmit && forgotForm.get('email')?.errors?.['email']"
+          class="text-destructive text-xs mt-1"
+        >
+          Cette adresse e-mail n'est pas valide
+        </div>
       </div>
 
       <button type="submit" class="button-primary-sm">
