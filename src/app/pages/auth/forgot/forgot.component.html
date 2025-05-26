@@ -1,5 +1,5 @@
 <div
-  class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+  class="p-4 mb-4 text-sm text-red-800 rounded-lg border dark:text-red-400"
   role="alert"
   *ngIf="error"
 >
@@ -42,6 +42,12 @@
           class="text-destructive text-xs mt-1"
         >
           L'adresse est requis
+        </div>
+        <div
+          *ngIf="isSubmit && forgotForm.get('email')?.errors?.['email']"
+          class="text-destructive text-xs mt-1"
+        >
+          Cette adresse e-mail n'est pas valide
         </div>
       </div>
 

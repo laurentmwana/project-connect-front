@@ -1,9 +1,28 @@
 <div
-  class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+  class="p-4 mb-4 text-sm text-red-800 rounded-lg border dark:text-red-400"
   role="alert"
   *ngIf="error"
 >
   {{ error }}
+</div>
+
+<div
+  *ngIf="isResetPassword"
+  class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg dark:text-green-400 dark:border-green-800"
+  role="alert"
+>
+  🎉 Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant
+  vous connecter avec votre nouveau mot de passe.
+</div>
+
+<div
+  *ngIf="isRegister"
+  class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg dark:text-green-400 dark:border-green-800"
+  role="alert"
+>
+  🎉 Votre compte a été créé avec succès ! Un e-mail de vérification a été
+  envoyé à votre adresse. Veuillez cliquer sur le lien pour activer votre
+  compte.
 </div>
 
 <div

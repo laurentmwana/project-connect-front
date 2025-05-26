@@ -1,6 +1,7 @@
+import { AuthService } from '@/services/auth/auth.service';
 import { Component } from '@angular/core';
 import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -12,9 +13,19 @@ export class NavbarComponent {
 
   activeTab = 'discover';
 
-  constructor() {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   setActiveTab(tab: string): void {
     this.activeTab = tab;
+  }
+
+  onLogout() {
+    const isLogout = this.authService.logoutUser();
+
+    if (isLogout) {
+      this.router.navigate(['/login'], {
+        queryParams: { 'is-logout': 1 },
+      });
+    }
   }
 }
