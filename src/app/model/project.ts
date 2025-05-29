@@ -13,6 +13,7 @@ export interface RoleSkill {
  * Contient toutes les informations nécessaires pour créer ou mettre à jour un projet
  */
 export interface Project {
+
   title: string;
   description: string;
   date_start: string;
@@ -33,7 +34,8 @@ export interface Role {
 
 
 
-// ================================ Model de recuperation ===========================================================
+// ================================ Modèle principal basé sur la réponse du backend ================================
+
 export interface User {
   id: number;
   name: string;
@@ -66,9 +68,9 @@ export interface ProjectData {
   id: number;
   title: string;
   description: string;
-  date_start: string;
+  date_start: string; // ou Date si vous transformez après
   date_end: string;
-  budget: string;
+  budget: string; 
   location: string;
   visibility: 'public' | 'private';
   created_by: User;
@@ -78,4 +80,3 @@ export interface ProjectData {
   domains: Domain[];
   project_roles_skills: ProjectRoleSkill[];
 }
-

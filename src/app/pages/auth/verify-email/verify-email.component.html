@@ -1,0 +1,40 @@
+<div
+  class="p-4 mb-4 text-sm text-red-800 rounded-lg border dark:text-red-400"
+  role="alert"
+  *ngIf="error"
+>
+  {{ error }}
+</div>
+
+<div
+  class="bg-card text-card-foreground flex flex-col gap-6 rounded-md border py-6 shadow-sm"
+>
+  <div class="px-10 pt-8 pb-0 text-center" *ngIf="isPending">
+    <h2 class="leading-none font-semibold mb-3">
+      Vérification de l'adresse e-mail
+    </h2>
+
+    <div>
+      <p class="text-sm text-muted-foreground mb-8">
+        Nous sommes en train de vérifier votre adresse e-mail. Veuillez
+        patienter quelques instants… Cette étape ne prend généralement que
+        quelques secondes.
+      </p>
+
+      <div>
+        <app-loader />
+      </div>
+    </div>
+  </div>
+
+  <div class="px-10 pt-8 pb-0 text-center" *ngIf="!error && isSuccess">
+    <h2 class="leading-none font-semibold mb-3">Vérification terminée</h2>
+
+    <div>
+      <p class="text-sm text-muted-foreground mb-8">
+        🎉 Votre compte est maintenant activé ! Vous pouvez vous
+        <a class="text-link" href="/login">connecter</a> avec vos identifiants.
+      </p>
+    </div>
+  </div>
+</div>
