@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { Project } from '../model/project';
+import { map, Observable, of } from 'rxjs';
+import { Project, ProjectData } from '../model/project';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectService {
   // URL de base de l'API (à remplacer par votre URL réelle)
-  private apiUrl = 'https://api.example.com/projects';
+  private apiUrl = 'http://127.0.0.1:8000/api/projects';
 
   // Données prédéfinies pour les domaines, rôles et compétences
   private availableDomains: string[] = [];
@@ -69,21 +70,36 @@ export class ProjectService {
    * @param id L'identifiant du projet
    * @returns Observable contenant les données du projet
    */
-  getProjectById(id: string): Observable<Project> {
-    // Dans un environnement réel, cette méthode ferait un appel HTTP GET
-    // return this.http.get<ProjectData>(`${this.apiUrl}/${id}`);
+  // getProjectById(id: string): Observable<Project> {
+  //   // Dans un environnement réel, cette méthode ferait un appel HTTP GET
+  //   // return this.http.get<ProjectData>(`${this.apiUrl}/${id}`);
 
-    // Pour l'exemple, on retourne un projet vide
-    return of({
-      title: '',
-      description: '',
-      date_start: '',
-      date_end: '',
-      budget: 0,
-      location: 'Remote',
-      visibility: 'private',
-      domains: [],
-      role_skills: [],
-    });
+  //   // Pour l'exemple, on retourne un projet vide
+  //   return of({
+  //     title: '',
+  //     description: '',
+  //     date_start: '',
+  //     date_end: '',
+  //     budget: 0,
+  //     location: 'Remote',
+  //     visibility: 'private',
+  //     domains: [],
+  //     role_skills: [],
+  //   });
+  // }
+  // getProjectById(id: string): Observable<Pro> {
+  //   let project = this.http.get<Project>(`${this.apiUrl}/${id}`);
+  //   console.log('le projet ', project);
+
+  //   return project;
+  // }
+
+  // getAllProjects(): Observable<any> {
+  //  return this.http.get(this.apiUrl);
+  // }
+  getAllProjects(): Observable<ProjectData[]> {
+    return this.http.get<{ data: ProjectData[] }>(this.apiUrl).pipe(
+      map((response) => response.data) // On prend uniquement la liste des projets
+    );
   }
 }
