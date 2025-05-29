@@ -9,6 +9,7 @@ import { RegisterComponent } from './pages/auth/register/register.component';
 import { VerifyEmailComponent } from './pages/auth/verify-email/verify-email.component';
 
 import { guestGuard } from './guards/auth/guest.guard';
+import { MessageComponent } from './pages/message/message.component';
 
 export const routes: Routes = [
   {
@@ -25,9 +26,24 @@ export const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'message',
+        title: 'Messagerie',
+        children: [
+          {
+            path: '',
+            component: MessageComponent, // inbox par défaut
+          },
+          {
+            path: ':chatId',
+            component: MessageComponent, // ou ChatDetailComponent si séparé
+            title: 'Détail du chat - ProjectConnect'
+          },
+        ],
+      },
+
     ],
   },
-
   {
     path: '',
     component: AuthLayoutComponent,

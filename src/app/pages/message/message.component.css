@@ -1,0 +1,240 @@
+/* Layout principal */
+.min-h-screen {
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Sidebar Layout */
+.border-r.hidden.md\:block {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Fixed Sidebar Header */
+.sidebar-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: hsl(var(--background));
+  border-bottom: 1px solid hsl(var(--border));
+  padding: 1rem;
+  flex-shrink: 0;
+}
+
+/* Scrollable Conversations Container */
+.conversations-container {
+  flex: 1;
+  overflow-y: auto;
+  height: calc(100vh - 140px); /* Ajuster selon la hauteur du header */
+}
+
+/* Chat Layout */
+.col-span-3 {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Fixed Chat Header */
+.chat-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: hsl(var(--background));
+  border-bottom: 1px solid hsl(var(--border));
+  padding: 1rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Scrollable Messages Container */
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  height: calc(100vh - 200px); /* Ajuster selon la hauteur du header et input */
+  scroll-behavior: smooth;
+}
+
+/* Fixed Message Input */
+.message-input {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  background: hsl(var(--background));
+  border-top: 1px solid hsl(var(--border));
+  padding: 1rem;
+  flex-shrink: 0;
+}
+
+/* Scrollbar styling pour les conversations */
+.conversations-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.conversations-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.conversations-container::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
+}
+
+.conversations-container::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Scrollbar styling pour les messages */
+.messages-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
+}
+
+.messages-container::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Contenteditable placeholder styling */
+[contenteditable="true"]:empty:before {
+  content: attr(placeholder);
+  color: hsl(var(--muted-foreground));
+  pointer-events: none;
+}
+
+[contenteditable="true"]:focus {
+  outline: none;
+}
+
+/* Animation pour les bulles de message */
+.space-y-4 > div {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Effets de survol pour les éléments de conversation */
+.hover\:bg-muted:hover {
+  transition: background-color 0.2s ease;
+}
+
+/* Style de conversation active */
+.bg-orange-50.dark\:bg-orange-950\/20 {
+  transition: all 0.2s ease;
+}
+
+/* Style des pièces jointes */
+.bg-muted.p-2.rounded-lg {
+  transition: background-color 0.2s ease;
+}
+
+.bg-muted.p-2.rounded-lg:hover {
+  background-color: hsl(var(--accent));
+}
+
+/* Style de focus pour l'input de message */
+.border.rounded-lg.p-2:focus-within {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
+}
+
+/* Ombres pour les éléments fixes */
+.sidebar-header {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chat-header {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.message-input {
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajustements responsives */
+@media (max-width: 768px) {
+  .grid-cols-1.md\:grid-cols-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .hidden.md\:block {
+    display: flex !important;
+  }
+
+  .col-span-3 {
+    grid-column: span 1;
+  }
+
+  .sidebar-header,
+  .chat-header,
+  .message-input {
+    padding: 0.75rem;
+  }
+
+  .conversations-container {
+    height: calc(100vh - 120px);
+  }
+
+  .messages-container {
+    height: calc(100vh - 180px);
+    padding: 0.75rem;
+  }
+}
+
+/* Style pour le mode sombre */
+.dark .sidebar-header,
+.dark .chat-header,
+.dark .message-input {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Auto-scroll vers le bas pour les nouveaux messages */
+.messages-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.messages-container .space-y-4 {
+  margin-top: auto;
+}
+
+/* Amélioration de la lisibilité */
+.messages-container {
+  scroll-padding-bottom: 1rem;
+}
+
+/* Style pour les messages qui arrivent en temps réel */
+.space-y-4 > div:last-child {
+  animation: slideInFromBottom 0.4s ease-out;
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
