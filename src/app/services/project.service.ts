@@ -37,10 +37,14 @@ export class ProjectService {
   /**
    * Récupère un projet par ID
    */
-  getProjectById(id: string): Observable<ProjectData> {
-    return this.http.get<ProjectData>(this.baseUrl + 'projects/' + id);
+  // getProjectById(id: string): Observable<ProjectData> {
+  //   return this.http.get<ProjectData>(this.baseUrl + 'projects/' + id);
+  // }
+  getProjectById(id: string) {
+    return this.http.get<{ data: ProjectData }>(
+      `http://127.0.0.1:8000/api/projects/${id}`
+    );
   }
-
   /**
    * Récupère les domaines disponibles
    */

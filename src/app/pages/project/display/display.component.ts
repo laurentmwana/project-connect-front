@@ -26,24 +26,7 @@ export class DisplayComponent {
     this.fetchProjects();
   }
 
-  // fetchProjects(): void {
-  //   this.projectService.getAllProjects().subscribe({
-  //     next: (data: any) => {
-  //       this.projectData = data;
-  //       console.log('Projets chargés:', this.projectData);
-
-  //       // this.isLoading = false;
-  //     },
-  //     error: (error) => {
-  //       this.errorMessage = 'Erreur lors du chargement des projets';
-  //       // this.isLoading = false;
-  //       console.error("Détails de l'erreur:", error);
-  //     },
-  //     complete: () => {
-  //       console.log('Chargement des projets terminé');
-  //     },
-  //   });
-  // }
+  
   fetchProjects(): void {
     this.projectService.getAllProjects().subscribe({
       next: (projects) => {
@@ -54,13 +37,13 @@ export class DisplayComponent {
       },
     });
   }
-  getSkills(project: ProjectData): string[] {
-    return [
-      ...new Set(
-        project.project_roles_skills.flatMap((role) =>
-          role.skills.map((skill) => skill.name)
-        )
-      ),
-    ];
-  }
+  // getSkills(project: ProjectData): string[] {
+  //   return [
+  //     ...new Set(
+  //       project.project_roles_skills.flatMap((role) =>
+  //         role.skills.map((skill) => skill.name)
+  //       )
+  //     ),
+  //   ];
+  // }
 }

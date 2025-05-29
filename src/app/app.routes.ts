@@ -12,6 +12,7 @@ import { BaseLayoutComponent } from './layouts/base-layout/base-layout.component
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 
 import { guestGuard } from './guards/auth/guest.guard';
+import { ProjectDetailComponent } from './pages/project/project-detail/project-detail.component';
 
 export const routes: Routes = [
   {
@@ -67,4 +68,5 @@ export const routes: Routes = [
     path: 'projectsss',
     component: DisplayComponent,
   },
+  { path: 'project/:id', component: ProjectDetailComponent },
 ];
