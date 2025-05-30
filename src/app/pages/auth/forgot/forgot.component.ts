@@ -1,4 +1,6 @@
-import { AuthService } from '@/services/auth/auth.service';
+import { FieldErrors, ValidationServerResult } from '@/model/default';
+import { ErrorsValidatorPipe } from '@/pipe/errors-validator.pipe';
+import { AuthService } from '@/services/auth.service';
 import { LoaderComponent } from '@/shared/loader/loader.component';
 import { NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -13,15 +15,17 @@ import {
 
 @Component({
   selector: 'app-forgot',
-  imports: [NgIf, LoaderComponent, ReactiveFormsModule],
+  standalone: true,
+  imports: [NgIf, LoaderComponent, ReactiveFormsModule, ErrorsValidatorPipe],
   templateUrl: './forgot.component.html',
 })
 export class ForgotComponent {
-  isPending: boolean = false;
   forgotForm: FormGroup;
-  isSubmit: boolean = false;
+  isPending = false;
+  isSubmit = false;
   error: string | null = null;
-  isSend: boolean = false;
+  validatorMessage: ValidationServerResult | null = null;
+  isSend = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -32,40 +36,68 @@ export class ForgotComponent {
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.isSubmit = true;
+    this.error = null;
 
     if (this.forgotForm.invalid) {
       this.forgotForm.markAllAsTouched();
       return;
     }
 
-    const { email }: { email: string } = this.forgotForm.value;
+    const { email } = this.forgotForm.value;
 
     this.isPending = true;
 
-    this.authService.forgotPassword(email).then((observer) => {
-      observer.subscribe({
-        next: (response) => {
-          if (response.status) {
-            this.isSend = true;
-          } else {
-            this.error = response.status;
-          }
+    this.authService
+      .forgotPassword(email)
+      .then((observable) => {
+        observable.subscribe({
+          next: (response) => {
+            this.isPending = false;
+            this.isSubmit = false;
+            this.isSend = false;
 
-          this.isPending = false;
-          this.error = null;
-        },
-        error: (response: HttpErrorResponse) => {
-          this.isPending = false;
-          this.isSubmit = false;
+            const { status, message, errors } = response as {
+              status: number;
+              message: string;
+              errors?: FieldErrors;
+            };
 
-          this.error = (response.error as { message: string }).message;
-        },
-        complete: () => {
-          this.isPending = false;
-        },
+            if ([404, 422].includes(status)) {
+              if (errors) {
+                this.validatorMessage = {
+                  errors: errors,
+                  message: message,
+                };
+              } else {
+                this.error = message;
+              }
+              return;
+            }
+
+            if (status === 200) {
+              this.isSend = true;
+            } else {
+              this.error = 'Une erreur est survenue, merci de réessayer';
+            }
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            this.isPending = false;
+            this.isSubmit = false;
+
+            this.error =
+              errorResponse.error?.message || 'Erreur serveur inconnue';
+          },
+          complete: () => {
+            this.isPending = false;
+          },
+        });
+      })
+      .catch(() => {
+        this.isPending = false;
+        this.isSubmit = false;
+        this.error = 'Erreur de connexion au serveur';
       });
-    });
   }
 }
