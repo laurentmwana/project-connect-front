@@ -14,6 +14,7 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { guestGuard } from './guards/auth/guest.guard';
 import { ProjectDetailComponent } from './pages/project/project-detail/project-detail.component';
 import { protectedGuard } from './guards/protected.guard';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
   {
@@ -31,6 +32,7 @@ export const routes: Routes = [
         title: "Création d'un projet - ProjectConnect",
         canActivate: [protectedGuard],
       },
+      { path: 'profile', component: ProfileComponent},
     ],
   },
   {
