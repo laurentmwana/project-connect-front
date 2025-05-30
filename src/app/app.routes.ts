@@ -15,6 +15,7 @@ import { guestGuard } from './guards/auth/guest.guard';
 import { ProjectDetailComponent } from './pages/project/project-detail/project-detail.component';
 import { protectedGuard } from './guards/protected.guard';
 import { ProfileComponent } from './pages/profile/profile.component';
+
 export const routes: Routes = [
   {
     path: '',
