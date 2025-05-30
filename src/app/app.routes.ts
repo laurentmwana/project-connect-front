@@ -13,6 +13,8 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 
 import { guestGuard } from './guards/auth/guest.guard';
 import { ProjectDetailComponent } from './pages/project/project-detail/project-detail.component';
+import { InfoUserComponent } from './components/profile/info-user/info-user.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
   {
@@ -29,6 +31,7 @@ export const routes: Routes = [
         component: CreateComponent,
         title: "Création d'un projet - ProjectConnect",
       },
+      { path: 'profile', component: ProfileComponent },
     ],
   },
   {
