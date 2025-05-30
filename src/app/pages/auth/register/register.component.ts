@@ -1,7 +1,9 @@
-import { RegisterData } from '@/model/auth';
-import { AuthService } from '@/services/auth/auth.service';
+import { RegisterRequest } from '@/model/auth';
+import { FieldErrors, ValidationServerResult } from '@/model/default';
+import { ErrorsValidatorPipe } from '@/pipe/errors-validator.pipe';
+import { AuthService } from '@/services/auth.service';
 import { LoaderComponent } from '@/shared/loader/loader.component';
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import {
@@ -11,23 +13,23 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
-  imports: [NgIf, ReactiveFormsModule, LoaderComponent],
+  imports: [NgIf, ReactiveFormsModule, LoaderComponent, ErrorsValidatorPipe],
   templateUrl: './register.component.html',
 })
 export class RegisterComponent {
-  isPending: boolean = false;
+  isPending = false;
   registerForm: FormGroup;
-  isSubmit: boolean = false;
+  isSubmit = false;
+  isRegister = false;
   error: string | null = null;
+  validatorMessage: ValidationServerResult | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService,
-    private router: Router
+    private authService: AuthService
   ) {
     this.registerForm = this.formBuilder.group({
       name: new FormControl('', [Validators.required]),
@@ -44,6 +46,9 @@ export class RegisterComponent {
   }
 
   onSubmit(): void {
+    this.clearServerErrors();
+    this.error = null;
+    this.validatorMessage = null;
     this.isSubmit = true;
 
     if (this.registerForm.invalid) {
@@ -51,20 +56,41 @@ export class RegisterComponent {
       return;
     }
 
-    const data: RegisterData = this.registerForm.getRawValue();
+    const data: RegisterRequest = this.registerForm.getRawValue();
 
     this.isPending = true;
 
     this.authService.register(data).then((observer) => {
       observer.subscribe({
-        next: () => {
+        next: (response) => {
           this.isPending = false;
 
-          this.router.navigate(['/login'], {
-            queryParams: { 'new-register': 1 },
-          });
+          const { status, message, errors } = response as {
+            status: number;
+            message: string;
+            errors?: FieldErrors;
+          };
+
+          if ([403, 404, 422].includes(status)) {
+            if (errors) {
+              this.validatorMessage = {
+                errors: errors,
+                message: message,
+              };
+            } else {
+              this.error = message;
+            }
+          } else if (status === 201) {
+            this.isRegister = true;
+          } else {
+            this.error = 'Une erreur est survenue, merci de réessayer';
+          }
+          this.resetFieldPassword();
+
+          return;
         },
         error: (response: HttpErrorResponse) => {
+          this.isRegister = false;
           this.isPending = false;
           this.isSubmit = false;
           this.error =
@@ -73,8 +99,22 @@ export class RegisterComponent {
         },
         complete: () => {
           this.isPending = false;
+          this.error = null;
         },
       });
     });
+  }
+
+  private clearServerErrors(): void {
+    this.validatorMessage = null;
+  }
+
+  private resetFieldPassword(): void {
+    this.registerForm.patchValue({
+      password: '',
+      password_confirmation: '',
+    });
+    this.registerForm.get('password')?.markAsUntouched();
+    this.registerForm.get('password_confirmation')?.markAsUntouched();
   }
 }
