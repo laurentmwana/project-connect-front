@@ -55,7 +55,7 @@ export const routes: Routes = [
       },
 
       {
-        path: 'verify-email',
+        path: 'verify-email/:userId/:hash',
         component: VerifyEmailComponent,
         title: "Vérification de l'adresse e-mail - ProjectConnect",
       },
