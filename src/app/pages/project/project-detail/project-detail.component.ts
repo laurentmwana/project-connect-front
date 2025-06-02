@@ -3,11 +3,18 @@ import { ProjectService } from '@/services/project.service';
 import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+<<<<<<< HEAD
 import { NavbarComponent } from "../../../components/navbar/navbar.component";
 
 @Component({
   selector: 'app-project-detail',
   imports: [NgIf, NgFor, NavbarComponent],
+=======
+
+@Component({
+  selector: 'app-project-detail',
+  imports: [NgIf, NgFor],
+>>>>>>> e830c5b (Ajout et affichage de Chat)
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.css',
 })

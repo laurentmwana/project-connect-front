@@ -18,11 +18,14 @@ export class UserLocalService {
 
     return user;
   }
+<<<<<<< HEAD
    getToken(): string | null {
     const user = this.getUser();
     // recupération de token est stocké dans user.token
     return user ? user.token ?? null : null;
   }
+=======
+>>>>>>> e830c5b (Ajout et affichage de Chat)
 
   removeUser() {
     const user = this.getUser();
