@@ -1,3 +1,4 @@
+import { UserLocalService } from '@/services/user-local.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
@@ -14,7 +15,10 @@ export class ProjectService {
   // ✅ URL de base corrigée (pas de doublon 'projects')
   private baseUrl = 'http://127.0.0.1:8000/api/';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private userLocalService: UserLocalService
+  ) {}
 
   /**
    * Récupère la liste des projets
@@ -31,16 +35,28 @@ export class ProjectService {
    * Crée un nouveau projet
    */
   createProject(data: Project): Observable<any> {
-    return this.http.post(this.baseUrl + 'projects', data);
+    const user = this.userLocalService.getUser();
+
+    return this.http.post(this.baseUrl + 'projects', data, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${user?.token}`,
+      },
+    });
   }
 
   /**
    * Récupère un projet par ID
    */
-  getProjectById(id: string): Observable<ProjectData> {
-    return this.http.get<ProjectData>(this.baseUrl + 'projects/' + id);
+  // getProjectById(id: string): Observable<ProjectData> {
+  //   return this.http.get<ProjectData>(this.baseUrl + 'projects/' + id);
+  // }
+  getProjectById(id: string) {
+    return this.http.get<{ data: ProjectData }>(
+      `http://127.0.0.1:8000/api/projects/${id}`
+    );
   }
-
   /**
    * Récupère les domaines disponibles
    */

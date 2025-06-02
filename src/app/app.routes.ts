@@ -12,8 +12,9 @@ import { BaseLayoutComponent } from './layouts/base-layout/base-layout.component
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 
 import { guestGuard } from './guards/auth/guest.guard';
+import { ProjectDetailComponent } from './pages/project/project-detail/project-detail.component';
+import { protectedGuard } from './guards/protected.guard';
 import { MessageComponent } from './pages/message/message.component';
-
 export const routes: Routes = [
   {
     path: '',
@@ -28,8 +29,9 @@ export const routes: Routes = [
         path: 'project/create',
         component: CreateComponent,
         title: "Création d'un projet - ProjectConnect",
+        canActivate: [protectedGuard],
       },
-      {
+       {
         path: 'message',
         title: 'Messagerie',
         children: [
@@ -44,7 +46,6 @@ export const routes: Routes = [
           },
         ],
       },
-
     ],
   },
   {
@@ -73,7 +74,7 @@ export const routes: Routes = [
         title: 'Création du compte - ProjectConnect',
       },
       {
-        path: 'verify-email',
+        path: 'verify-email/:userId/:hash',
         component: VerifyEmailComponent,
         title: "Vérification de l'adresse e-mail - ProjectConnect",
       },
@@ -84,4 +85,5 @@ export const routes: Routes = [
     path: 'projectsss',
     component: DisplayComponent,
   },
+  { path: 'project/:id', component: ProjectDetailComponent },
 ];

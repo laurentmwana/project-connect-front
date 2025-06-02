@@ -7,6 +7,22 @@
 </div>
 
 <div
+  *ngIf="validatorMessage"
+  [innerHTML]="validatorMessage | errorsValidator"
+></div>
+
+<div
+  *ngIf="isRegister"
+  class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg dark:text-green-400 dark:border-green-800"
+  role="alert"
+>
+  🎉 Votre compte a été créé avec succès ! Un e-mail de vérification a été
+  envoyé à votre adresse. Veuillez cliquer sur le lien pour activer votre
+  compte.
+</div>
+
+<div
+  *ngIf="!isRegister"
   class="bg-card text-card-foreground flex flex-col gap-6 rounded-md border py-6 shadow-sm"
 >
   <div class="px-10 pt-8 pb-0 text-center">
@@ -19,6 +35,7 @@
 
   <div class="px-6">
     <form (ngSubmit)="onSubmit()" class="space-y-8" [formGroup]="registerForm">
+      <!-- Nom -->
       <div class="space-y-2">
         <label class="label-form" for="name">Nom</label>
         <input
@@ -30,13 +47,26 @@
           formControlName="name"
         />
         <div
-          *ngIf="isSubmit && registerForm.get('name')?.errors?.['required']"
+          *ngIf="
+            (registerForm.get('name')?.touched || isSubmit) &&
+            registerForm.get('name')?.hasError('required')
+          "
           class="text-destructive text-xs mt-1"
         >
           Le nom est requis.
         </div>
+        <div
+          *ngIf="
+            (registerForm.get('name')?.touched || isSubmit) &&
+            registerForm.get('name')?.errors?.['serverError']
+          "
+          class="text-destructive text-xs mt-1"
+        >
+          {{ registerForm.get('name')?.errors?.['serverError'] }}
+        </div>
       </div>
 
+      <!-- Email -->
       <div class="space-y-2">
         <label class="label-form" for="email">Adresse e-mail</label>
         <input
@@ -48,19 +78,35 @@
           formControlName="email"
         />
         <div
-          *ngIf="isSubmit && registerForm.get('email')?.errors?.['required']"
+          *ngIf="
+            (registerForm.get('email')?.touched || isSubmit) &&
+            registerForm.get('email')?.hasError('required')
+          "
           class="text-destructive text-xs mt-1"
         >
           L'adresse e-mail est requise.
         </div>
         <div
-          *ngIf="isSubmit && registerForm.get('email')?.errors?.['email']"
+          *ngIf="
+            (registerForm.get('email')?.touched || isSubmit) &&
+            registerForm.get('email')?.hasError('email')
+          "
           class="text-destructive text-xs mt-1"
         >
           Veuillez entrer une adresse e-mail valide.
         </div>
+        <div
+          *ngIf="
+            (registerForm.get('email')?.touched || isSubmit) &&
+            registerForm.get('email')?.errors?.['serverError']
+          "
+          class="text-destructive text-xs mt-1"
+        >
+          {{ registerForm.get('email')?.errors?.['serverError'] }}
+        </div>
       </div>
 
+      <!-- Mot de passe -->
       <div class="space-y-2">
         <label class="label-form" for="password">Mot de passe</label>
         <input
@@ -72,19 +118,35 @@
           formControlName="password"
         />
         <div
-          *ngIf="isSubmit && registerForm.get('password')?.errors?.['required']"
+          *ngIf="
+            (registerForm.get('password')?.touched || isSubmit) &&
+            registerForm.get('password')?.hasError('required')
+          "
           class="text-destructive text-xs mt-1"
         >
           Le mot de passe est requis.
         </div>
         <div
-          *ngIf="isSubmit && registerForm.get('password')?.errors?.['minlength']"
+          *ngIf="
+            (registerForm.get('password')?.touched || isSubmit) &&
+            registerForm.get('password')?.hasError('minlength')
+          "
           class="text-destructive text-xs mt-1"
         >
           Le mot de passe doit contenir au moins 8 caractères.
         </div>
+        <div
+          *ngIf="
+            (registerForm.get('password')?.touched || isSubmit) &&
+            registerForm.get('password')?.errors?.['serverError']
+          "
+          class="text-destructive text-xs mt-1"
+        >
+          {{ registerForm.get('password')?.errors?.['serverError'] }}
+        </div>
       </div>
 
+      <!-- Confirmation mot de passe -->
       <div class="space-y-2">
         <label class="label-form" for="password_confirmation"
           >Confirmer le mot de passe</label
@@ -98,22 +160,37 @@
           formControlName="password_confirmation"
         />
         <div
-          *ngIf="isSubmit && registerForm.get('password_confirmation')?.errors?.['required']"
+          *ngIf="
+            (registerForm.get('password_confirmation')?.touched || isSubmit) &&
+            registerForm.get('password_confirmation')?.hasError('required')
+          "
           class="text-destructive text-xs mt-1"
         >
           La confirmation du mot de passe est requise.
         </div>
         <div
-          *ngIf="isSubmit && registerForm.get('password_confirmation')?.errors?.['minlength']"
+          *ngIf="
+            (registerForm.get('password_confirmation')?.touched || isSubmit) &&
+            registerForm.get('password_confirmation')?.hasError('minlength')
+          "
           class="text-destructive text-xs mt-1"
         >
           La confirmation du mot de passe doit contenir au moins 8 caractères.
         </div>
+        <div
+          *ngIf="
+            (registerForm.get('password_confirmation')?.touched || isSubmit) &&
+            registerForm.get('password_confirmation')?.errors?.['serverError']
+          "
+          class="text-destructive text-xs mt-1"
+        >
+          {{ registerForm.get('password_confirmation')?.errors?.['serverError'] }}
+        </div>
       </div>
 
-      <button type="submit" class="button-primary-sm">
+      <button type="submit" class="button-primary-sm" [disabled]="isPending">
         <span *ngIf="!isPending">S'inscrire</span>
-        <app-loader *ngIf="isPending" />
+        <app-loader *ngIf="isPending"></app-loader>
       </button>
     </form>
   </div>
@@ -121,7 +198,7 @@
   <div class="px-10 py-8">
     <div class="text-muted-foreground text-center text-sm mt-3">
       Vous avez déjà un compte ?
-      <a href="/login" class="text-link" tabindex="5">Retour à la connexion</a>
+      <a href="/login" class="text-link" tabindex="5"> se connecter </a>
     </div>
   </div>
 </div>

@@ -7,6 +7,11 @@
 </div>
 
 <div
+  *ngIf="validatorMessage"
+  [innerHTML]="validatorMessage | errorsValidator"
+></div>
+
+<div
   class="bg-card text-card-foreground flex flex-col gap-6 rounded-md border py-6 shadow-sm"
 >
   <div class="px-10 pt-8 pb-0 text-center">
@@ -49,6 +54,9 @@
         >
           Cette adresse e-mail n'est pas valide
         </div>
+        <div *ngIf="forgotForm.get('email')?.errors?.['serverError']">
+          {{ forgotForm.get('email')?.errors?.['serverError'] }}
+        </div>
       </div>
 
       <button type="submit" class="button-primary-sm">
@@ -60,8 +68,7 @@
 
   <div class="px-10 py-8">
     <div class="text-muted-foreground text-center text-sm mt-3">
-      Ou, retour ?
-      <a href="/login" class="text-link" tabindex="5"> à la connexion </a>
+      <a href="/login" class="text-link" tabindex="5"> Se connecter </a>
     </div>
   </div>
 </div>
