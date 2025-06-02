@@ -1,27 +1,17 @@
+import { User } from "./project"
+
+
 export interface Message {
   id: number
-  senderId: string
-  senderName: string
-  senderAvatar: string
-  content: string
-  timestamp: string
-  isOwn: boolean
-  attachments?: Attachment[]
-}
-
-export interface Attachment {
-  type: "file" | "image" | "link"
-  name: string
-  size?: string
-  url?: string
-}
-
-export interface Conversation {
-  id: string
-  name: string
-  initials: string
+  chat_id: number
+  sender_id: number
   message: string
-  time: string
-  unread?: boolean
-  isGroup?: boolean
+  created_at: string
+  updated_at: string
+  sender: User
+}
+
+export enum ChatType {
+  Private = "private",
+  Group = "group",
 }
