@@ -146,7 +146,12 @@
         <h3 class="font-medium">{{roleSkill.role.name}}</h3>
         <p class="text-sm text-muted-foreground mt-2">{{roleSkill.description}}</p>
 
-       
+        <div class="flex flex-wrap gap-2">
+            <span *ngFor="let skill of roleSkill.skills"
+                class="bg-orange-100 dark:bg-orange-950/30 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full mt-6">
+                {{ skill.name }}
+            </span>
+        </div>
         <button
             class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 mt-4 bg-orange-500 hover:bg-orange-600">Apply
             for this Role</button>
