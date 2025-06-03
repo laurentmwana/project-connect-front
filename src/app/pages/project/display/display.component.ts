@@ -6,15 +6,18 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-display',
-  imports: [NgIf, NgFor,RouterLink],
+  imports: [NgIf, NgFor, RouterLink],
   templateUrl: './display.component.html',
   styleUrl: './display.component.css',
 })
 export class DisplayComponent {
   projectId!: string;
-  // projectData: Project[] = [];
-  projectData: ProjectData[] = [];
-  // isLoading = true;
+ 
+  pprojects: ProjectData[] = [];
+  currentPage = 1;
+  lastPage = 1;
+
+ 
   errorMessage = '';
 
   constructor(
@@ -26,24 +29,28 @@ export class DisplayComponent {
     this.fetchProjects();
   }
 
-  
-  fetchProjects(): void {
-    this.projectService.getAllProjects().subscribe({
-      next: (projects) => {
-        this.projectData = projects; // Pas de slice(), on garde tout
+  fetchProjects(page: number = 1): void {
+    this.projectService.getAllProjects(page).subscribe({
+      next: (response) => {
+        this.pprojects = response.data;
+        this.currentPage = response.meta.current_page;
+        this.lastPage = response.meta.last_page;
       },
       error: () => {
-        this.errorMessage = 'Erreur lors du chargement des projets';
+        console.error('Erreur de chargement des projets');
       },
     });
   }
-  // getSkills(project: ProjectData): string[] {
-  //   return [
-  //     ...new Set(
-  //       project.project_roles_skills.flatMap((role) =>
-  //         role.skills.map((skill) => skill.name)
-  //       )
-  //     ),
-  //   ];
-  // }
+
+  goToNextPage(): void {
+    if (this.currentPage < this.lastPage) {
+      this.fetchProjects(this.currentPage + 1);
+    }
+  }
+
+  goToPreviousPage(): void {
+    if (this.currentPage > 1) {
+      this.fetchProjects(this.currentPage - 1);
+    }
+  }
 }

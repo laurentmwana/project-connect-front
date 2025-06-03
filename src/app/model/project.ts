@@ -80,3 +80,15 @@ export interface ProjectData {
   domains: Domain[];
   project_roles_skills: ProjectRoleSkill[];
 }
+
+export interface PaginatedProjects {
+  data: ProjectData[];
+  meta: {
+    current_page: number;
+    last_page: number;
+  };
+  links: {
+    next: string | null;
+    prev: string | null;
+  };
+}

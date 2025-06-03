@@ -3,10 +3,11 @@ import { ProjectService } from '@/services/project.service';
 import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NavbarComponent } from "../../../components/navbar/navbar.component";
 
 @Component({
   selector: 'app-project-detail',
-  imports: [NgIf, NgFor],
+  imports: [NgIf, NgFor, NavbarComponent],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.css',
 })
