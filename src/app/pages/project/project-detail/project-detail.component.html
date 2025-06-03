@@ -125,6 +125,36 @@
             </div>
         </div>
     </div>
+<!-- <div class="p-6 pt-6 space-y-6">
+    <div class="p-4 border rounded-lg">
+        <h3 class="font-medium">UX/UI Designer</h3>
+        
+        <p class="text-sm text-muted-foreground mt-2">{{project.description}}
+        </p>
+       
+        
+        <button
+            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 mt-4 bg-orange-500 hover:bg-orange-600">Apply
+            for this Role</button>
+    </div>
+   
+</div> -->
+<div class="rounded-lg border bg-card text-card-foreground shadow-sm mt-6">
+<div class="p-6 pt-6 space-y-6">
+    <div *ngFor="let roleSkill of project.project_roles_skills">
+        <div class="p-4 border rounded-lg">
+        <h3 class="font-medium">{{roleSkill.role.name}}</h3>
+        <p class="text-sm text-muted-foreground mt-2">{{roleSkill.description}}</p>
+
+       
+        <button
+            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 mt-4 bg-orange-500 hover:bg-orange-600">Apply
+            for this Role</button>
+        </div>
+    </div>
+</div>
+</div>
+
     <ng-template #noData>
         <p>Aucun projet à afficher.</p>
     </ng-template>
