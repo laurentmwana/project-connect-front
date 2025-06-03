@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 
-import { Project, ProjectData } from '../model/project';
+import { PaginatedProjects, Project, ProjectData } from '../model/project';
 import { Domain } from '@/model/domain';
 import { Role } from '@/model/role';
 import { Skill } from '@/model/skill';
@@ -16,15 +16,11 @@ export class ProjectService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Récupère la liste des projets
-   */
-  getAllProjects(): Observable<ProjectData[]> {
-    return this.http
-      .get<{ data: ProjectData[] }>(this.baseUrl + 'projects')
-      .pipe(
-        map((response) => response.data) // <- extrait le tableau depuis `data`
-      );
+
+  getAllProjects(page: number = 1): Observable<PaginatedProjects> {
+    return this.http.get<PaginatedProjects>(
+      `${this.baseUrl}projects?page=${page}`
+    );
   }
 
   /**
@@ -45,6 +41,7 @@ export class ProjectService {
       `http://127.0.0.1:8000/api/projects/${id}`
     );
   }
+
   /**
    * Récupère les domaines disponibles
    */
