@@ -1,20 +1,14 @@
 import { ProjectData } from '@/model/project';
 import { ProjectService } from '@/services/project.service';
-import { NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-<<<<<<< HEAD
-import { NavbarComponent } from "../../../components/navbar/navbar.component";
+import { NavbarComponent } from '../../../components/navbar/navbar.component';
+import { CandidacyService } from '@/services/candidacy.service';
 
 @Component({
   selector: 'app-project-detail',
-  imports: [NgIf, NgFor, NavbarComponent],
-=======
-
-@Component({
-  selector: 'app-project-detail',
-  imports: [NgIf, NgFor],
->>>>>>> e830c5b (Ajout et affichage de Chat)
+  imports: [NgIf, NgFor, NavbarComponent, NgClass],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.css',
 })
@@ -23,10 +17,15 @@ export class ProjectDetailComponent {
   project!: ProjectData;
   errorMessage = '';
 
+  toasts: { message: string; type: 'success' | 'error' }[] = [];
+
   constructor(
     private route: ActivatedRoute,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private candidacyService: CandidacyService
   ) {}
+
+  message: string = '';
 
   ngOnInit(): void {
     this.projectId = this.route.snapshot.paramMap.get('id')!;
@@ -37,5 +36,27 @@ export class ProjectDetailComponent {
       },
       error: () => (this.errorMessage = 'Erreur lors du chargement du projet'),
     });
+  }
+
+  onApplyRole(id: number) {
+    this.candidacyService.applyForRole(id).subscribe({
+      next: () => {
+        this.showToast('Candidature soumise avec succès.', 'success');
+      },
+      error: (err) => {
+        let error = err.error;
+
+        this.showToast(`${error.message}`, 'error');
+      },
+    });
+  }
+
+  showToast(message: string, type: 'success' | 'error') {
+    const toast = { message, type };
+    this.toasts.push(toast);
+
+    setTimeout(() => {
+      this.toasts = this.toasts.filter((t) => t !== toast);
+    }, 3000);
   }
 }
