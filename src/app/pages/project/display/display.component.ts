@@ -29,18 +29,27 @@ export class DisplayComponent {
     this.fetchProjects();
   }
 
+<<<<<<< HEAD
   fetchProjects(page: number = 1): void {
     this.projectService.getAllProjects(page).subscribe({
       next: (response) => {
         this.pprojects = response.data;
         this.currentPage = response.meta.current_page;
         this.lastPage = response.meta.last_page;
+=======
+  
+  fetchProjects(): void {
+    this.projectService.getAllProjects().subscribe({
+      next: (projects) => {
+        this.projectData = projects; // Pas de slice(), on garde tout
+>>>>>>> e830c5b (Ajout et affichage de Chat)
       },
       error: () => {
         console.error('Erreur de chargement des projets');
       },
     });
   }
+<<<<<<< HEAD
 
   goToNextPage(): void {
     if (this.currentPage < this.lastPage) {
@@ -53,4 +62,15 @@ export class DisplayComponent {
       this.fetchProjects(this.currentPage - 1);
     }
   }
+=======
+  // getSkills(project: ProjectData): string[] {
+  //   return [
+  //     ...new Set(
+  //       project.project_roles_skills.flatMap((role) =>
+  //         role.skills.map((skill) => skill.name)
+  //       )
+  //     ),
+  //   ];
+  // }
+>>>>>>> e830c5b (Ajout et affichage de Chat)
 }
