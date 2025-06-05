@@ -53,7 +53,6 @@ export class ProjectService {
       `http://127.0.0.1:8000/api/projects/${id}`
     );
   }
-
   /**
    * Récupère les domaines disponibles
    */

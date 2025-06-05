@@ -18,6 +18,11 @@ export class UserLocalService {
 
     return user;
   }
+   getToken(): string | null {
+    const user = this.getUser();
+    // recupération de token est stocké dans user.token
+    return user ? user.token ?? null : null;
+  }
 
   removeUser() {
     const user = this.getUser();
