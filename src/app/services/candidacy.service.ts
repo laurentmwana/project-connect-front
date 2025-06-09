@@ -33,7 +33,6 @@ export class CandidacyService {
     );
   }
 
-
   getCandidacies(
     projectId: number,
     filters?: {
@@ -62,7 +61,8 @@ export class CandidacyService {
     }
 
     if (filters?.isValidated !== undefined) {
-      params = params.append('is_validated', filters.isValidated ? '1' : '0');
+      const isValidatedNumber = filters.isValidated ? 1 : 0;
+      params = params.append('is_validated', isValidatedNumber.toString());
     }
 
     if (filters?.page) {

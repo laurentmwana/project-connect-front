@@ -120,7 +120,7 @@
                 ></path>
                 <circle cx="12" cy="10" r="3"></circle>
               </svg>
-              <p class="font-medium">Remote</p>
+              <p class="font-medium">{{ project.location }}</p>
             </div>
           </div>
         </div>
@@ -286,9 +286,9 @@
             [(ngModel)]="validatedFilter"
             class="mt-1 block w-full text-xs rounded-md border border-input bg-background text-foreground shadow-sm focus:ring-primary focus:border-primary"
           >
-            <option [value]="-1">Tous</option>
-            <option [value]="1">Validées</option>
-            <option [value]="0">Non validées</option>
+            <option [ngValue]="-1">Tous</option>
+            <option [ngValue]="1">Validées</option>
+            <option [ngValue]="0">Non validées</option>
           </select>
         </div>
         <div>
