@@ -12,12 +12,11 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 })
 export class DisplayComponent {
   projectId!: string;
- 
+
   pprojects: ProjectData[] = [];
   currentPage = 1;
   lastPage = 1;
 
- 
   errorMessage = '';
 
   constructor(

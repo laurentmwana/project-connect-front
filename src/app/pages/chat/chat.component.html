@@ -1,0 +1,132 @@
+<div class="chat-container" *ngIf="selectedChat; else noChatSelected">
+  <!-- Chat Header -->
+  <div class="chat-header border-b p-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="message-avatar">
+          {{ getChatInitials(selectedChat) }}
+        </div>
+        <div>
+          <h3 class="font-medium">{{ getChatDisplayName(selectedChat) }}</h3>
+          <p class="text-xs text-muted-foreground">
+            {{ selectedChat.type === 'group' ? selectedChat.users.length + ' participants' : 'En ligne' }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Header Actions -->
+      <div class="flex items-center gap-2">
+        <button class="icon-button" aria-label="Appeler">
+          <svg ...> <!-- Phone icon --></svg>
+        </button>
+        <button class="icon-button" aria-label="Info">
+          <svg ...> <!-- Info icon --></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Messages -->
+  <div #messagesContainer class="chat-messages overflow-y-auto px-4 py-2">
+    <!-- Loading -->
+    <div *ngIf="isLoadingMessages" class="flex justify-center py-6">
+      <div class="animate-spin h-8 w-8 rounded-full border-b-2 border-primary"></div>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error && !isLoadingMessages" class="empty-state text-center">
+      <p class="mb-2 text-sm text-destructive">{{ error }}</p>
+      <button (click)="loadMessages()" class="btn-primary">Réessayer</button>
+    </div>
+
+    <!-- Messages Loaded -->
+    <div *ngIf="!isLoadingMessages && !error">
+      <div *ngIf="messages.length > 0; else emptyState">
+        <div *ngFor="let messageGroup of groupedMessages; trackBy: trackByMessageGroup" [ngClass]="{'own': messageGroup.isOwn, 'other': !messageGroup.isOwn}" class="mb-4">
+          
+          <!-- Sender info (only for group chats and other users) -->
+          <div *ngIf="!messageGroup.isOwn && selectedChat.type === 'group'" class="message-info mb-1 text-xs text-muted-foreground flex items-center gap-2">
+            <div class="message-avatar">{{ getUserInitials(messageGroup.sender) }}</div>
+            <span class="font-medium">{{ messageGroup.sender.name }}</span>
+            <span class="ml-auto">{{ formatTime(messageGroup.messages[0].created_at) }}</span>
+          </div>
+
+          <!-- Messages bubbles -->
+          <div *ngFor="let message of messageGroup.messages; trackBy: trackByMessage" class="mb-1">
+            <div [ngClass]="{'message-own': messageGroup.isOwn, 'message-other': !messageGroup.isOwn}" class="message-bubble">
+              <p>{{ message.message }}</p>
+            </div>
+          </div>
+
+          <!-- Time for own messages -->
+          <div *ngIf="messageGroup.isOwn" class="text-xs text-muted-foreground text-end pr-2">
+            {{ formatTime(messageGroup.messages[0].created_at) }}
+          </div>
+        </div>
+      </div>
+
+      <!-- No messages -->
+      <ng-template #emptyState>
+        <div class="empty-state text-center py-6">
+          <svg ... class="mx-auto mb-4 opacity-50 w-12 h-12">...</svg>
+          <p>Aucun message dans cette conversation</p>
+          <p class="text-sm mt-1 text-muted-foreground">Envoyez le premier message pour commencer la discussion</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Typing -->
+    <div *ngIf="isTyping" class="typing-indicator flex items-center gap-2 mt-4">
+      <div class="message-avatar">{{ typingUser }}</div>
+      <span class="text-sm text-muted-foreground">{{ typingUserName }} est en train d'écrire</span>
+      <div class="typing-dots flex gap-1">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Input -->
+  <div class="chat-input border-t p-4">
+    <div class="flex items-end gap-2">
+      <textarea
+        [(ngModel)]="newMessage"
+        (keydown)="onKeyDown($event)"
+        (input)="onTyping()"
+        [disabled]="isSending"
+        placeholder="Tapez votre message..."
+        #messageInput
+        class="message-textarea flex-1 resize-none rounded p-2 border text-sm"
+      ></textarea>
+
+      <div class="flex items-center gap-2">
+        <!-- Icons (attachment, emoji, etc.) -->
+        <button class="icon-button" aria-label="Ajouter un fichier"><svg ...></svg></button>
+        <button class="icon-button" aria-label="Emoji"><svg ...></svg></button>
+
+        <!-- Send -->
+        <button
+          (click)="sendMessage()"
+          [disabled]="!canSendMessage()"
+          class="send-button"
+          aria-label="Envoyer"
+        >
+          <svg *ngIf="!isSending" ...>...</svg>
+          <svg *ngIf="isSending" class="animate-spin" ...>...</svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- No Chat Selected -->
+<ng-template #noChatSelected>
+  <div class="chat-container flex items-center justify-center">
+    <div class="empty-state text-center">
+      <svg ... class="mx-auto mb-4 opacity-50 w-16 h-16">...</svg>
+      <p class="text-muted-foreground">Aucune conversation sélectionnée</p>
+      <p class="text-sm mt-1">Choisissez un chat dans la liste pour commencer</p>
+    </div>
+  </div>
+</ng-template>

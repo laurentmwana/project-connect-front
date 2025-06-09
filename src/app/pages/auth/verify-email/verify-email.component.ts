@@ -1,9 +1,11 @@
+import { UserLocalService } from '@/services/user-local.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AuthService } from '@/services/auth/auth.service';
+import { AuthService } from '@/services/auth.service';
 import { LoaderComponent } from '@/shared/loader/loader.component';
 import { NgIf } from '@angular/common';
+import { AuthenticatedUser } from '@/model/auth';
 
 @Component({
   selector: 'app-verify-email',
@@ -18,37 +20,57 @@ export class VerifyEmailComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
-    private ActivatedRoute: ActivatedRoute,
+    private userLocalService: UserLocalService,
+    private activatedRoute: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    const callback = this.ActivatedRoute.snapshot.queryParamMap.get('callback');
+    const userId = parseInt(
+      this.activatedRoute.snapshot.paramMap.get('userId') ?? '0',
+      10
+    );
+    const hashToken = this.activatedRoute.snapshot.paramMap.get('hash');
 
-    if (!callback) {
+    if (userId <= 0) {
       this.error = 'Le lien est incomplet ou invalide.';
       return;
     }
 
-    this.verifyEmail(callback);
+    if (!hashToken) {
+      this.error = 'Le lien est incomplet ou invalide.';
+      return;
+    }
+
+    this.verifyEmail(userId, hashToken);
   }
 
-  private verifyEmail(url: string): void {
+  private verifyEmail(userId: number, hashToken: string): void {
     this.isPending = true;
     this.error = null;
 
     this.auth
-      .verifyEmail(url)
-
+      .verifyEmail(userId, hashToken)
       .then((observer) => {
         observer.subscribe({
           next: (response) => {
             this.isPending = false;
 
-            if (response.status === 'verification-link-success') {
+            const { status, message, data } = response as {
+              status: number;
+              message: string;
+              data?: AuthenticatedUser;
+            };
+
+            if (status === 404) {
+              this.error = message;
+              return;
+            }
+
+            if (data) {
+              this.userLocalService.createUser(data);
               this.isSuccess = true;
-            } else if (response.status === 'verification-link-already') {
-              this.router.navigate(['login']);
+              this.router.navigate(['/']);
             } else {
               this.error = 'Une erreur est survenue, merci de réessayer';
             }
@@ -67,6 +89,10 @@ export class VerifyEmailComponent implements OnInit {
             this.isPending = false;
           },
         });
+      })
+      .catch(() => {
+        this.isPending = false;
+        this.error = 'Erreur de connexion au serveur. Veuillez réessayer.';
       });
   }
 }

@@ -1,8 +1,9 @@
-export interface LoginUser {
+export interface LoginCredentials {
   email: string;
   password: string;
 }
-export interface Authenticate {
+
+export interface AuthenticatedUser {
   id: number;
   name: string;
   email: string;
@@ -10,28 +11,28 @@ export interface Authenticate {
   token: string;
 }
 
-export interface ForgotPasswordUser {
+export interface ForgotPasswordResponse {
   status: string;
 }
 
-export interface PasswordResetUser {
+export interface ResetPasswordResponse {
   status: string;
 }
 
-export interface PasswordResetData {
+export interface ResetPasswordRequest {
   email: string;
   password: string;
   password_confirmation: string;
   token: string;
 }
 
-export interface RegisterData {
+export interface RegisterRequest {
   name: string;
   email: string;
   password: string;
   password_confirmation: string;
 }
 
-export interface VerifyEmailData {
+export interface EmailVerificationStatus {
   status: 'verification-link-success' | 'verification-link-already';
 }

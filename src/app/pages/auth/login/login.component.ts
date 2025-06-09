@@ -1,5 +1,5 @@
-import { AuthService } from '@/services/auth/auth.service';
-import { LoginUser } from '@/model/auth';
+import { UserLocalService } from '@/services/user-local.service';
+import { AuthService } from '@/services/auth.service';
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -12,87 +12,138 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoaderComponent } from '@/shared/loader/loader.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AuthenticatedUser, LoginCredentials } from '@/model/auth';
+import { FieldErrors, ValidationServerResult } from '@/model/default';
+import { ErrorsValidatorPipe } from '@/pipe/errors-validator.pipe';
 
 @Component({
   selector: 'app-login',
-  imports: [NgIf, ReactiveFormsModule, LoaderComponent],
+  standalone: true,
+  imports: [NgIf, ReactiveFormsModule, LoaderComponent, ErrorsValidatorPipe],
   templateUrl: './login.component.html',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
 
-  isPending: boolean = false;
-
-  isSubmit: boolean = false;
-
+  isPending = false;
+  isSubmit = false;
   error: string | null = null;
-
+  validatorMessage: ValidationServerResult | null = null;
+  isLogout = false;
   isResetPassword = false;
-  isRegister = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private userLocalService: UserLocalService
   ) {
     this.loginForm = this.formBuilder.group({
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required]),
+      email: new FormControl('', [
+        Validators.required,
+        Validators.email,
+        Validators.maxLength(255),
+      ]),
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(8),
+      ]),
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     const queryParams = this.activatedRoute.snapshot.queryParamMap;
 
     this.isResetPassword = queryParams.has('reset-password');
-    this.isRegister = queryParams.has('new-register');
+    this.isLogout = queryParams.has('is-logout');
 
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: {
         'reset-password': null,
         'new-register': null,
+        'is-logout': null,
       },
       queryParamsHandling: 'merge',
       replaceUrl: true,
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.isSubmit = true;
-    this.isRegister = false;
     this.isResetPassword = false;
+    this.isLogout = false;
+    this.error = null;
 
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
     }
 
-    const credentials: LoginUser = this.loginForm.getRawValue();
+    const credentials: LoginCredentials = this.loginForm.getRawValue();
 
     this.isPending = true;
 
-    this.authService.authenticate(credentials).then((observer) => {
-      observer.subscribe({
-        next: (response) => {
-          if (response.token) {
-            localStorage.setItem('user', JSON.stringify(response));
-            this.router.navigate(['/']);
-          }
-        },
-        error: (response: HttpErrorResponse) => {
-          this.isPending = false;
-          this.isSubmit = false;
+    this.authService
+      .authenticate(credentials)
+      .then((observable) => {
+        observable.subscribe({
+          next: (response) => {
+            this.isPending = false;
+            this.isSubmit = false;
 
-          this.error = (response.error as { message: string }).message;
+            const { status, message, data, errors } = response as {
+              status: number;
+              message: string;
+              data?: AuthenticatedUser;
+              errors?: FieldErrors;
+            };
 
-          this.loginForm.patchValue({ password: '' });
-        },
-        complete: () => {
-          this.isPending = false;
-        },
+            if ([403, 404, 422].includes(status)) {
+              if (errors) {
+                this.validatorMessage = {
+                  message: message,
+                  errors: errors,
+                };
+              } else {
+                this.error = message;
+              }
+
+              this.resetFieldPassword();
+              return;
+            }
+
+            if (data) {
+              this.userLocalService.createUser(data);
+              this.router.navigate(['/']);
+            } else {
+              this.error = 'Une erreur est survenue, merci de réessayer';
+              this.resetFieldPassword();
+            }
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            this.isPending = false;
+            this.isSubmit = false;
+
+            this.error =
+              errorResponse.error?.message || 'Erreur serveur inconnue';
+            this.resetFieldPassword();
+          },
+          complete: () => {
+            this.isPending = false;
+          },
+        });
+      })
+      .catch(() => {
+        this.isPending = false;
+        this.isSubmit = false;
+        this.error = 'Erreur de connexion au serveur';
+        this.resetFieldPassword();
       });
-    });
+  }
+
+  private resetFieldPassword(): void {
+    this.loginForm.patchValue({ password: '' });
   }
 }

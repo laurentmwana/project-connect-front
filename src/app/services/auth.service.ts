@@ -1,11 +1,10 @@
-import { VerifyEmailData } from '@/model/auth';
 import {
-  Authenticate,
-  ForgotPasswordUser,
-  LoginUser,
-  PasswordResetData,
-  PasswordResetUser,
-  RegisterData,
+  AuthenticatedUser,
+  ForgotPasswordResponse,
+  LoginCredentials,
+  RegisterRequest,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
 } from '@/model/auth';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -17,10 +16,10 @@ import { Environment } from 'environments/environment';
 export class AuthService {
   constructor(private http: HttpClient) {}
 
-  async authenticate(data: LoginUser) {
+  async authenticate(data: LoginCredentials) {
     const url = `${Environment.apiUrl}/login`;
 
-    return this.http.post<Authenticate>(url, data, {
+    return this.http.post(url, data, {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
@@ -31,7 +30,7 @@ export class AuthService {
   async forgotPassword(email: string) {
     const url = `${Environment.apiUrl}/forgot-password`;
 
-    return this.http.post<ForgotPasswordUser>(
+    return this.http.post(
       url,
       { email },
       {
@@ -43,10 +42,10 @@ export class AuthService {
     );
   }
 
-  async passwordReset(data: PasswordResetData) {
+  async passwordReset(data: ResetPasswordRequest) {
     const url = `${Environment.apiUrl}/reset-password`;
 
-    return this.http.post<PasswordResetUser>(url, data, {
+    return this.http.post(url, data, {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
@@ -54,10 +53,10 @@ export class AuthService {
     });
   }
 
-  async register(data: RegisterData) {
+  async register(data: RegisterRequest) {
     const url = `${Environment.apiUrl}/register`;
 
-    return this.http.post<PasswordResetUser>(url, data, {
+    return this.http.post(url, data, {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
@@ -65,30 +64,13 @@ export class AuthService {
     });
   }
 
-  async verifyEmail(callbackUrl: string) {
-    return this.http.post<VerifyEmailData>(callbackUrl, null, {
+  async verifyEmail(userId: number, hashToken: string) {
+    const url = `${Environment.apiUrl}/verify-email/${userId}/${hashToken}`;
+
+    return this.http.post(url, null, {
       headers: {
         Accept: 'application/json',
       },
     });
-  }
-
-  logoutUser(): boolean {
-    const user = this.getUser();
-
-    if (user) {
-      localStorage.removeItem('user');
-    }
-    return true;
-  }
-
-  getUser(): Authenticate | null {
-    const data = localStorage.getItem('user');
-
-    if (!data) return null;
-
-    const user: Authenticate = JSON.parse(data);
-
-    return user;
   }
 }
