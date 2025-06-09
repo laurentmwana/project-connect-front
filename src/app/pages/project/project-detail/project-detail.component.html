@@ -1,148 +1,214 @@
-<<<<<<< HEAD
 <app-navbar></app-navbar>
 
-=======
->>>>>>> e830c5b (Ajout et affichage de Chat)
 <div class="container max-w-4xl mx-auto p-8">
- <div class="fixed top-4 right-4 space-y-2 z-50">
-  <div *ngFor="let toast of toasts"
-       [ngClass]="{
-         'bg-green-500 text-white': toast.type === 'success',
-         'bg-red-600 text-white': toast.type === 'error'
-       }"
-       class="px-4 py-2 rounded shadow-md animate-fade-in-out">
-    {{ toast.message }}
-  </div>
-</div>
-
-    <!-- <div class="flex justify-between items-center mb-2"> -->
-        
-        <div class="flex items-center mb-6"><a class="flex items-center text-muted-foreground hover:text-foreground mr-4"
-                href="/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-arrow-left h-4 w-4 mr-2">
-                    <path d="m12 19-7-7 7-7"></path>
-                    <path d="M19 12H5"></path>
-                </svg>Back</a>
-            <h1 class="text-2xl font-bold">{{ project.title }}</h1>
-            <div
-                class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-primary/80 ml-4 bg-green-100 text-green-800 dark:bg-green-950/30 dark:text-green-400 border-green-200 dark:border-green-800">
-                Recruiting</div>
-        </div>
-    <!-- </div> -->
-
-    <div>
-        <div *ngIf="project" class="space-y-4 pt-4">
-
-
-            <div  class="p-6 border border-gray-300 rounded-lg hover:shadow-lg ">
-
-
-                <h2 class="text-2xl font-semibold leading-none tracking-tigh">Project Overview</h2>
-                <h4 class="font-medium mb-2 pt-5">Description</h4>
-                <p class="text-muted-foreground pt-3">{{ project.description }}</p>
-                
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-5">
-                <div class="space-y-1">
-                    <p class="text-xs text-muted-foreground">Duration</p>
-                    <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="lucide lucide-clock h-4 w-4 mr-2 text-muted-foreground">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12 6 12 12 16 14"></polyline>
-                        </svg>
-                        <p class="font-medium">{{ project.date_end }}</p>
-                    </div>
-                </div>
-                <div class="space-y-1">
-                   
-                  
-                </div>
-                <div class="space-y-1">
-                    <p class="text-xs text-muted-foreground">Budget</p>
-                    <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="lucide lucide-dollar-sign h-4 w-4 mr-2 text-muted-foreground">
-                            <line x1="12" x2="12" y1="2" y2="22"></line>
-                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
-                        <p class="font-medium">{{project.budget}}</p>
-                    </div>
-                </div>
-                <div class="space-y-1">
-                    <p class="text-xs text-muted-foreground">Location</p>
-                    <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="lucide lucide-map-pin h-4 w-4 mr-2 text-muted-foreground">
-                            <path
-                                d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0">
-                            </path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                        <p class="font-medium">Remote</p>
-                    </div>
-                </div>
-            </div>
-            <h3 class="font-medium mb-2 pt-5">Required Skills</h3>
-                  
-                <div class="flex flex-wrap gap-2 mt-3">
-                
-                    <div class="flex  gap-4 mt-3">
-                        <div *ngFor="let roleSkill of project.project_roles_skills">
-                
-                            <div class="flex flex-wrap gap-2">
-                                <span *ngFor="let skill of roleSkill.skills"
-                                    class="bg-orange-100 dark:bg-orange-950/30 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full">
-                                    {{ skill.name }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                
-                
-                </div>
-                <h4 class="font-medium mb-2 pt-5">Timeline</h4>
-                <h4 class="text-md  text-gray-900 pt-2">Project Progress</h4>
-                <div aria-valuemax="100" aria-valuemin="0" role="progressbar" data-state="indeterminate" data-max="100"
-                    class="relative w-full overflow-hidden rounded-full bg-secondary h-2">
-                    <div data-state="indeterminate" data-max="100" class="h-full w-full flex-1 bg-primary transition-all"
-                        style="transform: translateX(-75%);"></div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-calendar h-4 w-4 mr-2 text-muted-foreground">
-                            <path d="M8 2v4"></path>
-                            <path d="M16 2v4"></path>
-                            <rect width="18" height="18" x="3" y="4" rx="2"></rect>
-                            <path d="M3 10h18"></path>
-                        </svg>
-                        <div>
-                            <p class="text-sm">Start Date</p>
-                            <p class="text-sm font-medium">{{project.date_start}}</p>
-                        </div>
-                    </div>
-                    <div class="flex pt-5 items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-calendar h-4 w-4 mr-2 text-muted-foreground">
-                            <path d="M8 2v4"></path>
-                            <path d="M16 2v4"></path>
-                            <rect width="18" height="18" x="3" y="4" rx="2"></rect>
-                            <path d="M3 10h18"></path>
-                        </svg>
-                        <div>
-                            <p class="text-sm">Estimated Completion</p>
-                            <p class="text-sm font-medium">{{project.date_end}}</p>
-                        </div>
-                    </div>
-                </div>
-                
-
-            </div>
-        </div>
+  <div class="fixed top-4 right-4 space-y-2 z-50">
+    <div
+      *ngFor="let toast of toasts"
+      [ngClass]="{
+        'bg-green-500 text-white': toast.type === 'success',
+        'bg-red-600 text-white': toast.type === 'error'
+      }"
+      class="px-4 py-2 rounded shadow-md animate-fade-in-out"
+    >
+      {{ toast.message }}
     </div>
-<<<<<<< HEAD
-<!-- <div class="p-6 pt-6 space-y-6">
+  </div>
+
+  <!-- <div class="flex justify-between items-center mb-2"> -->
+
+  <div class="flex items-center mb-6">
+    <a
+      class="flex items-center text-muted-foreground hover:text-foreground mr-4"
+      href="/"
+      ><svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-arrow-left h-4 w-4 mr-2"
+      >
+        <path d="m12 19-7-7 7-7"></path>
+        <path d="M19 12H5"></path></svg
+      >Back</a
+    >
+    <h1 class="text-2xl font-bold">{{ project.title }}</h1>
+    <div
+      class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-primary/80 ml-4 bg-green-100 text-green-800 dark:bg-green-950/30 dark:text-green-400 border-green-200 dark:border-green-800"
+    >
+      Recruiting
+    </div>
+  </div>
+  <!-- </div> -->
+
+  <div>
+    <div *ngIf="project" class="space-y-4 pt-4">
+      <div class="p-6 border border-gray-300 rounded-lg hover:shadow-lg">
+        <h2 class="text-2xl font-semibold leading-none tracking-tigh">
+          Project Overview
+        </h2>
+        <h4 class="font-medium mb-2 pt-5">Description</h4>
+        <p class="text-muted-foreground pt-3">{{ project.description }}</p>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-5">
+          <div class="space-y-1">
+            <p class="text-xs text-muted-foreground">Duration</p>
+            <div class="flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-clock h-4 w-4 mr-2 text-muted-foreground"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <p class="font-medium">{{ project.date_end }}</p>
+            </div>
+          </div>
+          <div class="space-y-1"></div>
+          <div class="space-y-1">
+            <p class="text-xs text-muted-foreground">Budget</p>
+            <div class="flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-dollar-sign h-4 w-4 mr-2 text-muted-foreground"
+              >
+                <line x1="12" x2="12" y1="2" y2="22"></line>
+                <path
+                  d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+                ></path>
+              </svg>
+              <p class="font-medium">{{ project.budget }}</p>
+            </div>
+          </div>
+          <div class="space-y-1">
+            <p class="text-xs text-muted-foreground">Location</p>
+            <div class="flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-map-pin h-4 w-4 mr-2 text-muted-foreground"
+              >
+                <path
+                  d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+                ></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <p class="font-medium">Remote</p>
+            </div>
+          </div>
+        </div>
+        <h3 class="font-medium mb-2 pt-5">Required Skills</h3>
+
+        <div class="flex flex-wrap gap-2 mt-3">
+          <div class="flex gap-4 mt-3">
+            <div *ngFor="let roleSkill of project.project_roles_skills">
+              <div class="flex flex-wrap gap-2">
+                <span
+                  *ngFor="let skill of roleSkill.skills"
+                  class="bg-orange-100 dark:bg-orange-950/30 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full"
+                >
+                  {{ skill.name }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h4 class="font-medium mb-2 pt-5">Timeline</h4>
+        <h4 class="text-md text-gray-900 pt-2">Project Progress</h4>
+        <div
+          aria-valuemax="100"
+          aria-valuemin="0"
+          role="progressbar"
+          data-state="indeterminate"
+          data-max="100"
+          class="relative w-full overflow-hidden rounded-full bg-secondary h-2"
+        >
+          <div
+            data-state="indeterminate"
+            data-max="100"
+            class="h-full w-full flex-1 bg-primary transition-all"
+            style="transform: translateX(-75%)"
+          ></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-calendar h-4 w-4 mr-2 text-muted-foreground"
+            >
+              <path d="M8 2v4"></path>
+              <path d="M16 2v4"></path>
+              <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+              <path d="M3 10h18"></path>
+            </svg>
+            <div>
+              <p class="text-sm">Start Date</p>
+              <p class="text-sm font-medium">{{ project.date_start }}</p>
+            </div>
+          </div>
+          <div class="flex pt-5 items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-calendar h-4 w-4 mr-2 text-muted-foreground"
+            >
+              <path d="M8 2v4"></path>
+              <path d="M16 2v4"></path>
+              <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+              <path d="M3 10h18"></path>
+            </svg>
+            <div>
+              <p class="text-sm">Estimated Completion</p>
+              <p class="text-sm font-medium">{{ project.date_end }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="p-6 pt-6 space-y-6">
     <div class="p-4 border rounded-lg">
         <h3 class="font-medium">UX/UI Designer</h3>
         
@@ -156,29 +222,228 @@
     </div>
    
 </div> -->
-<div class="rounded-lg border bg-card text-card-foreground shadow-sm mt-6">
-<div class="p-6 pt-6 space-y-6">
-    <div *ngFor="let roleSkill of project.project_roles_skills">
+  <div class="rounded-lg border bg-card text-card-foreground shadow-sm mt-6">
+    <div class="p-6 pt-6 space-y-6">
+      <div *ngFor="let roleSkill of project.project_roles_skills">
         <div class="p-4 border rounded-lg">
-        <h3 class="font-medium">{{roleSkill.role.name}}</h3>
-        <p class="text-sm text-muted-foreground mt-2">{{roleSkill.description}}</p>
+          <h3 class="font-medium">{{ roleSkill.role.name }}</h3>
+          <p class="text-sm text-muted-foreground mt-2">
+            {{ roleSkill.description }}
+          </p>
 
-        <div class="flex flex-wrap gap-2">
-            <span *ngFor="let skill of roleSkill.skills"
-                class="bg-orange-100 dark:bg-orange-950/30 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full mt-6">
-                {{ skill.name }}
+          <div class="flex flex-wrap gap-2">
+            <span
+              *ngFor="let skill of roleSkill.skills"
+              class="bg-orange-100 dark:bg-orange-950/30 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full mt-6"
+            >
+              {{ skill.name }}
             </span>
+          </div>
+          <button
+            (click)="onApplyRole(roleSkill.id)"
+            *ngIf="!isOwner"
+            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 mt-4 bg-orange-500 hover:bg-orange-600"
+          >
+            Apply for this Role
+          </button>
         </div>
-        <button (click)="onApplyRole(roleSkill.role.id)"
-            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 mt-4 bg-orange-500 hover:bg-orange-600">Apply
-            for this Role</button>
-        </div>
+      </div>
     </div>
-</div>
-</div>
+  </div>
 
-=======
->>>>>>> e830c5b (Ajout et affichage de Chat)
-    <ng-template #noData>
-        <p>Aucun projet à afficher.</p>
-    </ng-template>
+  <div class="mt-8 space-y-4" *ngIf="isOwner">
+    <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+      <!-- Section Filtres -->
+      <div class="p-6 border-b border-border">
+        <h2 class="text-lg font-semibold">Filtres</h2>
+      </div>
+      <div class="p-6 grid grid-cols-1 md:grid-cols-5 gap-2">
+        <div>
+          <label class="block text-xs font-medium text-foreground">Rôle</label>
+          <input
+            type="text"
+            [(ngModel)]="roleFilter"
+            placeholder="Rôle"
+            class="mt-1 block w-full text-xs rounded-md border border-input bg-background text-foreground shadow-sm focus:ring-primary focus:border-primary"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-foreground"
+            >Utilisateur</label
+          >
+          <input
+            type="text"
+            [(ngModel)]="userFilter"
+            placeholder="Nom"
+            class="mt-1 block w-full text-xs rounded-md border border-input bg-background text-foreground shadow-sm focus:ring-primary focus:border-primary"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-foreground"
+            >Statut</label
+          >
+          <select
+            [(ngModel)]="validatedFilter"
+            class="mt-1 block w-full text-xs rounded-md border border-input bg-background text-foreground shadow-sm focus:ring-primary focus:border-primary"
+          >
+            <option [value]="-1">Tous</option>
+            <option [value]="1">Validées</option>
+            <option [value]="0">Non validées</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-foreground"
+            >Par page</label
+          >
+          <select
+            [(ngModel)]="perPage"
+            (change)="onPerPageChange()"
+            class="mt-1 block w-full text-xs rounded-md border border-input bg-background text-foreground shadow-sm focus:ring-primary focus:border-primary"
+          >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+        <div class="flex items-end gap-1">
+          <button
+            (click)="applyFilters()"
+            class="text-xs bg-primary text-white px-3 py-1.5 rounded-md hover:bg-primary/90 transition"
+          >
+            Appliquer
+          </button>
+          <button
+            (click)="resetFilters()"
+            class="text-xs border border-border px-3 py-1.5 rounded-md text-foreground hover:bg-muted transition"
+          >
+            Réinitialiser
+          </button>
+        </div>
+      </div>
+
+      <!-- Section Candidatures -->
+      <div class="p-6 border-t border-border flex justify-between items-center">
+        <h2 class="text-lg font-semibold">Liste des Candidatures</h2>
+        <span *ngIf="meta" class="text-sm text-muted-foreground">
+          {{ meta.total }} résultat(s) trouvé(s)
+        </span>
+      </div>
+      <div class="p-6 overflow-x-auto">
+        <table class="min-w-full text-sm text-left text-foreground">
+          <thead class="bg-muted">
+            <tr>
+              <th class="px-4 py-2">Utilisateur</th>
+              <th class="px-4 py-2">Email</th>
+              <th class="px-4 py-2">Rôle</th>
+              <th class="px-4 py-2">Statut</th>
+              <th class="px-4 py-2">Date</th>
+              <th class="px-4 py-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Loading -->
+            <tr *ngIf="isLoading">
+              <td colspan="6" class="text-center py-4">
+                <div
+                  class="animate-spin rounded-full h-6 w-6 border-t-2 border-primary mx-auto"
+                ></div>
+              </td>
+            </tr>
+
+            <!-- Empty -->
+            <tr *ngIf="!isLoading && candidacies.length === 0">
+              <td colspan="6" class="text-center py-4 text-muted-foreground">
+                Aucune candidature trouvée
+              </td>
+            </tr>
+
+            <!-- Rows -->
+            <tr
+              *ngFor="let candidacy of candidacies"
+              class="hover:bg-muted/50 transition"
+            >
+              <td class="px-4 py-2">{{ candidacy.user.name }}</td>
+              <td class="px-4 py-2">{{ candidacy.user.email }}</td>
+              <td class="px-4 py-2">{{ candidacy.project_role.role.name }}</td>
+              <td class="px-4 py-2">
+                <span
+                  class="inline-flex px-2 py-1 text-xs rounded-full font-medium"
+                  [ngClass]="{
+                    'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400':
+                      candidacy.is_validated,
+                    'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300':
+                      !candidacy.is_validated
+                  }"
+                >
+                  {{ candidacy.is_validated ? "Validé" : "En attente" }}
+                </span>
+              </td>
+              <td class="px-4 py-2">{{ candidacy.created_at }}</td>
+              <td class="px-4 py-2">
+                <button class="text-primary hover:underline text-sm">
+                  <i class="bi bi-eye mr-1"></i> Voir
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div
+          *ngIf="meta && meta.last_page > 1"
+          class="mt-6 flex justify-between items-center"
+        >
+          <span class="text-sm text-muted-foreground">
+            Page {{ meta.current_page }} sur {{ meta.last_page }}
+          </span>
+          <div class="inline-flex gap-1">
+            <button
+              class="px-2 py-1 rounded border text-sm"
+              [disabled]="meta.current_page === 1"
+              (click)="onPageChange(1)"
+            >
+              «
+            </button>
+            <button
+              class="px-2 py-1 rounded border text-sm"
+              [disabled]="meta.current_page === 1"
+              (click)="onPageChange(meta.current_page - 1)"
+            >
+              ‹
+            </button>
+            <ng-container *ngFor="let page of getPageNumbers()">
+              <button
+                class="px-3 py-1 rounded border text-sm"
+                [ngClass]="{
+                  'bg-primary text-white': page === meta.current_page,
+                  'hover:bg-muted': page !== meta.current_page
+                }"
+                (click)="onPageChange(page)"
+              >
+                {{ page }}
+              </button>
+            </ng-container>
+            <button
+              class="px-2 py-1 rounded border text-sm"
+              [disabled]="meta.current_page === meta.last_page"
+              (click)="onPageChange(meta.current_page + 1)"
+            >
+              ›
+            </button>
+            <button
+              class="px-2 py-1 rounded border text-sm"
+              [disabled]="meta.current_page === meta.last_page"
+              (click)="onPageChange(meta.last_page)"
+            >
+              »
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noData>
+    <p>Aucun projet à afficher.</p>
+  </ng-template>
+</div>
