@@ -1,32 +1,49 @@
 <app-navbar></app-navbar>
 
 <div class="container max-w-4xl mx-auto p-8">
- <div class="fixed top-4 right-4 space-y-2 z-50">
-  <div *ngFor="let toast of toasts"
-       [ngClass]="{
-         'bg-green-500 text-white': toast.type === 'success',
-         'bg-red-600 text-white': toast.type === 'error'
-       }"
-       class="px-4 py-2 rounded shadow-md animate-fade-in-out">
-    {{ toast.message }}
+  <div class="fixed top-4 right-4 space-y-2 z-50">
+    <div
+      *ngFor="let toast of toasts"
+      [ngClass]="{
+        'bg-green-500 text-white': toast.type === 'success',
+        'bg-red-600 text-white': toast.type === 'error'
+      }"
+      class="px-4 py-2 rounded shadow-md animate-fade-in-out"
+    >
+      {{ toast.message }}
+    </div>
   </div>
-</div>
 
-    <!-- <div class="flex justify-between items-center mb-2"> -->
-        
-        <div class="flex items-center mb-6"><a class="flex items-center text-muted-foreground hover:text-foreground mr-4"
-                href="/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-arrow-left h-4 w-4 mr-2">
-                    <path d="m12 19-7-7 7-7"></path>
-                    <path d="M19 12H5"></path>
-                </svg>Back</a>
-            <h1 class="text-2xl font-bold">{{ project.title }}</h1>
-            <div
-                class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-primary/80 ml-4 bg-green-100 text-green-800 dark:bg-green-950/30 dark:text-green-400 border-green-200 dark:border-green-800">
-                Recruiting</div>
-        </div>
-    <!-- </div> -->
+  <!-- <div class="flex justify-between items-center mb-2"> -->
+
+  <div class="flex items-center mb-6">
+    <a
+      class="flex items-center text-muted-foreground hover:text-foreground mr-4"
+      href="/"
+      ><svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-arrow-left h-4 w-4 mr-2"
+      >
+        <path d="m12 19-7-7 7-7"></path>
+        <path d="M19 12H5"></path></svg
+      >Back</a
+    >
+    <h1 class="text-2xl font-bold">{{ project.title }}</h1>
+    <div
+      class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-primary/80 ml-4 bg-green-100 text-green-800 dark:bg-green-950/30 dark:text-green-400 border-green-200 dark:border-green-800"
+    >
+      Recruiting
+    </div>
+  </div>
+  <!-- </div> -->
 
     <div>
         <div *ngIf="project" class="space-y-4 pt-4">
@@ -138,6 +155,7 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 <!-- <div class="p-6 pt-6 space-y-6">
     <div class="p-4 border rounded-lg">
         <h3 class="font-medium">UX/UI Designer</h3>
@@ -152,27 +170,37 @@
     </div>
    
 </div> -->
-<div class="rounded-lg border bg-card text-card-foreground shadow-sm mt-6">
-<div class="p-6 pt-6 space-y-6">
-    <div *ngFor="let roleSkill of project.project_roles_skills">
+  <div class="rounded-lg border bg-card text-card-foreground shadow-sm mt-6">
+    <div class="p-6 pt-6 space-y-6">
+      <div *ngFor="let roleSkill of project.project_roles_skills">
         <div class="p-4 border rounded-lg">
-        <h3 class="font-medium">{{roleSkill.role.name}}</h3>
-        <p class="text-sm text-muted-foreground mt-2">{{roleSkill.description}}</p>
+          <h3 class="font-medium">{{ roleSkill.role.name }}</h3>
+          <p class="text-sm text-muted-foreground mt-2">
+            {{ roleSkill.description }}
+          </p>
 
-        <div class="flex flex-wrap gap-2">
-            <span *ngFor="let skill of roleSkill.skills"
-                class="bg-orange-100 dark:bg-orange-950/30 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full mt-6">
-                {{ skill.name }}
+          <div class="flex flex-wrap gap-2">
+            <span
+              *ngFor="let skill of roleSkill.skills"
+              class="bg-orange-100 dark:bg-orange-950/30 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full mt-6"
+            >
+              {{ skill.name }}
             </span>
+          </div>
+          <button
+            (click)="onApplyRole(roleSkill.id)"
+            *ngIf="!isOwner"
+            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 mt-4 bg-orange-500 hover:bg-orange-600"
+          >
+            Apply for this Role
+          </button>
         </div>
-        <button (click)="onApplyRole(roleSkill.role.id)"
-            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 mt-4 bg-orange-500 hover:bg-orange-600">Apply
-            for this Role</button>
-        </div>
+      </div>
     </div>
-</div>
-</div>
+  </div>
 
+=======
+>>>>>>> e830c5b (Ajout et affichage de Chat)
     <ng-template #noData>
         <p>Aucun projet à afficher.</p>
     </ng-template>

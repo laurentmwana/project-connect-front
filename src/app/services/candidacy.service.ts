@@ -3,7 +3,8 @@ import { UserLocalService } from './user-local.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Environment } from 'environments/environment';
-import { CandidacyResponse } from '@/model/candidacy';
+import { PaginatedCandidacies } from '@/model/candidacy';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -34,27 +35,44 @@ export class CandidacyService {
 
   getCandidacies(
     projectId: number,
-    filters: {
-      role_name?: string;
-      user_name?: string;
-      is_validated?: number;
-      per_page?: number;
+    filters?: {
+      roleName?: string;
+      userName?: string;
+      isValidated?: boolean;
       page?: number;
-    } = {}
-  ) {
-    const user = this.userLocalService.getUser();
+      perPage?: number;
+    }
+  ): Observable<PaginatedCandidacies> {
+    let params = new HttpParams();
     const url = `${Environment.apiUrl}/projects/${projectId}/candidacies`;
-
+    const user = this.userLocalService.getUser();
     const headers = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       Authorization: `Bearer ${user?.token}`,
     };
 
-    const params = new HttpParams({
-      fromObject: filters as Record<string, string>,
-    });
+    if (filters?.roleName) {
+      params = params.append('role_name', filters.roleName);
+    }
 
-    return this.http.get<CandidacyResponse>(url, { headers, params });
+    if (filters?.userName) {
+      params = params.append('user_name', filters.userName);
+    }
+
+    if (filters?.isValidated !== undefined) {
+      const isValidatedNumber = filters.isValidated ? 1 : 0;
+      params = params.append('is_validated', isValidatedNumber.toString());
+    }
+
+    if (filters?.page) {
+      params = params.append('page', filters.page.toString());
+    }
+
+    if (filters?.perPage) {
+      params = params.append('per_page', filters.perPage.toString());
+    }
+
+    return this.http.get<PaginatedCandidacies>(url, { headers, params });
   }
 }

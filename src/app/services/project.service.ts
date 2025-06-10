@@ -1,6 +1,6 @@
 import { UserLocalService } from '@/services/user-local.service';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 
 import { PaginatedProjects, Project, ProjectData } from '../model/project';
@@ -21,10 +21,16 @@ export class ProjectService {
   ) {}
 
 
-  getAllProjects(page: number = 1): Observable<PaginatedProjects> {
-    return this.http.get<PaginatedProjects>(
-      `${this.baseUrl}projects?page=${page}`
-    );
+  
+  
+  getAllProjects(page: number = 1, searchTerm: string = ''): Observable<PaginatedProjects> {
+    let url = `${this.baseUrl}projects?page=${page}`;
+  
+    if (searchTerm.trim()) {
+      url += `&search=${encodeURIComponent(searchTerm.trim())}`;
+    }
+  
+    return this.http.get<PaginatedProjects>(url);
   }
 
   /**
@@ -45,9 +51,7 @@ export class ProjectService {
   /**
    * Récupère un projet par ID
    */
-  // getProjectById(id: string): Observable<ProjectData> {
-  //   return this.http.get<ProjectData>(this.baseUrl + 'projects/' + id);
-  // }
+  
   getProjectById(id: string) {
     return this.http.get<{ data: ProjectData }>(
       `http://127.0.0.1:8000/api/projects/${id}`

@@ -1,42 +1,46 @@
-import { Role, User } from "./project";
-
-export interface CandidacyResponse {
-  message: string;
-  meta: Meta;
-  filters: any[]; // À affiner si tu sais le format des filtres
-  data: Candidacy[];
-}
-
-export interface Meta {
-  total: number;
-  per_page: number;
-  current_page: number;
-  last_page: number;
-  from: number;
-  to: number;
-  links: MetaLinks;
-}
-
-export interface MetaLinks {
-  first: string;
-  last: string;
-  prev: string | null;
-  next: string | null;
-}
-
 export interface Candidacy {
   id: number;
-  is_validated: number;
+  is_validated: boolean;
   created_at: string;
-  user: User;
-  project_role: ProjectRole;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+  };
+  project_role: {
+    id: number;
+    description: string;
+    role: {
+      id: number;
+      name: string;
+    };
+  };
 }
 
-
-export interface ProjectRole {
-  id: number;
-  description: string;
-  role: Role;
+export interface PaginatedCandidacies {
+  data: Candidacy[];
+  meta: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
 }
 
+export interface CandidacyFilters {
+  roleName?: string;
+  userName?: string;
+  isValidated?: boolean;
+  perPage?: number;
+}
+export interface Meta {
+  current_page: number;
+  last_page: number;
+  per_page: number;
+  total: number;
+}
 
+export interface PaginatedCandidacyResponse {
+  data: Candidacy[];
+  meta: Meta;
+}
