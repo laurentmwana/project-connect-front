@@ -20,16 +20,16 @@ export class ProjectService {
     private userLocalService: UserLocalService
   ) {}
 
-
-  
-  
-  getAllProjects(page: number = 1, searchTerm: string = ''): Observable<PaginatedProjects> {
+  getAllProjects(
+    page: number = 1,
+    searchTerm: string = ''
+  ): Observable<PaginatedProjects> {
     let url = `${this.baseUrl}projects?page=${page}`;
-  
+
     if (searchTerm.trim()) {
       url += `&search=${encodeURIComponent(searchTerm.trim())}`;
     }
-  
+
     return this.http.get<PaginatedProjects>(url);
   }
 
@@ -48,14 +48,31 @@ export class ProjectService {
     });
   }
 
+  //modifier un projet
+
+  updateProject(id: string, data: any): Observable<any> {
+    const user = this.userLocalService.getUser();
+
+    return this.http.put(`${this.baseUrl}projects/${id}`, data, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${user?.token}`,
+      },
+    });
+  }
+
   /**
    * Récupère un projet par ID
    */
-  
+
   getProjectById(id: string) {
     return this.http.get<{ data: ProjectData }>(
       `http://127.0.0.1:8000/api/projects/${id}`
     );
+  }
+  getProject(id: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}projects/${id}`);
   }
   /**
    * Récupère les domaines disponibles
