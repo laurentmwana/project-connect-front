@@ -16,6 +16,7 @@ import { ProjectDetailComponent } from './pages/project/project-detail/project-d
 import { protectedGuard } from './guards/protected.guard';
 import { MessageComponent } from './pages/message/message.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { ProjectEditComponent } from './pages/project/project-edit/project-edit.component';
 export const routes: Routes = [
   {
     path: '',
@@ -32,7 +33,14 @@ export const routes: Routes = [
         title: "Création d'un projet - ProjectConnect",
         canActivate: [protectedGuard],
       },
-       {
+      {
+        path: 'project/edit/:id',
+        component: ProjectEditComponent,
+        title: 'Modifier un projet - ProjectConnect',
+        canActivate: [protectedGuard],
+      },
+
+      {
         path: 'message',
         title: 'Messagerie',
         children: [
@@ -43,11 +51,11 @@ export const routes: Routes = [
           {
             path: ':chatId',
             component: MessageComponent, // ou ChatDetailComponent si séparé
-            title: 'Détail du chat - ProjectConnect'
+            title: 'Détail du chat - ProjectConnect',
           },
         ],
       },
-      { path: 'profile', component: ProfileComponent},
+      { path: 'profile', component: ProfileComponent },
     ],
   },
   {

@@ -2,7 +2,7 @@ import { ProjectData } from '@/model/project';
 import { ProjectService } from '@/services/project.service';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NavbarComponent } from '../../../components/navbar/navbar.component';
 import { CandidacyService } from '@/services/candidacy.service';
 import { Candidacy, Meta, PaginatedCandidacyResponse } from '@/model/candidacy';
@@ -11,7 +11,7 @@ import { FormsModule, NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-project-detail',
-  imports: [NgIf, NgFor, NavbarComponent, NgClass, FormsModule],
+  imports: [NgIf, NgFor, NavbarComponent, NgClass, FormsModule, RouterLink],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.css',
 })
@@ -25,6 +25,7 @@ export class ProjectDetailComponent {
   perPage: number = 10; // Valeur par défaut
   isOwner: boolean = false;
   isLoading: boolean = false;
+  projectMenuOpen = false;
 
   // Filtres
   roleFilter: string = '';
@@ -157,5 +158,13 @@ export class ProjectDetailComponent {
       pages.push(i);
     }
     return pages;
+  }
+
+  toggleProjectMenu() {
+    this.projectMenuOpen = !this.projectMenuOpen;
+  }
+
+  onDeleteProject() {
+    //TODO:Gerer la suppression ?
   }
 }
