@@ -5,3 +5,31 @@ hover:bg-gray-900 dark:hover:bg-gray-200"
 >
   {{ loading ? '...' : (isFollowing ? 'Ne plus suivre' : 'Suivre') }}
 </button>
+
+<!-- Modal -->
+<div *ngIf="showLoginModal" class="fixed inset-0 flex items-center justify-center bg-gray-50 bg-opacity-10 z-10">
+  <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-sm w-full text-center">
+    <h2 class="text-lg font-semibold mb-4 text-black dark:text-white">Connexion requise</h2>
+    <p class="mb-6 text-gray-700 dark:text-gray-300">Veuillez vous connecter pour pouvoir suivre cet utilisateur.</p>
+
+    <div class="flex justify-center gap-4">
+      <!-- Bouton Login -->
+      <button 
+        (click)="onLogin()" 
+        class="px-4 py-2 bg-orange-600 text-white rounded hover:bg-black transition"
+      >
+        Login
+      </button>
+
+      <!-- Bouton Fermer -->
+      <button 
+        (click)="closeModal()" 
+        class="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 transition"
+      >
+        Annuler
+      </button>
+    </div>
+  </div>
+</div>
+
+
