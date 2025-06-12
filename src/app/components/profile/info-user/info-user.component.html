@@ -51,7 +51,7 @@
         <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
       </svg>
       <span class="text-sm">
-        {{ "john.doe@example.com" }}
+        john.doeexample.com
       </span>
     </div>
     <div class="flex items-center">
@@ -128,9 +128,20 @@
       <p class="text-sm text-muted-foreground">Projects</p>
     </div>
   </div>
-  <div class="mt-6">
+
+  <div class="mt-6 space-y-5">
+    <!-- Bouton Follow / Unfollow -->
+    <app-follow-button
+      [userId]="userId"
+      [initialIsFollowing]="initialIsFollowing"
+      (followChange)="onFollowChange($event)"
+      class="w-full"
+    ></app-follow-button>
+
+    <!-- Bouton Message -->
     <button
-      class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 py-2 w-full mt-2 bg-orange-500 text-white hover:bg-orange-600"
+      (click)="onMessageClick()"
+      class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 py-2 w-full bg-orange-500 text-white hover:bg-orange-600"
     >
       Message
     </button>
