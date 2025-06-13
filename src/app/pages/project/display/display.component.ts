@@ -48,7 +48,7 @@ export class DisplayComponent {
     );
   }
 
-<<<<<<< HEAD
+
   fetchProjects(page: number = 1): void {
     this.projectService.getAllProjects(page, this.searchTerm).subscribe({
       next: (response) => {
@@ -61,7 +61,7 @@ export class DisplayComponent {
       },
     });
   }
-<<<<<<< HEAD
+
 
   goToNextPage(): void {
     if (this.currentPage < this.lastPage) {
