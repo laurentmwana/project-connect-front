@@ -20,9 +20,10 @@ export class ExperienceService {
    * Récuperer les experiences d'un user 
    * 
    */
-  getExperiences(): Observable<{data : Experience[]}>{
+  getExperiences(userId?:number| null): Observable<{data : Experience[]}>{
     const user = this.userLocalService.getUser();
-    return this.http.get<{data : Experience[]}>(this.apiUrl, {
+    let url= userId? `${this.apiUrl}?user_id=${userId}`: this.apiUrl
+    return this.http.get<{data : Experience[]}>(url, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
