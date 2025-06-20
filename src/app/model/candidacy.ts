@@ -2,6 +2,7 @@ export interface Candidacy {
   id: number;
   is_validated: boolean;
   created_at: string;
+  status: string;
   user: {
     id: number;
     name: string;
