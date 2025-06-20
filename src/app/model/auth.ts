@@ -31,6 +31,7 @@ export interface RegisterRequest {
   email: string;
   password: string;
   password_confirmation: string;
+  token?: string;
 }
 
 export interface EmailVerificationStatus {
