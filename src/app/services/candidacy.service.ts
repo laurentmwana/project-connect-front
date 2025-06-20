@@ -75,4 +75,16 @@ export class CandidacyService {
 
     return this.http.get<PaginatedCandidacies>(url, { headers, params });
   }
+
+  inviteCandidate(roleId: number, email: string) {
+    const url = `${Environment.apiUrl}/project-roles/${roleId}/invite`;
+    const user = this.userLocalService.getUser();
+    const headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${user?.token}`,
+    };
+
+    return this.http.post(url, { email }, { headers });
+  }
 }
