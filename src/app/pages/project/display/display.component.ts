@@ -22,6 +22,7 @@ export class DisplayComponent {
   private searchSubscription!: Subscription;
   currentPage = 1;
   lastPage = 1;
+  Math: Math = Math;
 
   errorMessage = '';
 
@@ -48,11 +49,11 @@ export class DisplayComponent {
     );
   }
 
-
   fetchProjects(page: number = 1): void {
     this.projectService.getAllProjects(page, this.searchTerm).subscribe({
       next: (response) => {
         this.pprojects = response.data;
+        console.log('message dans la console', this.pprojects);
         this.currentPage = response.meta.current_page;
         this.lastPage = response.meta.last_page;
       },

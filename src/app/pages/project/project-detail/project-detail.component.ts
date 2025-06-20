@@ -1,6 +1,6 @@
 import { ProjectData } from '@/model/project';
 import { ProjectService } from '@/services/project.service';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NavbarComponent } from '../../../components/navbar/navbar.component';
@@ -11,7 +11,15 @@ import { FormsModule, NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-project-detail',
-  imports: [NgIf, NgFor, NavbarComponent, NgClass, FormsModule, RouterLink],
+  imports: [
+    NgIf,
+    NgFor,
+    NavbarComponent,
+    NgClass,
+    FormsModule,
+    RouterLink,
+    CommonModule,
+  ],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.css',
 })
@@ -26,11 +34,67 @@ export class ProjectDetailComponent {
   isOwner: boolean = false;
   isLoading: boolean = false;
   projectMenuOpen = false;
+  Math: Math = Math;
 
   // Filtres
   roleFilter: string = '';
   userFilter: string = '';
   validatedFilter: number = -1;
+
+  //invitations
+  showInviteModal = false;
+  selectedRole: any = null;
+  inviteEmail: string = '';
+
+  openInviteModal(role: any) {
+    this.selectedRole = role;
+    this.inviteEmail = '';
+    this.showInviteModal = true;
+  }
+
+  cancelInvite() {
+    this.showInviteModal = false;
+  }
+
+  sendInvite() {
+    if (!this.inviteEmail) return;
+    this.candidacyService
+      .inviteCandidate(this.selectedRole.id, this.inviteEmail)
+      .subscribe({
+        next: (response) => {
+          this.showToast("Email d'invitation envoyé avec succès.", 'success');
+          this.inviteEmail = '';
+          this.showInviteModal = false;
+        },
+        error: (err) => {
+          const error = err?.error;
+          this.showToast(
+            error?.message || "Erreur lors de l'envoi de l'invitation.",
+            'error'
+          );
+        },
+      });
+  }
+
+  //candidacies modal
+
+  showCandidacyModal = false;
+  // Méthodes
+  openCandidacyModal(role: any) {
+    this.selectedRole = role;
+    this.showCandidacyModal = true;
+  }
+
+  cancelCandidacy() {
+    this.showCandidacyModal = false;
+  }
+
+  confirmCandidacy() {
+    if (this.selectedRole?.id) {
+      this.onApplyRole(this.selectedRole.id);
+      this.showCandidacyModal = false;
+    }
+  }
 
   toasts: { message: string; type: 'success' | 'error' }[] = [];
 
@@ -131,6 +195,7 @@ export class ProjectDetailComponent {
     this.candidacyService.applyForRole(id).subscribe({
       next: () => {
         this.showToast('Candidature soumise avec succès.', 'success');
+        this.showCandidacyModal = false; // Ferme la modale après succès
       },
       error: (err) => {
         let error = err.error;
