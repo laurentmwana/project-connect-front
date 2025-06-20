@@ -76,6 +76,7 @@
           placeholder="exemple@domaine.com"
           class="input-field"
           formControlName="email"
+          [readonly]="isEmailReadonly"
         />
         <div
           *ngIf="
