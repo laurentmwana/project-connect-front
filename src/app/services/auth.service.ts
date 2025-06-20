@@ -64,8 +64,8 @@ export class AuthService {
     });
   }
 
-  async verifyEmail(userId: number, hashToken: string) {
-    const url = `${Environment.apiUrl}/verify-email/${userId}/${hashToken}`;
+  async verifyEmail(userId: number, hashToken: string, token?: string) {
+    const url = `${Environment.apiUrl}/verify-email/${userId}/${hashToken}?token=${token}`;
 
     return this.http.post(url, null, {
       headers: {

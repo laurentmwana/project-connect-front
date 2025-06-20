@@ -3,9 +3,9 @@ import { FieldErrors, ValidationServerResult } from '@/model/default';
 import { ErrorsValidatorPipe } from '@/pipe/errors-validator.pipe';
 import { AuthService } from '@/services/auth.service';
 import { LoaderComponent } from '@/shared/loader/loader.component';
-import { NgFor, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -13,23 +13,26 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   imports: [NgIf, ReactiveFormsModule, LoaderComponent, ErrorsValidatorPipe],
   templateUrl: './register.component.html',
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   isPending = false;
   registerForm: FormGroup;
   isSubmit = false;
   isRegister = false;
   error: string | null = null;
   validatorMessage: ValidationServerResult | null = null;
+  isEmailReadonly = false;
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute
   ) {
     this.registerForm = this.formBuilder.group({
       name: new FormControl('', [Validators.required]),
@@ -44,6 +47,18 @@ export class RegisterComponent {
       ]),
     });
   }
+    token: string | null = null;
+
+  ngOnInit(): void {
+    const emailFromQuery = this.route.snapshot.queryParamMap.get('email');
+    const tokenQuery = this.route.snapshot.queryParamMap.get('token');
+    if (emailFromQuery && tokenQuery) {
+      this.registerForm.patchValue({ email: emailFromQuery });
+   
+      this.isEmailReadonly = true;
+    }
+      this.token = tokenQuery;
+  }
 
   onSubmit(): void {
     this.clearServerErrors();
@@ -56,7 +71,7 @@ export class RegisterComponent {
       return;
     }
 
-    const data: RegisterRequest = this.registerForm.getRawValue();
+    const data: RegisterRequest = {...this.registerForm.getRawValue(),token: this.token};
 
     this.isPending = true;
 

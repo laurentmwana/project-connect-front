@@ -32,6 +32,8 @@ export class VerifyEmailComponent implements OnInit {
     );
     const hashToken = this.activatedRoute.snapshot.paramMap.get('hash');
 
+    const token = this.activatedRoute.snapshot.queryParamMap.get('token') ?? '';
+
     if (userId <= 0) {
       this.error = 'Le lien est incomplet ou invalide.';
       return;
@@ -42,15 +44,15 @@ export class VerifyEmailComponent implements OnInit {
       return;
     }
 
-    this.verifyEmail(userId, hashToken);
+    this.verifyEmail(userId, hashToken, token);
   }
 
-  private verifyEmail(userId: number, hashToken: string): void {
+  private verifyEmail(userId: number, hashToken: string, token?: string): void {
     this.isPending = true;
     this.error = null;
 
     this.auth
-      .verifyEmail(userId, hashToken)
+      .verifyEmail(userId, hashToken, token)
       .then((observer) => {
         observer.subscribe({
           next: (response) => {
