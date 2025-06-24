@@ -1,4 +1,4 @@
-import { Project, ProjectData } from '@/model/project';
+import { Meta, Project, ProjectData } from '@/model/project';
 import { ProjectService } from '@/services/project.service';
 import { RechercheService } from '@/services/recherche.service';
 
@@ -15,7 +15,11 @@ import { Subscription } from 'rxjs';
 })
 export class DisplayComponent {
   projectId!: string;
-
+  isLoading = false;
+  totalItems = 0;
+  meta!: Meta;
+  pages: number[] = [];
+  maxVisiblePages = 5;
   pprojects: ProjectData[] = [];
 
   searchTerm = '';
@@ -50,29 +54,93 @@ export class DisplayComponent {
   }
 
   fetchProjects(page: number = 1): void {
+    this.isLoading = true;
     this.projectService.getAllProjects(page, this.searchTerm).subscribe({
       next: (response) => {
         this.pprojects = response.data;
-        console.log('message dans la console', this.pprojects);
+        this.meta = response.meta;
         this.currentPage = response.meta.current_page;
         this.lastPage = response.meta.last_page;
+        this.totalItems = response.meta.total;
+        this.updatePages();
+        this.isLoading = false;
       },
-      error: () => {
-        console.error('Erreur de chargement des projets');
+      error: (error) => {
+        console.error('Erreur de chargement des projets', error);
+        this.isLoading = false;
+        this.errorMessage = 'Erreur lors du chargement des projets';
       },
     });
   }
 
+  updatePages(): void {
+    this.pages = [];
+    const startPage = Math.max(
+      1,
+      this.currentPage - Math.floor(this.maxVisiblePages / 2)
+    );
+    const endPage = Math.min(
+      this.lastPage,
+      startPage + this.maxVisiblePages - 1
+    );
 
-  goToNextPage(): void {
-    if (this.currentPage < this.lastPage) {
-      this.fetchProjects(this.currentPage + 1);
+    for (let i = startPage; i <= endPage; i++) {
+      this.pages.push(i);
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.lastPage && page !== this.currentPage) {
+      this.fetchProjects(page);
     }
   }
 
   goToPreviousPage(): void {
-    if (this.currentPage > 1) {
-      this.fetchProjects(this.currentPage - 1);
+    this.goToPage(this.currentPage - 1);
+  }
+
+  goToNextPage(): void {
+    this.goToPage(this.currentPage + 1);
+  }
+
+  getVisiblePages(): number[] {
+    const visiblePages: number[] = [];
+    const maxVisiblePages = 5; // Vous pouvez ajuster ce nombre
+
+    // Toujours afficher la première page
+    visiblePages.push(1);
+
+    // Calcul des pages autour de la page courante
+    let start = Math.max(2, this.currentPage - 2);
+    let end = Math.min(this.lastPage - 1, this.currentPage + 2);
+
+    // Ajuster si nous sommes près du début ou de la fin
+    if (this.currentPage <= 3) {
+      end = Math.min(1 + maxVisiblePages - 1, this.lastPage - 1);
+    } else if (this.currentPage >= this.lastPage - 2) {
+      start = Math.max(2, this.lastPage - maxVisiblePages + 1);
     }
+
+    // Ajouter les pages calculées
+    for (let i = start; i <= end; i++) {
+      if (!visiblePages.includes(i)) {
+        visiblePages.push(i);
+      }
+    }
+
+    // Toujours afficher la dernière page
+    if (this.lastPage > 1 && !visiblePages.includes(this.lastPage)) {
+      visiblePages.push(this.lastPage);
+    }
+
+    return visiblePages.sort((a, b) => a - b);
+  }
+
+  shouldShowEllipsis(): boolean {
+    const visiblePages = this.getVisiblePages();
+    return (
+      visiblePages[visiblePages.length - 1] < this.lastPage - 1 ||
+      visiblePages[1] > 2
+    );
   }
 }
