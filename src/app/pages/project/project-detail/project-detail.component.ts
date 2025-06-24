@@ -45,6 +45,8 @@ export class ProjectDetailComponent {
   showInviteModal = false;
   selectedRole: any = null;
   inviteEmail: string = '';
+  viewMenuOpen = false;
+  selectedCandidacyId: number | null = null;
 
   openInviteModal(role: any) {
     this.selectedRole = role;
@@ -126,6 +128,11 @@ export class ProjectDetailComponent {
         this.showToast(this.errorMessage, 'error');
       },
     });
+  }
+
+  refreshCandidacies(): void {
+    if (this.isLoading) return;
+    this.loadCandidacies(this.currentPage); // Recharge avec la page actuelle
   }
 
   loadCandidacies(page: number = this.currentPage): void {
@@ -231,5 +238,65 @@ export class ProjectDetailComponent {
 
   onDeleteProject() {
     //TODO:Gerer la suppression ?
+  }
+
+  //rendre la progress bar dynamique
+  getProjectProgress(): number {
+    if (!this.project?.date_start || !this.project?.date_end) {
+      return 0;
+    }
+
+    const startDate = new Date(this.project.date_start);
+    const endDate = new Date(this.project.date_end);
+    const today = new Date();
+
+    // Vérifier si le projet n'a pas encore commencé
+    if (today < startDate) return 0;
+
+    // Vérifier si le projet est déjà terminé
+    if (today > endDate) return 100;
+
+    const totalDuration = endDate.getTime() - startDate.getTime();
+    const elapsedDuration = today.getTime() - startDate.getTime();
+
+    // Calculer le pourcentage de progression
+    const progress = (elapsedDuration / totalDuration) * 100;
+
+    return Math.min(100, Math.max(0, Math.round(progress)));
+  }
+
+  //Traitement candidature
+  toggleViewMenu(candidacyId: number) {
+    this.viewMenuOpen = !this.viewMenuOpen;
+    this.selectedCandidacyId =
+      this.selectedCandidacyId === candidacyId ? null : candidacyId;
+  }
+
+  onValidate(candidacyId: number) {
+    this.candidacyService.updateCandidacy(candidacyId, 'accepted').subscribe({
+      next: () => {
+        this.showToast('Candidature acceptée avec succès.', 'success');
+      },
+      error: (err) => {
+        let error = err.error;
+        this.showToast(`${error.message}`, 'error');
+      },
+    });
+    this.viewMenuOpen = false;
+  }
+
+  onReject(candidacyId: number) {
+    this.candidacyService.updateCandidacy(candidacyId, 'declined').subscribe({
+      next: () => {
+        this.showToast('Candidature refusée avec succès.', 'error');
+        this.selectedCandidacyId = null;
+      },
+      error: (err) => {
+        let error = err.error;
+        this.showToast(`${error.message}`, 'error');
+        this.selectedCandidacyId = null;
+      },
+    });
+    this.viewMenuOpen = false;
   }
 }

@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 
 <div class="container max-w-4xl mx-auto p-4 md:p-6 lg:p-8">
-  <!-- Toast Notifications -->
+  <!-- Notifications Toast -->
   <div class="fixed top-4 right-4 space-y-2 z-50">
     <div
       *ngFor="let toast of toasts"
@@ -50,7 +50,7 @@
     </div>
   </div>
 
-  <!-- Project Header -->
+  <!-- En-tête du Projet -->
   <div class="flex items-center mb-6 gap-2 flex-wrap">
     <a
       class="flex items-center text-muted-foreground hover:text-foreground transition-colors duration-200"
@@ -71,7 +71,7 @@
         <path d="m12 19-7-7 7-7"></path>
         <path d="M19 12H5"></path>
       </svg>
-      Back
+      Retour
     </a>
     <div class="flex items-center gap-2 flex-1 min-w-[200px]">
       <h1 class="text-2xl font-bold text-foreground">{{ project.title }}</h1>
@@ -79,7 +79,7 @@
         <button
           (click)="toggleProjectMenu()"
           class="p-1 rounded-md hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-primary transition-colors duration-200"
-          aria-label="Project actions"
+          aria-label="Actions du projet"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +121,7 @@
               <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
               <path d="m15 5 4 4"></path>
             </svg>
-            Edit
+            Modifier
           </button>
           <button
             (click)="onDeleteProject()"
@@ -145,19 +145,19 @@
               <line x1="10" y1="11" x2="10" y2="17"></line>
               <line x1="14" y1="11" x2="14" y2="17"></line>
             </svg>
-            Delete
+            Supprimer
           </button>
         </div>
       </div>
       <span
         class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800"
       >
-        Recruiting
+        Recrutement en cours
       </span>
     </div>
   </div>
 
-  <!-- Project Overview -->
+  <!-- Aperçu du Projet -->
   <div class="space-y-6">
     <div
       class="p-6 border rounded-lg bg-card shadow-sm hover:shadow-md transition-shadow duration-300"
@@ -165,7 +165,7 @@
       <h2
         class="text-2xl font-semibold leading-none tracking-tight text-foreground"
       >
-        Project Overview
+        Aperçu du Projet
       </h2>
 
       <div class="mt-6 space-y-6">
@@ -175,28 +175,6 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="space-y-1">
-            <p class="text-sm text-muted-foreground">Duration</p>
-            <div class="flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-clock text-muted-foreground"
-              >
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
-              <p class="font-medium text-foreground">{{ project.date_end }}</p>
-            </div>
-          </div>
-
           <div class="space-y-1">
             <p class="text-sm text-muted-foreground">Budget</p>
             <div class="flex items-center gap-2">
@@ -222,7 +200,7 @@
           </div>
 
           <div class="space-y-1">
-            <p class="text-sm text-muted-foreground">Location</p>
+            <p class="text-sm text-muted-foreground">Localisation</p>
             <div class="flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -247,7 +225,7 @@
         </div>
 
         <div>
-          <h4 class="font-medium text-foreground">Required Skills</h4>
+          <h4 class="font-medium text-foreground">Compétences Requises</h4>
           <div class="flex flex-wrap gap-2 mt-3">
             <div *ngFor="let roleSkill of project.project_roles_skills">
               <div class="flex flex-wrap gap-2">
@@ -263,16 +241,19 @@
         </div>
 
         <div>
-          <h4 class="font-medium text-foreground">Timeline</h4>
-          <h4 class="text-md text-foreground mt-2">Project Progress</h4>
+          <h4 class="font-medium text-foreground">Calendrier</h4>
+          <h4 class="text-md text-foreground mt-2">Progression du Projet</h4>
           <div class="mt-2">
             <div
               class="relative w-full overflow-hidden rounded-full bg-secondary h-2"
             >
               <div
-                class="h-full w-full flex-1 bg-primary transition-all"
-                style="transform: translateX(-75%)"
+                class="h-full bg-primary transition-all duration-300"
+                [style.width.%]="getProjectProgress()"
               ></div>
+            </div>
+            <div class="text-right text-xs text-muted-foreground mt-1">
+              {{ getProjectProgress() }}% complété
             </div>
           </div>
 
@@ -298,9 +279,9 @@
                 </svg>
               </div>
               <div>
-                <p class="text-sm text-muted-foreground">Start Date</p>
+                <p class="text-sm text-muted-foreground">Date de Début</p>
                 <p class="text-sm font-medium text-foreground">
-                  {{ project.date_start }}
+                  {{ project.date_start | date : "mediumDate" }}
                 </p>
               </div>
             </div>
@@ -326,11 +307,9 @@
                 </svg>
               </div>
               <div>
-                <p class="text-sm text-muted-foreground">
-                  Estimated Completion
-                </p>
+                <p class="text-sm text-muted-foreground">Fin Estimée</p>
                 <p class="text-sm font-medium text-foreground">
-                  {{ project.date_end }}
+                  {{ project.date_end | date : "mediumDate" }}
                 </p>
               </div>
             </div>
@@ -339,9 +318,9 @@
       </div>
     </div>
 
-    <!-- Project Roles -->
+    <!-- Rôles du Projet -->
     <div>
-      <h2 class="text-2xl font-bold text-foreground mb-4">Open Positions</h2>
+      <h2 class="text-2xl font-bold text-foreground mb-4">Postes Ouverts</h2>
 
       <div class="space-y-4">
         <div
@@ -387,7 +366,7 @@
                     <path d="m22 2-7 20-4-9-9-4Z" />
                     <path d="M22 2 11 13" />
                   </svg>
-                  Apply Now
+                  Postuler
                 </button>
                 <button
                   (click)="openInviteModal(roleSkill)"
@@ -411,7 +390,7 @@
                     <line x1="19" x2="19" y1="8" y2="14" />
                     <line x1="22" x2="16" y1="11" y2="11" />
                   </svg>
-                  Invite Candidate
+                  Inviter un Candidat
                 </button>
               </div>
             </div>
@@ -427,56 +406,80 @@
     </div>
   </div>
 
-  <!-- Candidacies Section (Owner Only) -->
+  <!-- Section Candidatures (Propriétaire uniquement) -->
   <div class="mt-8" *ngIf="isOwner">
     <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-      <!-- Filters Section -->
+      <!-- Filtres -->
       <div class="p-4 border-b border-border">
         <div class="flex justify-between items-center">
-          <h2 class="text-lg font-semibold text-foreground">Applications</h2>
+          <h2 class="text-lg font-semibold text-foreground">Candidatures</h2>
           <span *ngIf="meta" class="text-sm text-muted-foreground">
-            {{ meta.total }} result(s)
+            {{ meta.total }} résultat(s)
           </span>
+          <button
+            (click)="refreshCandidacies()"
+            [disabled]="isLoading"
+            class="p-1.5 rounded-md hover:bg-muted transition"
+            title="Actualiser les candidatures"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              [class.animate-spin]="isLoading"
+            >
+              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+              <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+              <path d="M16 16h5v5" />
+            </svg>
+          </button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mt-3">
           <div>
             <label class="block text-sm font-medium text-foreground mb-1"
-              >Role</label
+              >Rôle</label
             >
             <input
               type="text"
               [(ngModel)]="roleFilter"
-              placeholder="Role"
+              placeholder="Rôle"
               class="w-full text-sm rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:ring-2 focus:ring-ring focus:ring-offset-2"
             />
           </div>
           <div>
             <label class="block text-sm font-medium text-foreground mb-1"
-              >User</label
+              >Utilisateur</label
             >
             <input
               type="text"
               [(ngModel)]="userFilter"
-              placeholder="Name"
+              placeholder="Nom"
               class="w-full text-sm rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:ring-2 focus:ring-ring focus:ring-offset-2"
             />
           </div>
           <div>
             <label class="block text-sm font-medium text-foreground mb-1"
-              >Status</label
+              >Statut</label
             >
             <select
               [(ngModel)]="validatedFilter"
               class="w-full text-sm rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:ring-2 focus:ring-ring focus:ring-offset-2"
             >
-              <option [ngValue]="-1">All</option>
-              <option [ngValue]="1">Validated</option>
-              <option [ngValue]="0">Not validated</option>
+              <option [ngValue]="-1">Tous</option>
+              <option [ngValue]="1">Validé</option>
+              <option [ngValue]="0">Non validé</option>
             </select>
           </div>
           <div>
             <label class="block text-sm font-medium text-foreground mb-1"
-              >Per page</label
+              >Par page</label
             >
             <select
               [(ngModel)]="perPage"
@@ -493,51 +496,51 @@
               (click)="applyFilters()"
               class="w-full text-sm bg-primary text-primary-foreground px-3 py-2 rounded-md hover:bg-primary/90 transition"
             >
-              Apply
+              Appliquer
             </button>
             <button
               (click)="resetFilters()"
               class="w-full text-sm border border-input px-3 py-2 rounded-md hover:bg-muted transition"
             >
-              Reset
+              Réinitialiser
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Applications Table -->
+      <!-- Tableau des Candidatures -->
       <div class="p-4">
         <div class="overflow-x-auto rounded-lg border border-border">
           <table class="min-w-full text-sm text-left">
             <thead class="bg-muted">
               <tr>
-                <th class="px-4 py-3 font-medium text-foreground">Candidate</th>
+                <th class="px-4 py-3 font-medium text-foreground">Candidat</th>
                 <th class="px-4 py-3 font-medium text-foreground">Email</th>
                 <th class="px-4 py-3 font-medium text-foreground">
-                  Applied Role
+                  Rôle Postulé
                 </th>
                 <th class="px-4 py-3 font-medium text-foreground">
                   Validation
                 </th>
-                <th class="px-4 py-3 font-medium text-foreground">Status</th>
+                <th class="px-4 py-3 font-medium text-foreground">Statut</th>
                 <th class="px-4 py-3 font-medium text-foreground">Date</th>
                 <th class="px-4 py-3 font-medium text-foreground">Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-border">
-              <!-- Loading State -->
+              <!-- État de Chargement -->
               <tr *ngIf="isLoading">
                 <td colspan="7" class="py-6 text-center">
                   <div class="flex justify-center items-center space-x-2">
                     <div
                       class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary"
                     ></div>
-                    <span class="text-muted-foreground">Loading...</span>
+                    <span class="text-muted-foreground">Chargement...</span>
                   </div>
                 </td>
               </tr>
 
-              <!-- Empty State -->
+              <!-- État Vide -->
               <tr *ngIf="!isLoading && candidacies.length === 0">
                 <td colspan="7" class="py-6 text-center">
                   <div
@@ -562,12 +565,12 @@
                       <circle cx="10" cy="13" r="3" />
                       <path d="m12 12-1 1" />
                     </svg>
-                    <span>No applications found</span>
+                    <span>Aucune candidature trouvée</span>
                   </div>
                 </td>
               </tr>
 
-              <!-- Applications -->
+              <!-- Candidatures -->
               <tr
                 *ngFor="let candidacy of candidacies"
                 class="hover:bg-muted/50 transition-colors"
@@ -606,7 +609,7 @@
                         !candidacy.is_validated
                     }"
                   >
-                    {{ candidacy.is_validated ? "Yes" : "No" }}
+                    {{ candidacy.is_validated ? "Oui" : "Non" }}
                   </span>
                 </td>
                 <td class="px-4 py-3 text-muted-foreground">
@@ -615,27 +618,109 @@
                 <td class="px-4 py-3 whitespace-nowrap text-muted-foreground">
                   {{ candidacy.created_at | date : "dd/MM/yyyy" }}
                 </td>
-                <td class="px-4 py-3">
-                  <button
-                    class="inline-flex items-center text-primary hover:underline gap-1"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="lucide lucide-eye"
+                <td class="px-4 py-3 relative">
+                  <!-- Bouton d'actions -->
+                  <div class="dropdown relative">
+                    <button
+                      (click)="toggleViewMenu(candidacy.id)"
+                      class="inline-flex items-center justify-center p-2 rounded-md hover:bg-muted/50 transition-colors"
+                      aria-label="Actions"
                     >
-                      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                    View
-                  </button>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-more-horizontal"
+                      >
+                        <circle cx="12" cy="12" r="1" />
+                        <circle cx="19" cy="12" r="1" />
+                        <circle cx="5" cy="12" r="1" />
+                      </svg>
+                    </button>
+
+                    <!-- Menu déroulant -->
+                    <div
+                      *ngIf="selectedCandidacyId === candidacy.id"
+                      class="dropdown-menu absolute right-0 mt-1 w-48 bg-card border border-border rounded-md shadow-lg z-20 py-1 transition-all duration-200 origin-top-right"
+                      @fadeInOut
+                    >
+                      <!-- Option Voir le profil -->
+                      <button
+                        [routerLink]="['/profile', candidacy.user.id]"
+                        class="flex items-center w-full px-4 py-2 text-sm text-foreground hover:bg-muted/50 transition-colors"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-user mr-2"
+                        >
+                          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                          <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        Voir le profil
+                      </button>
+
+                      <!-- Option Valider -->
+                      <button
+                        (click)="onValidate(candidacy.id)"
+                        class="flex items-center w-full px-4 py-2 text-sm text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-check-circle mr-2"
+                        >
+                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                          <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                        Valider
+                      </button>
+
+                      <!-- Option Rejeter -->
+                      <button
+                        (click)="onReject(candidacy.id)"
+                        class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-x-circle mr-2"
+                        >
+                          <circle cx="12" cy="12" r="10" />
+                          <line x1="15" y1="9" x2="9" y2="15" />
+                          <line x1="9" y1="9" x2="15" y2="15" />
+                        </svg>
+                        Rejeter
+                      </button>
+                    </div>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -648,17 +733,17 @@
           class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           <div class="text-sm text-muted-foreground">
-            Showing
+            Affichage
             <span class="font-medium text-foreground">{{
               (meta.current_page - 1) * meta.per_page + 1
             }}</span>
-            to
+            à
             <span class="font-medium text-foreground">{{
               Math.min(meta.current_page * meta.per_page, meta.total)
             }}</span>
-            of
+            sur
             <span class="font-medium text-foreground">{{ meta.total }}</span>
-            results
+            résultats
           </div>
 
           <div class="flex items-center gap-1">
@@ -708,7 +793,7 @@
     </div>
   </div>
 
-  <!-- Invite Modal -->
+  <!-- Modal d'Invitation -->
   <div
     *ngIf="showInviteModal"
     class="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -723,12 +808,12 @@
       class="relative w-full max-w-md rounded-xl border border-border bg-card text-card-foreground shadow-lg transition-all duration-300"
     >
       <div class="p-6">
-        <!-- Header -->
+        <!-- En-tête -->
         <div class="flex items-center justify-between mb-4">
           <h2
             class="text-xl font-semibold leading-none tracking-tight text-foreground"
           >
-            Invitation for: {{ selectedRole?.role.name }}
+            Invitation pour : {{ selectedRole?.role.name }}
           </h2>
           <button
             (click)="cancelInvite()"
@@ -749,32 +834,32 @@
               <path d="M18 6 6 18" />
               <path d="m6 6 12 12" />
             </svg>
-            <span class="sr-only">Close</span>
+            <span class="sr-only">Fermer</span>
           </button>
         </div>
 
-        <!-- Content -->
+        <!-- Contenu -->
         <div class="space-y-4">
           <div>
             <label
               for="invite-email"
               class="block text-sm font-medium mb-2 text-foreground"
             >
-              Email address
+              Adresse email
             </label>
             <input
               id="invite-email"
               type="email"
               [(ngModel)]="inviteEmail"
               class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              placeholder="email@example.com"
+              placeholder="email@exemple.com"
               required
             />
           </div>
 
           <div *ngIf="selectedRole" class="rounded-md bg-muted p-4">
             <h4 class="text-sm font-medium mb-2 text-foreground">
-              Role to assign:
+              Rôle à attribuer :
             </h4>
             <div class="flex items-center gap-2">
               <span
@@ -783,19 +868,19 @@
                 {{ selectedRole.role.name }}
               </span>
               <span class="text-sm text-muted-foreground">
-                {{ selectedRole.skills.length }} required skills
+                {{ selectedRole.skills.length }} compétences requises
               </span>
             </div>
           </div>
         </div>
 
-        <!-- Footer -->
+        <!-- Pied de page -->
         <div class="mt-6 flex justify-end gap-2">
           <button
             (click)="cancelInvite()"
             class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-muted/50 h-10 px-4 py-2"
           >
-            Cancel
+            Annuler
           </button>
           <button
             (click)="sendInvite()"
@@ -817,14 +902,14 @@
               <path d="m22 2-7 20-4-9-9-4Z" />
               <path d="M22 2 11 13" />
             </svg>
-            Send invitation
+            Envoyer l'invitation
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Confirmation Modal -->
+  <!-- Modal de Confirmation de Candidature -->
   <div
     *ngIf="showCandidacyModal"
     class="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -839,12 +924,12 @@
       class="relative w-full max-w-md rounded-xl border border-border bg-card text-card-foreground shadow-lg transition-all duration-300"
     >
       <div class="p-6">
-        <!-- Header -->
+        <!-- En-tête -->
         <div class="flex items-center justify-between mb-4">
           <h2
             class="text-xl font-semibold leading-none tracking-tight text-foreground"
           >
-            Confirm Application
+            Confirmer la Candidature
           </h2>
           <button
             (click)="cancelCandidacy()"
@@ -865,14 +950,14 @@
               <path d="M18 6 6 18" />
               <path d="m6 6 12 12" />
             </svg>
-            <span class="sr-only">Close</span>
+            <span class="sr-only">Fermer</span>
           </button>
         </div>
 
-        <!-- Content -->
+        <!-- Contenu -->
         <div class="space-y-4">
           <p class="text-muted-foreground">
-            Are you sure you want to apply for the role
+            Êtes-vous sûr de vouloir postuler pour le rôle
             <strong>{{ selectedRole?.role?.name }}</strong
             >?
           </p>
@@ -882,7 +967,7 @@
             class="rounded-md bg-muted p-4"
           >
             <h4 class="text-sm font-medium mb-2 text-foreground">
-              Required Skills:
+              Compétences Requises :
             </h4>
             <div class="flex flex-wrap gap-2">
               <span
@@ -895,13 +980,13 @@
           </div>
         </div>
 
-        <!-- Footer -->
+        <!-- Pied de page -->
         <div class="mt-6 flex justify-end gap-2">
           <button
             (click)="cancelCandidacy()"
             class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-muted/50 h-10 px-4 py-2"
           >
-            Cancel
+            Annuler
           </button>
           <button
             (click)="confirmCandidacy()"
@@ -921,7 +1006,7 @@
             >
               <path d="M20 6 9 17l-5-5" />
             </svg>
-            Confirm Application
+            Confirmer la Candidature
           </button>
         </div>
       </div>
