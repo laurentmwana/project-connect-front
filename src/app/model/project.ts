@@ -3,9 +3,9 @@
  * Contient le rôle, les compétences associées et une description du rôle
  */
 export interface RoleSkill {
-  role: string
-  skill: string[]
-  description: string
+  role: string;
+  skill: string[];
+  description: string;
 }
 
 /**
@@ -13,7 +13,6 @@ export interface RoleSkill {
  * Contient toutes les informations nécessaires pour créer ou mettre à jour un projet
  */
 export interface Project {
-
   title: string;
   description: string;
   date_start: string;
@@ -29,10 +28,6 @@ export interface Role {
   role: string;
   description: string;
 }
-
-
-
-
 
 // ================================ Modèle principal basé sur la réponse du backend ================================
 
@@ -70,7 +65,7 @@ export interface ProjectData {
   description: string;
   date_start: string; // ou Date si vous transformez après
   date_end: string;
-  budget: string; 
+  budget: string;
   location: string;
   visibility: 'public' | 'private';
   created_by: User;
@@ -83,12 +78,30 @@ export interface ProjectData {
 
 export interface PaginatedProjects {
   data: ProjectData[];
-  meta: {
-    current_page: number;
-    last_page: number;
-  };
-  links: {
-    next: string | null;
-    prev: string | null;
-  };
+  meta: Meta;
+  links: Links;
+}
+
+export interface Links {
+  first: string;
+  last: string;
+  prev: string | null;
+  next: string | null;
+}
+
+export interface Meta {
+  current_page: number;
+  from: number;
+  last_page: number;
+  links: Link[];
+  path: string;
+  per_page: number;
+  to: number;
+  total: number;
+}
+
+export interface Link {
+  url: null | string;
+  label: string;
+  active: boolean;
 }

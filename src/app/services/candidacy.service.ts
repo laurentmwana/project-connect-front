@@ -87,4 +87,16 @@ export class CandidacyService {
 
     return this.http.post(url, { email }, { headers });
   }
+
+  updateCandidacy(candidacyId: number, status: 'accepted' | 'declined') {
+    const url = `${Environment.apiUrl}/candidacies/${candidacyId}/validate`;
+    const user = this.userLocalService.getUser();
+    const headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${user?.token}`,
+    };
+
+    return this.http.put(url, { status }, { headers });
+  }
 }
