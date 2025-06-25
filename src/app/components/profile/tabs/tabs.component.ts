@@ -3,6 +3,7 @@ import { AboutMeComponent } from './about_me/about-me/about-me.component';
 import { ExperienceComponent } from './experience/experience/experience.component';
 import { PortfolioComponent } from './portfolio/portfolio/portfolio.component';
 import { RecommandationComponent } from './recommandation/recommandation/recommandation.component';
+import { MesProjectsComponent } from "./mes-projects/mes-projects.component";
 
 @Component({
   selector: 'app-tabs',
@@ -11,7 +12,8 @@ import { RecommandationComponent } from './recommandation/recommandation/recomma
     ExperienceComponent,
     PortfolioComponent,
     RecommandationComponent,
-  ],
+    MesProjectsComponent
+],
   templateUrl: './tabs.component.html',
   styleUrl: './tabs.component.css',
 })
