@@ -48,6 +48,8 @@ export class ProjectDetailComponent {
   viewMenuOpen = false;
   selectedCandidacyId: number | null = null;
 
+  activeTab: 'candidatures' | 'invitations' = 'candidatures';
+
   openInviteModal(role: any) {
     this.selectedRole = role;
     this.inviteEmail = '';
