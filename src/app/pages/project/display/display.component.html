@@ -27,8 +27,8 @@
             </h3>
             <div class="flex items-center gap-3 mt-2 flex-wrap">
               <span class="text-xs text-muted-foreground">
-                <span class="hidden sm:inline">Créé</span>
-                {{ project.created_at }} par {{ project.created_by.name }}
+                <span class="hidden sm:inline">Crée le </span>
+                {{ project.created_at| date:'dd/MM/yyyy' }} par {{ project.created_by.name }}
               </span>
             </div>
           </div>

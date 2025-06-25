@@ -2,14 +2,14 @@ import { Meta, Project, ProjectData } from '@/model/project';
 import { ProjectService } from '@/services/project.service';
 import { RechercheService } from '@/services/recherche.service';
 
-import { NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-display',
-  imports: [NgIf, NgFor, RouterLink],
+  imports: [NgIf, NgFor, RouterLink,CommonModule],
   templateUrl: './display.component.html',
   styleUrl: './display.component.css',
 })
