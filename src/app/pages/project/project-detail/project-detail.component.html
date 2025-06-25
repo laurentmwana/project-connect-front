@@ -331,11 +331,53 @@
             <div
               class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
             >
-              <div>
-                <h3 class="text-xl font-semibold text-foreground">
-                  {{ roleSkill.role.name }}
-                </h3>
-                <div class="flex flex-wrap gap-2 mt-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-xl font-semibold text-foreground truncate">
+                    {{ roleSkill.role.name }}
+                  </h3>
+
+                  <!-- Badge avec nombre de collaborateur et invitation en cours  -->
+                  <div
+                    class="flex-shrink-0 flex items-centerbg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-900/30 text-orange-600 dark:text-orange-300 px-3 py-1 rounded-full text-xs font-medium border border-orange-200 dark:border-orange-800/50"
+                    *ngIf="isOwner"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="flex-shrink-0 mr-1"
+                    >
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+
+                    <span class="truncate">
+                      <!-- Collaborateurs -->
+                      {{
+                        roleSkill.candidacies_count > 0
+                          ? roleSkill.candidacies_count + " collaborateur(s)"
+                          : "Aucun collaborateur"
+                      }}
+                      <!-- Séparateur si au moins 1 invitation -->
+                      <ng-container *ngIf="roleSkill.invitations_count > 0">
+                        &nbsp;•&nbsp;
+                      </ng-container>
+                      <!-- Invitations -->
+                      <ng-container *ngIf="roleSkill.invitations_count > 0">
+                        {{ roleSkill.invitations_count }} invitation(s) en cours
+                      </ng-container>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
                   <span
                     *ngFor="let skill of roleSkill.skills"
                     class="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-900/30 text-orange-600 dark:text-orange-300 px-3 py-1 rounded-full text-xs font-medium border border-orange-200 dark:border-orange-800/50"
@@ -406,387 +448,476 @@
     </div>
   </div>
 
-  <!-- Section Candidatures (Propriétaire uniquement) -->
+  <!-- Section Tabs (Propriétaire uniquement) -->
   <div class="mt-8" *ngIf="isOwner">
     <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-      <!-- Filtres -->
-      <div class="p-4 border-b border-border">
-        <div class="flex justify-between items-center">
-          <h2 class="text-lg font-semibold text-foreground">Candidatures</h2>
-          <span *ngIf="meta" class="text-sm text-muted-foreground">
-            {{ meta.total }} résultat(s)
-          </span>
+      <!-- En-tête des Tabs -->
+      <div class="border-b border-border">
+        <nav class="flex">
           <button
-            (click)="refreshCandidacies()"
-            [disabled]="isLoading"
-            class="p-1.5 rounded-md hover:bg-muted transition"
-            title="Actualiser les candidatures"
+            (click)="activeTab = 'candidatures'"
+            [class.border-b-2]="activeTab === 'candidatures'"
+            [class.border-primary]="activeTab === 'candidatures'"
+            [class.text-primary]="activeTab === 'candidatures'"
+            [class.font-medium]="activeTab === 'candidatures'"
+            class="px-4 py-3 text-sm hover:bg-muted/50 transition-colors"
           >
+            Candidatures
+          </button>
+          <button
+            (click)="activeTab = 'invitations'"
+            [class.border-b-2]="activeTab === 'invitations'"
+            [class.border-primary]="activeTab === 'invitations'"
+            [class.text-primary]="activeTab === 'invitations'"
+            [class.font-medium]="activeTab === 'invitations'"
+            class="px-4 py-3 text-sm hover:bg-muted/50 transition-colors"
+          >
+            Invitations
+          </button>
+        </nav>
+      </div>
+
+      <!-- Contenu des Tabs -->
+      <div class="p-4">
+        <!-- Onglet Candidatures -->
+        <div *ngIf="activeTab === 'candidatures'">
+          <!-- Filtres -->
+          <div class="p-4 border-b border-border">
+            <div class="flex justify-between items-center">
+              <h2 class="text-lg font-semibold text-foreground">
+                Candidatures
+              </h2>
+              <span *ngIf="meta" class="text-sm text-muted-foreground">
+                {{ meta.total }} résultat(s)
+              </span>
+              <button
+                (click)="refreshCandidacies()"
+                [disabled]="isLoading"
+                class="p-1.5 rounded-md hover:bg-muted transition"
+                title="Actualiser les candidatures"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  [class.animate-spin]="isLoading"
+                >
+                  <path
+                    d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"
+                  />
+                  <path d="M3 3v5h5" />
+                  <path
+                    d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"
+                  />
+                  <path d="M16 16h5v5" />
+                </svg>
+              </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mt-3">
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-1"
+                  >Rôle</label
+                >
+                <input
+                  type="text"
+                  [(ngModel)]="roleFilter"
+                  placeholder="Rôle"
+                  class="w-full text-sm rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-1"
+                  >Utilisateur</label
+                >
+                <input
+                  type="text"
+                  [(ngModel)]="userFilter"
+                  placeholder="Nom"
+                  class="w-full text-sm rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-1"
+                  >Statut</label
+                >
+                <select
+                  [(ngModel)]="validatedFilter"
+                  class="w-full text-sm rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                >
+                  <option [ngValue]="-1">Tous</option>
+                  <option [ngValue]="1">Validé</option>
+                  <option [ngValue]="0">Non validé</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-1"
+                  >Par page</label
+                >
+                <select
+                  [(ngModel)]="perPage"
+                  (change)="onPerPageChange()"
+                  class="w-full text-sm rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                >
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                </select>
+              </div>
+              <div class="flex items-end gap-2">
+                <button
+                  (click)="applyFilters()"
+                  class="w-full text-sm bg-primary text-primary-foreground px-3 py-2 rounded-md hover:bg-primary/90 transition"
+                >
+                  Appliquer
+                </button>
+                <button
+                  (click)="resetFilters()"
+                  class="w-full text-sm border border-input px-3 py-2 rounded-md hover:bg-muted transition"
+                >
+                  Réinitialiser
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tableau des Candidatures -->
+          <div class="p-4">
+            <div class="overflow-x-auto rounded-lg border border-border">
+              <table class="min-w-full text-sm text-left">
+                <thead class="bg-muted">
+                  <tr>
+                    <th class="px-4 py-3 font-medium text-foreground">
+                      Candidat
+                    </th>
+                    <th class="px-4 py-3 font-medium text-foreground">Email</th>
+                    <th class="px-4 py-3 font-medium text-foreground">
+                      Rôle Postulé
+                    </th>
+                    <th class="px-4 py-3 font-medium text-foreground">
+                      Validation
+                    </th>
+                    <th class="px-4 py-3 font-medium text-foreground">
+                      Statut
+                    </th>
+                    <th class="px-4 py-3 font-medium text-foreground">Date</th>
+                    <th class="px-4 py-3 font-medium text-foreground">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-border">
+                  <!-- État de Chargement -->
+                  <tr *ngIf="isLoading">
+                    <td colspan="7" class="py-6 text-center">
+                      <div class="flex justify-center items-center space-x-2">
+                        <div
+                          class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary"
+                        ></div>
+                        <span class="text-muted-foreground">Chargement...</span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- État Vide -->
+                  <tr *ngIf="!isLoading && candidacies.length === 0">
+                    <td colspan="7" class="py-6 text-center">
+                      <div
+                        class="flex flex-col items-center justify-center space-y-2 text-muted-foreground"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-file-search"
+                        >
+                          <path
+                            d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v3"
+                          />
+                          <path d="M14 2v6h6" />
+                          <circle cx="10" cy="13" r="3" />
+                          <path d="m12 12-1 1" />
+                        </svg>
+                        <span>Aucune candidature trouvée</span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Candidatures -->
+                  <tr
+                    *ngFor="let candidacy of candidacies"
+                    class="hover:bg-muted/50 transition-colors"
+                  >
+                    <td class="px-4 py-3 font-medium">
+                      <div class="flex items-center space-x-3">
+                        <div
+                          class="flex-shrink-0 h-8 w-8 rounded-full bg-muted flex items-center justify-center"
+                        >
+                          <span
+                            class="text-sm font-medium text-muted-foreground"
+                          >
+                            {{
+                              candidacy.user.name | slice : 0 : 1 | uppercase
+                            }}
+                          </span>
+                        </div>
+                        <span class="text-foreground">{{
+                          candidacy.user.name
+                        }}</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 text-muted-foreground">
+                      {{ candidacy.user.email }}
+                    </td>
+                    <td class="px-4 py-3">
+                      <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
+                      >
+                        {{ candidacy.project_role.role.name }}
+                      </span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                        [ngClass]="{
+                          'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300':
+                            candidacy.is_validated,
+                          'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300':
+                            !candidacy.is_validated
+                        }"
+                      >
+                        {{ candidacy.is_validated ? "Oui" : "Non" }}
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 text-muted-foreground">
+                      {{ candidacy.status }}
+                    </td>
+                    <td
+                      class="px-4 py-3 whitespace-nowrap text-muted-foreground"
+                    >
+                      {{ candidacy.created_at | date : "dd/MM/yyyy" }}
+                    </td>
+                    <td class="px-4 py-3 relative">
+                      <!-- Bouton d'actions -->
+                      <div class="dropdown relative">
+                        <button
+                          (click)="toggleViewMenu(candidacy.id)"
+                          class="inline-flex items-center justify-center p-2 rounded-md hover:bg-muted/50 transition-colors"
+                          aria-label="Actions"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="lucide lucide-more-horizontal"
+                          >
+                            <circle cx="12" cy="12" r="1" />
+                            <circle cx="19" cy="12" r="1" />
+                            <circle cx="5" cy="12" r="1" />
+                          </svg>
+                        </button>
+
+                        <!-- Menu déroulant -->
+                        <div
+                          *ngIf="selectedCandidacyId === candidacy.id"
+                          class="dropdown-menu absolute right-0 mt-1 w-48 bg-card border border-border rounded-md shadow-lg z-20 py-1 transition-all duration-200 origin-top-right"
+                          @fadeInOut
+                        >
+                          <!-- Option Voir le profil -->
+                          <button
+                            [routerLink]="['/profile', candidacy.user.id]"
+                            class="flex items-center w-full px-4 py-2 text-sm text-foreground hover:bg-muted/50 transition-colors"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="lucide lucide-user mr-2"
+                            >
+                              <path
+                                d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"
+                              />
+                              <circle cx="12" cy="7" r="4" />
+                            </svg>
+                            Voir le profil
+                          </button>
+
+                          <!-- Option Valider -->
+                          <button
+                            (click)="onValidate(candidacy.id)"
+                            class="flex items-center w-full px-4 py-2 text-sm text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="lucide lucide-check-circle mr-2"
+                            >
+                              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                              <polyline points="22 4 12 14.01 9 11.01" />
+                            </svg>
+                            Valider
+                          </button>
+
+                          <!-- Option Rejeter -->
+                          <button
+                            (click)="onReject(candidacy.id)"
+                            class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="lucide lucide-x-circle mr-2"
+                            >
+                              <circle cx="12" cy="12" r="10" />
+                              <line x1="15" y1="9" x2="9" y2="15" />
+                              <line x1="9" y1="9" x2="15" y2="15" />
+                            </svg>
+                            Rejeter
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div
+              *ngIf="meta && meta.last_page > 1"
+              class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4"
+            >
+              <div class="text-sm text-muted-foreground">
+                Affichage
+                <span class="font-medium text-foreground">{{
+                  (meta.current_page - 1) * meta.per_page + 1
+                }}</span>
+                à
+                <span class="font-medium text-foreground">{{
+                  Math.min(meta.current_page * meta.per_page, meta.total)
+                }}</span>
+                sur
+                <span class="font-medium text-foreground">{{
+                  meta.total
+                }}</span>
+                résultats
+              </div>
+
+              <div class="flex items-center gap-1">
+                <button
+                  (click)="onPageChange(1)"
+                  [disabled]="meta.current_page === 1"
+                  class="px-3 py-1.5 rounded-md border border-input bg-background text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition"
+                >
+                  «
+                </button>
+                <button
+                  (click)="onPageChange(meta.current_page - 1)"
+                  [disabled]="meta.current_page === 1"
+                  class="px-3 py-1.5 rounded-md border border-input bg-background text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition"
+                >
+                  ‹
+                </button>
+
+                <ng-container *ngFor="let page of getPageNumbers()">
+                  <button
+                    (click)="onPageChange(page)"
+                    [class.bg-primary]="page === meta.current_page"
+                    [class.text-primary-foreground]="page === meta.current_page"
+                    class="px-3 py-1.5 rounded-md border border-input bg-background text-sm font-medium hover:bg-muted transition"
+                  >
+                    {{ page }}
+                  </button>
+                </ng-container>
+
+                <button
+                  (click)="onPageChange(meta.current_page + 1)"
+                  [disabled]="meta.current_page === meta.last_page"
+                  class="px-3 py-1.5 rounded-md border border-input bg-background text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition"
+                >
+                  ›
+                </button>
+                <button
+                  (click)="onPageChange(meta.last_page)"
+                  [disabled]="meta.current_page === meta.last_page"
+                  class="px-3 py-1.5 rounded-md border border-input bg-background text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition"
+                >
+                  »
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Onglet Invitations -->
+        <div *ngIf="activeTab === 'invitations'" class="py-12">
+          <div class="flex flex-col items-center justify-center text-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="48"
+              height="48"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
-              [class.animate-spin]="isLoading"
+              class="lucide lucide-construction text-muted-foreground mb-4"
             >
-              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-              <path d="M3 3v5h5" />
-              <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
-              <path d="M16 16h5v5" />
+              <rect x="2" y="6" width="20" height="8" rx="1" />
+              <path d="M17 14v7" />
+              <path d="M7 14v7" />
+              <path d="M17 3v3" />
+              <path d="M7 3v3" />
+              <path d="M10 14 2.3 6.3" />
+              <path d="m14 6 7.7 7.7" />
+              <path d="m8 6 8 8" />
             </svg>
-          </button>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mt-3">
-          <div>
-            <label class="block text-sm font-medium text-foreground mb-1"
-              >Rôle</label
-            >
-            <input
-              type="text"
-              [(ngModel)]="roleFilter"
-              placeholder="Rôle"
-              class="w-full text-sm rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:ring-2 focus:ring-ring focus:ring-offset-2"
-            />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-foreground mb-1"
-              >Utilisateur</label
-            >
-            <input
-              type="text"
-              [(ngModel)]="userFilter"
-              placeholder="Nom"
-              class="w-full text-sm rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:ring-2 focus:ring-ring focus:ring-offset-2"
-            />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-foreground mb-1"
-              >Statut</label
-            >
-            <select
-              [(ngModel)]="validatedFilter"
-              class="w-full text-sm rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:ring-2 focus:ring-ring focus:ring-offset-2"
-            >
-              <option [ngValue]="-1">Tous</option>
-              <option [ngValue]="1">Validé</option>
-              <option [ngValue]="0">Non validé</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-foreground mb-1"
-              >Par page</label
-            >
-            <select
-              [(ngModel)]="perPage"
-              (change)="onPerPageChange()"
-              class="w-full text-sm rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:ring-2 focus:ring-ring focus:ring-offset-2"
-            >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
-            </select>
-          </div>
-          <div class="flex items-end gap-2">
-            <button
-              (click)="applyFilters()"
-              class="w-full text-sm bg-primary text-primary-foreground px-3 py-2 rounded-md hover:bg-primary/90 transition"
-            >
-              Appliquer
-            </button>
-            <button
-              (click)="resetFilters()"
-              class="w-full text-sm border border-input px-3 py-2 rounded-md hover:bg-muted transition"
-            >
-              Réinitialiser
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tableau des Candidatures -->
-      <div class="p-4">
-        <div class="overflow-x-auto rounded-lg border border-border">
-          <table class="min-w-full text-sm text-left">
-            <thead class="bg-muted">
-              <tr>
-                <th class="px-4 py-3 font-medium text-foreground">Candidat</th>
-                <th class="px-4 py-3 font-medium text-foreground">Email</th>
-                <th class="px-4 py-3 font-medium text-foreground">
-                  Rôle Postulé
-                </th>
-                <th class="px-4 py-3 font-medium text-foreground">
-                  Validation
-                </th>
-                <th class="px-4 py-3 font-medium text-foreground">Statut</th>
-                <th class="px-4 py-3 font-medium text-foreground">Date</th>
-                <th class="px-4 py-3 font-medium text-foreground">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-border">
-              <!-- État de Chargement -->
-              <tr *ngIf="isLoading">
-                <td colspan="7" class="py-6 text-center">
-                  <div class="flex justify-center items-center space-x-2">
-                    <div
-                      class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary"
-                    ></div>
-                    <span class="text-muted-foreground">Chargement...</span>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- État Vide -->
-              <tr *ngIf="!isLoading && candidacies.length === 0">
-                <td colspan="7" class="py-6 text-center">
-                  <div
-                    class="flex flex-col items-center justify-center space-y-2 text-muted-foreground"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="lucide lucide-file-search"
-                    >
-                      <path
-                        d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v3"
-                      />
-                      <path d="M14 2v6h6" />
-                      <circle cx="10" cy="13" r="3" />
-                      <path d="m12 12-1 1" />
-                    </svg>
-                    <span>Aucune candidature trouvée</span>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- Candidatures -->
-              <tr
-                *ngFor="let candidacy of candidacies"
-                class="hover:bg-muted/50 transition-colors"
-              >
-                <td class="px-4 py-3 font-medium">
-                  <div class="flex items-center space-x-3">
-                    <div
-                      class="flex-shrink-0 h-8 w-8 rounded-full bg-muted flex items-center justify-center"
-                    >
-                      <span class="text-sm font-medium text-muted-foreground">
-                        {{ candidacy.user.name | slice : 0 : 1 | uppercase }}
-                      </span>
-                    </div>
-                    <span class="text-foreground">{{
-                      candidacy.user.name
-                    }}</span>
-                  </div>
-                </td>
-                <td class="px-4 py-3 text-muted-foreground">
-                  {{ candidacy.user.email }}
-                </td>
-                <td class="px-4 py-3">
-                  <span
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
-                  >
-                    {{ candidacy.project_role.role.name }}
-                  </span>
-                </td>
-                <td class="px-4 py-3">
-                  <span
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                    [ngClass]="{
-                      'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300':
-                        candidacy.is_validated,
-                      'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300':
-                        !candidacy.is_validated
-                    }"
-                  >
-                    {{ candidacy.is_validated ? "Oui" : "Non" }}
-                  </span>
-                </td>
-                <td class="px-4 py-3 text-muted-foreground">
-                  {{ candidacy.status }}
-                </td>
-                <td class="px-4 py-3 whitespace-nowrap text-muted-foreground">
-                  {{ candidacy.created_at | date : "dd/MM/yyyy" }}
-                </td>
-                <td class="px-4 py-3 relative">
-                  <!-- Bouton d'actions -->
-                  <div class="dropdown relative">
-                    <button
-                      (click)="toggleViewMenu(candidacy.id)"
-                      class="inline-flex items-center justify-center p-2 rounded-md hover:bg-muted/50 transition-colors"
-                      aria-label="Actions"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="lucide lucide-more-horizontal"
-                      >
-                        <circle cx="12" cy="12" r="1" />
-                        <circle cx="19" cy="12" r="1" />
-                        <circle cx="5" cy="12" r="1" />
-                      </svg>
-                    </button>
-
-                    <!-- Menu déroulant -->
-                    <div
-                      *ngIf="selectedCandidacyId === candidacy.id"
-                      class="dropdown-menu absolute right-0 mt-1 w-48 bg-card border border-border rounded-md shadow-lg z-20 py-1 transition-all duration-200 origin-top-right"
-                      @fadeInOut
-                    >
-                      <!-- Option Voir le profil -->
-                      <button
-                        [routerLink]="['/profile', candidacy.user.id]"
-                        class="flex items-center w-full px-4 py-2 text-sm text-foreground hover:bg-muted/50 transition-colors"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="lucide lucide-user mr-2"
-                        >
-                          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                          <circle cx="12" cy="7" r="4" />
-                        </svg>
-                        Voir le profil
-                      </button>
-
-                      <!-- Option Valider -->
-                      <button
-                        (click)="onValidate(candidacy.id)"
-                        class="flex items-center w-full px-4 py-2 text-sm text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="lucide lucide-check-circle mr-2"
-                        >
-                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                          <polyline points="22 4 12 14.01 9 11.01" />
-                        </svg>
-                        Valider
-                      </button>
-
-                      <!-- Option Rejeter -->
-                      <button
-                        (click)="onReject(candidacy.id)"
-                        class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="lucide lucide-x-circle mr-2"
-                        >
-                          <circle cx="12" cy="12" r="10" />
-                          <line x1="15" y1="9" x2="9" y2="15" />
-                          <line x1="9" y1="9" x2="15" y2="15" />
-                        </svg>
-                        Rejeter
-                      </button>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Pagination -->
-        <div
-          *ngIf="meta && meta.last_page > 1"
-          class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4"
-        >
-          <div class="text-sm text-muted-foreground">
-            Affichage
-            <span class="font-medium text-foreground">{{
-              (meta.current_page - 1) * meta.per_page + 1
-            }}</span>
-            à
-            <span class="font-medium text-foreground">{{
-              Math.min(meta.current_page * meta.per_page, meta.total)
-            }}</span>
-            sur
-            <span class="font-medium text-foreground">{{ meta.total }}</span>
-            résultats
-          </div>
-
-          <div class="flex items-center gap-1">
-            <button
-              (click)="onPageChange(1)"
-              [disabled]="meta.current_page === 1"
-              class="px-3 py-1.5 rounded-md border border-input bg-background text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition"
-            >
-              «
-            </button>
-            <button
-              (click)="onPageChange(meta.current_page - 1)"
-              [disabled]="meta.current_page === 1"
-              class="px-3 py-1.5 rounded-md border border-input bg-background text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition"
-            >
-              ‹
-            </button>
-
-            <ng-container *ngFor="let page of getPageNumbers()">
-              <button
-                (click)="onPageChange(page)"
-                [class.bg-primary]="page === meta.current_page"
-                [class.text-primary-foreground]="page === meta.current_page"
-                class="px-3 py-1.5 rounded-md border border-input bg-background text-sm font-medium hover:bg-muted transition"
-              >
-                {{ page }}
-              </button>
-            </ng-container>
-
-            <button
-              (click)="onPageChange(meta.current_page + 1)"
-              [disabled]="meta.current_page === meta.last_page"
-              class="px-3 py-1.5 rounded-md border border-input bg-background text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition"
-            >
-              ›
-            </button>
-            <button
-              (click)="onPageChange(meta.last_page)"
-              [disabled]="meta.current_page === meta.last_page"
-              class="px-3 py-1.5 rounded-md border border-input bg-background text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition"
-            >
-              »
-            </button>
+            <h3 class="text-lg font-medium text-foreground mb-2">
+              Section en cours de développement
+            </h3>
+            <p class="text-sm text-muted-foreground max-w-md">
+              La gestion des invitations sera bientôt disponible. Cette
+              fonctionnalité vous permettra de gerer les invitations envoyées
+              aux utilisateurs.
+            </p>
           </div>
         </div>
       </div>
