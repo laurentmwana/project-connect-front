@@ -1,6 +1,7 @@
-import { Project } from '@/model/project';
+import { Domain } from '@/model/domain';
+import { Project, ProjectRoleSkill, Skill } from '@/model/project';
 import { ProjectService } from '@/services/project.service';
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf, Location } from '@angular/common';
 import { Component } from '@angular/core';
 import {
   AbstractControl,
@@ -40,7 +41,8 @@ export class ProjectEditComponent {
     private fb: FormBuilder,
     private projectService: ProjectService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {
     this.projectForm = this.fb.group(
       {
@@ -82,6 +84,8 @@ export class ProjectEditComponent {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.projectId = params['id'];
+      console.log('id du projet:', this.projectId);
+
       if (this.projectId) {
         this.loadFormData();
         this.loadProjectData();
@@ -99,22 +103,45 @@ export class ProjectEditComponent {
   }
 
   loadFormData(): void {
-    this.projectService.getAvailableDomains().subscribe((response) => {
-      this.availableDomains = response.data.map((domain) => domain.name);
+    console.log('Loading form data...');
+
+    this.projectService.getAvailableDomains().subscribe({
+      next: (response) => {
+        this.availableDomains = response.data.map((domain) => domain.name);
+        console.log('Available domains loaded:', this.availableDomains);
+      },
+      error: (error) => {
+        console.error('Error loading domains:', error);
+      },
     });
 
-    this.projectService.getAvailableRoles().subscribe((response) => {
-      this.availableRoles = response.data.map((role) => role.name);
+    this.projectService.getAvailableRoles().subscribe({
+      next: (response) => {
+        this.availableRoles = response.data.map((role) => role.name);
+        console.log('Available roles loaded:', this.availableRoles);
+      },
+      error: (error) => {
+        console.error('Error loading roles:', error);
+      },
     });
 
-    this.projectService.getAvaillableSkills().subscribe((response) => {
-      this.availableSkills = response.data.map((skill) => skill.name);
+    this.projectService.getAvaillableSkills().subscribe({
+      next: (response) => {
+        this.availableSkills = response.data.map((skill) => skill.name);
+        console.log('Available skills loaded:', this.availableSkills);
+      },
+      error: (error) => {
+        console.error('Error loading skills:', error);
+      },
     });
   }
 
   loadProjectData(): void {
+    console.log('Loading project data for ID:', this.projectId);
+
     this.projectService.getProject(this.projectId).subscribe({
       next: (response) => {
+        console.log('Project data received:', response.data);
         const project = response.data;
         this.populateForm(project);
         this.loading = false;
@@ -127,31 +154,35 @@ export class ProjectEditComponent {
     });
   }
 
-  populateForm(project: Project): void {
-    // Populate basic fields
+  populateForm(project: any): void {
+    const domains = project.domains.map((d: Domain) => d.name);
+
     this.projectForm.patchValue({
       title: project.title,
       description: project.description,
-      date_start: '',
-      date_end: '',
-      budget: project.budget,
+      date_start: project.date_start,
+      date_end: project.date_end,
+      budget: project.budget || 0,
       location: project.location,
       visibility: project.visibility,
-      domains: project.domains || [],
+      domains: domains,
     });
 
-    // Clear existing role_skills array
     while (this.roleSkillsArray.length) {
       this.roleSkillsArray.removeAt(0);
     }
     this.newSkills = [];
 
-    // Populate role_skills array
-    if (project.role_skills && project.role_skills.length > 0) {
-      project.role_skills.forEach((roleSkill: any) => {
+    if (
+      project.project_roles_skills &&
+      project.project_roles_skills.length > 0
+    ) {
+      project.project_roles_skills.forEach((roleSkill: ProjectRoleSkill) => {
+        const skills = roleSkill.skills.map((s: Skill) => s.name);
+
         const roleSkillGroup = this.fb.group({
-          role: [roleSkill.role || '', Validators.required],
-          skill: [roleSkill.skill || []],
+          role: [roleSkill.role.name, Validators.required],
+          skill: [skills],
           description: [roleSkill.description || ''],
         });
 
@@ -160,7 +191,6 @@ export class ProjectEditComponent {
       });
     }
   }
-
   get roleSkillsArray(): FormArray {
     return this.projectForm.get('role_skills') as FormArray;
   }
@@ -192,10 +222,10 @@ export class ProjectEditComponent {
     const newSkill = this.newSkills[index];
     if (!newSkill || newSkill.trim() === '') return;
 
-    const roleSkillGroup = this.roleSkillsArray.at(index);
+    const roleSkillGroup = this.roleSkillsArray.at(index) as FormGroup;
     if (!roleSkillGroup) return;
 
-    const currentSkills = roleSkillGroup.get('skill')?.value || [];
+    const currentSkills: string[] = roleSkillGroup.get('skill')?.value || [];
 
     if (!currentSkills.includes(newSkill)) {
       roleSkillGroup.patchValue({ skill: [...currentSkills, newSkill] });
@@ -205,10 +235,10 @@ export class ProjectEditComponent {
   }
 
   removeSkillFromRole(roleIndex: number, skill: string): void {
-    const roleSkillGroup = this.roleSkillsArray.at(roleIndex);
+    const roleSkillGroup = this.roleSkillsArray.at(roleIndex) as FormGroup;
     if (!roleSkillGroup) return;
 
-    const currentSkills = roleSkillGroup.get('skill')?.value || [];
+    const currentSkills: string[] = roleSkillGroup.get('skill')?.value || [];
 
     roleSkillGroup.patchValue({
       skill: currentSkills.filter((s: string) => s !== skill),
@@ -217,7 +247,6 @@ export class ProjectEditComponent {
 
   onSubmit(): void {
     this.formSubmitted = true;
-    console.log('Formulaire de modification soumis:', this.projectForm.value);
 
     if (this.projectForm.invalid) {
       this.formError = 'Veuillez corriger les erreurs dans le formulaire.';
@@ -231,64 +260,50 @@ export class ProjectEditComponent {
 
     const data: Project = this.projectForm.value;
 
-    // Use updateProject instead of createProject
     this.projectService.updateProject(this.projectId, data).subscribe({
       next: (response) => {
-        console.log(this.projectForm.value);
-        console.log('Projet modifié avec succès:', response);
+        console.log('Project updated successfully:', response);
         this.submitting = false;
         this.successMessage = 'Projet modifié avec succès!';
         setTimeout(() => {
           this.successMessage = '';
-          // Optionally navigate back to project details or list
-          // this.router.navigate(['/projects', this.projectId]);
         }, 3000);
+        this.location.back();
       },
       error: (error) => {
-        console.error('Erreur lors de la modification du projet:', error);
+        console.error('Error updating project:', error);
         this.formError =
           'Une erreur est survenue lors de la modification du projet.';
         this.submitting = false;
       },
     });
   }
-
-  toggleDomain(domain: string): void {
-    const currentDomains = this.projectForm.get('domains')?.value || [];
-    const domainsArray = Array.isArray(currentDomains) ? currentDomains : [];
-
-    // On extrait les noms de domaine pour la comparaison
-    const domainNames = domainsArray.map((d: any) =>
-      typeof d === 'string' ? d : d.name
-    );
-
-    if (domainNames.includes(domain)) {
-      // On retire le domaine, qu'il soit objet ou string
-      const newDomains = domainsArray.filter((d: any) => {
-        const name = typeof d === 'string' ? d : d.name;
-        return name !== domain;
-      });
-      this.projectForm.patchValue({ domains: newDomains });
-    } else {
-      // On ajoute le domaine sous forme de string
-      this.projectForm.patchValue({ domains: [...domainNames, domain] });
-    }
-  }
-
   isDomainSelected(domain: string): boolean {
-    const currentDomains = this.projectForm.get('domains')?.value || [];
+    const currentDomains: string[] =
+      this.projectForm.get('domains')?.value || [];
     return currentDomains.includes(domain);
   }
 
+  toggleDomain(domain: string): void {
+    const currentDomains: string[] =
+      this.projectForm.get('domains')?.value || [];
+
+    if (currentDomains.includes(domain)) {
+      const newDomains = currentDomains.filter((d: string) => d !== domain);
+      this.projectForm.patchValue({ domains: newDomains });
+    } else {
+      this.projectForm.patchValue({ domains: [...currentDomains, domain] });
+    }
+  }
   onKeyDown(event: KeyboardEvent, index: number): void {
     if (event.key === 'Enter') {
       event.preventDefault();
+
       this.addSkillToRole(index);
     }
   }
 
-  // Optional: Cancel edit and navigate back
   onCancel(): void {
-    this.router.navigate(['/projects', this.projectId]);
+    this.location.back();
   }
 }
