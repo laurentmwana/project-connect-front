@@ -55,4 +55,9 @@ export class NavbarComponent {
       this.searchService.setSearchTerm(this.searchTerm.trim()); // Met à jour le service central
     });
   }
+  onKeyUp(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.launchSearch();
+    }
+  }
 }
