@@ -57,6 +57,8 @@ export interface ProjectRoleSkill {
   description?: string;
   role: Role;
   skills: Skill[];
+  candidacies_count: number;
+  invitations_count: number;
 }
 
 export interface ProjectData {
