@@ -13,6 +13,7 @@ import {
 import { ProjectService } from '../../../services/project.service';
 import { Project } from '../../../model/project';
 import { NgFor, NgIf } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create',
@@ -34,7 +35,11 @@ export class CreateComponent {
   formError = '';
   successMessage = '';
 
-  constructor(private fb: FormBuilder, private projectService: ProjectService) {
+  constructor(
+    private fb: FormBuilder,
+    private projectService: ProjectService,
+    private router: Router
+  ) {
     this.projectForm = this.fb.group(
       {
         title: ['', Validators.required],
@@ -182,7 +187,9 @@ export class CreateComponent {
         setTimeout(() => {
           this.successMessage = '';
         }, 5000);
+
         this.resetForm();
+        this.router.navigate(['/project', response.data.id]);
       },
       error: (error) => {
         console.error('Erreur lors de la création du projet:', error);
