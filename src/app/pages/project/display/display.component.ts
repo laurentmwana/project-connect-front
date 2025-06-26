@@ -1,4 +1,5 @@
 import { Project, ProjectData } from '@/model/project';
+import { User } from '@/services/follow.service';
 import { ProjectService } from '@/services/project.service';
 import { RechercheService } from '@/services/recherche.service';
 
@@ -6,10 +7,11 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { SuggestionsComponent } from "../../../components/suggestion/suggestion.component";
 
 @Component({
   selector: 'app-display',
-  imports: [NgIf, NgFor, RouterLink],
+  imports: [NgIf, NgFor, RouterLink, SuggestionsComponent],
   templateUrl: './display.component.html',
   styleUrl: './display.component.css',
 })
@@ -25,6 +27,7 @@ export class DisplayComponent {
   Math: Math = Math;
 
   errorMessage = '';
+  suggestions: User[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -62,6 +65,7 @@ export class DisplayComponent {
       },
     });
   }
+
 
 
   goToNextPage(): void {
