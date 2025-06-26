@@ -61,4 +61,26 @@ export class FollowService {
       { headers: this.getAuthHeaders() }
     );
   }
+
+  getFollowCounts(userId: number): Observable<{ 
+    followers_count: number; 
+    following_count: number; 
+    total_connections : number 
+  }> {
+    return this.http.get<{ 
+      followers_count: number; 
+      following_count: number;
+      total_connections : number
+    }>(
+      `${this.apiUrl}/users/${userId}/follow-counts`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+  getSuggestions(): Observable<User[]> {
+  return this.http.get<User[]>(
+    `${this.apiUrl}/users/suggestions`,
+    { headers: this.getAuthHeaders() }
+  );
+}
+
 }

@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { RechercheService } from '@/services/recherche.service';
 import { AuthService } from '@/services/auth.service';
 import { UserLocalService } from '@/services/user-local.service';
+import { ProjectService } from '@/services/project.service';
 
 
 @Component({
@@ -15,14 +16,16 @@ import { UserLocalService } from '@/services/user-local.service';
 })
 export class NavbarComponent {
   notificationCount = 2;
+  searchTerm = '';
 
   activeTab = 'discover';
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private userLocalService : UserLocalService ,
-    private searchService: RechercheService
+    private userLocalService: UserLocalService,
+    private searchService: RechercheService,
+    private projectService: ProjectService
   ) {}
 
   setActiveTab(tab: string): void {
@@ -38,7 +41,6 @@ export class NavbarComponent {
       });
     }
   }
-  
 
   // Cette méthode sera appelée à chaque frappe dans l'input
   onSearchInput(event: Event): void {
@@ -46,6 +48,16 @@ export class NavbarComponent {
     if (input) {
       // Met à jour le BehaviorSubject dans SearchService
       this.searchService.setSearchTerm(input.value.trim());
+    }
+  }
+  launchSearch(): void {
+    this.projectService.getAllProjects(1, this.searchTerm).subscribe((res) => {
+      this.searchService.setSearchTerm(this.searchTerm.trim()); // Met à jour le service central
+    });
+  }
+  onKeyUp(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.launchSearch();
     }
   }
 }

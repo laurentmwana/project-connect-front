@@ -17,6 +17,7 @@ import { protectedGuard } from './guards/protected.guard';
 import { MessageComponent } from './pages/message/message.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ProjectEditComponent } from './pages/project/project-edit/project-edit.component';
+import { canEditGuard } from './guards/can-edit.guard';
 export const routes: Routes = [
   {
     path: '',
@@ -37,7 +38,7 @@ export const routes: Routes = [
         path: 'project/edit/:id',
         component: ProjectEditComponent,
         title: 'Modifier un projet - ProjectConnect',
-        canActivate: [protectedGuard],
+        canActivate: [canEditGuard],
       },
 
       {

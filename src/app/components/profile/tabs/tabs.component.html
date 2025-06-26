@@ -2,7 +2,7 @@
   <!-- Tab Triggers -->
   <div
     role="tablist"
-    class="h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground grid w-full grid-cols-4"
+    class="h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground grid w-full grid-cols-5"
   >
     <button
       data-tabs-target="#about"
@@ -44,17 +44,30 @@
     >
       Recommandations
     </button>
+    <button
+      data-tabs-target="#mes-projects"
+      type="button"
+      role="tab"
+      aria-controls="mes-projects"
+      aria-selected="false"
+      class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium"
+    >
+      Mes Projects
+    </button>
   </div>
 
   <!-- Tab Content -->
   <div id="tab-content" class="mt-6">
-
-   <app-about-me></app-about-me>
+    <div id="about" role="tabpanel" class="hidden">
+      <app-about-me></app-about-me>
+    </div>
 
     <app-experience></app-experience>
-
     <app-portfolio></app-portfolio>
+    <app-recommandation></app-recommandation>
 
-  <app-recommandation></app-recommandation>
+    <div id="mes-projects" role="tabpanel" class="hidden">
+      <app-mes-projects></app-mes-projects>
+    </div>
   </div>
 </div>

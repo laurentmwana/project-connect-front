@@ -56,7 +56,7 @@
         *ngFor="let chat of filteredChats; trackBy: trackByChat"
         class="p-4 border-b hover:bg-gray-100 cursor-pointer flex justify-between items-center"
         (click)="selectChat(chat)"
-        [class.bg-indigo-100]="selectedChat?.id === chat.id"
+        [class.bg-accent]="selectedChat?.id === chat.id"
       >
         <div>
           <div class="font-semibold">{{ getChatDisplayName(chat) }}</div>
@@ -84,7 +84,7 @@
       <!-- Liste des messages -->
       <div
         #messagesContainer
-        class="flex-1 overflow-y-auto px-4 py-2 space-y-2 bg-gray-50"
+        class="flex-1 overflow-y-auto px-4 py-2 space-y-2 bg-muted"
       >
         <div
           *ngIf="isLoadingMessages"
@@ -107,8 +107,8 @@
         >
           <div
             [ngClass]="{
-              'bg-indigo-100 text-black ml-auto': isOwnMessage(message),
-              'bg-white text-gray-800 mr-auto': !isOwnMessage(message)
+              'bg-primary text-primary-foreground ml-auto': isOwnMessage(message),
+              'bg-card text-card-foreground mr-auto': !isOwnMessage(message)
             }"
             class="inline-block px-4 py-2 rounded-lg shadow max-w-xs md:max-w-md"
           >
@@ -134,7 +134,7 @@
         <button
           type="submit"
           [disabled]="isLoading || !newMessage.trim()"
-          class="px-4 py-2 bg-indigo-600 text-white rounded disabled:opacity-50"
+          class="px-4 py-2 bg-primary text-primary-foreground rounded disabled:opacity-50"
         >
           Envoyer
         </button>
