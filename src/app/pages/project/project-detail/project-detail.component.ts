@@ -8,6 +8,7 @@ import { CandidacyService } from '@/services/candidacy.service';
 import { Candidacy, Meta, PaginatedCandidacyResponse } from '@/model/candidacy';
 import { UserLocalService } from '@/services/user-local.service';
 import { FormsModule, NgModel } from '@angular/forms';
+import { Invitation, PaginatedInvitationResponse } from '@/model/invitation';
 
 @Component({
   selector: 'app-project-detail',
@@ -24,6 +25,16 @@ import { FormsModule, NgModel } from '@angular/forms';
   styleUrl: './project-detail.component.css',
 })
 export class ProjectDetailComponent {
+  toggleViewMenuInvite(invitationId: number) {
+    this.viewMenuOpen = !this.viewMenuOpen;
+    this.selectedInvitationId =
+      this.selectedInvitationId === invitationId ? null : invitationId;
+  }
+  selectedInvitationId: any;
+  refreshInvitations() {
+    if (this.isLoading) return;
+    this.loadInvitations();
+  }
   projectId!: string;
   project!: ProjectData;
   errorMessage = '';
@@ -35,11 +46,20 @@ export class ProjectDetailComponent {
   isLoading: boolean = false;
   projectMenuOpen = false;
   Math: Math = Math;
+  invitations: Invitation[] = [];
+  candidacyMeta: Meta | null = null;
+  invitationMeta: Meta | null = null;
+  currentInvitationPage: number = 1;
 
   // Filtres
   roleFilter: string = '';
   userFilter: string = '';
   validatedFilter: number = -1;
+  searchFilter: string = '';
+
+  invitationRoleFilter: string = '';
+  invitationEmailFilter: string = '';
+  invitationStatusFilter: string = '';
 
   //invitations
   showInviteModal = false;
@@ -123,6 +143,7 @@ export class ProjectDetailComponent {
 
         if (this.isOwner) {
           this.loadCandidacies();
+          this.loadInvitations();
         }
       },
       error: () => {
@@ -165,7 +186,7 @@ export class ProjectDetailComponent {
           console.log('Métadonnées de pagination:', response.meta);
 
           this.candidacies = response.data;
-          this.meta = response.meta;
+          this.candidacyMeta = response.meta;
           this.isLoading = false;
         },
         error: (error) => {
@@ -300,5 +321,95 @@ export class ProjectDetailComponent {
       },
     });
     this.viewMenuOpen = false;
+  }
+
+  //Invitations
+  // Ajouter cette méthode pour la pagination des invitations
+  onInvitationPageChange(page: number): void {
+    this.currentInvitationPage = page;
+    this.loadInvitations(page);
+  }
+
+  // Modifier loadInvitations pour utiliser currentInvitationPage
+  loadInvitations(page: number = 1) {
+    if (!this.isOwner) return;
+
+    this.isLoading = true;
+    this.currentInvitationPage = page;
+
+    // Dans loadInvitations()
+    const params = {
+      page: page,
+      per_page: this.perPage,
+      ...(this.invitationRoleFilter && { role: this.invitationRoleFilter }),
+      ...(this.invitationEmailFilter && { email: this.invitationEmailFilter }),
+    };
+
+    console.log('Paramètres envoyés:', params);
+
+    this.candidacyService
+      .getInvitations(Number(this.projectId), params)
+      .subscribe({
+        next: (response: PaginatedInvitationResponse) => {
+          this.invitations = response.data;
+          this.invitationMeta = response.meta;
+          console.log(
+            'Invitations chargées:',
+            this.invitations.length,
+            'Meta:',
+            this.invitationMeta
+          );
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Erreur:', err);
+          this.isLoading = false;
+          this.showToast('Erreur lors du chargement des invitations', 'error');
+        },
+      });
+  }
+  applyInvitationFilters(): void {
+    this.currentInvitationPage = 1;
+    this.loadInvitations();
+  }
+
+  resetInvitationFilters(): void {
+    this.invitationRoleFilter = '';
+    this.invitationEmailFilter = '';
+    this.invitationStatusFilter = '';
+    this.perPage = 10;
+    this.applyInvitationFilters();
+  }
+
+  onInvitationPerPageChange(): void {
+    this.currentInvitationPage = 1;
+    this.loadInvitations();
+  }
+  getInvitationPageNumbers(): number[] {
+    if (!this.invitationMeta) return [];
+
+    const pages = [];
+    const startPage = Math.max(1, this.invitationMeta.current_page - 2);
+    const endPage = Math.min(
+      this.invitationMeta.last_page,
+      this.invitationMeta.current_page + 2
+    );
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+  cancel(id: number) {
+    this.candidacyService.cancelInvitation(id).subscribe({
+      next: () => {
+        this.showToast('Invitation annulée avec succès.', 'success');
+        this.loadInvitations();
+      },
+      error: (err) => {
+        let error = err.error;
+        this.showToast(`${error.message}`, 'error');
+      },
+    });
   }
 }
