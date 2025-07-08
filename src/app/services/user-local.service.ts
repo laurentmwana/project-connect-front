@@ -41,4 +41,6 @@ export class UserLocalService {
   isLoggedIn(): boolean {
     return this.getUser() !== null;
   }
+  
+ 
 }

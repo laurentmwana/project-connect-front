@@ -1,35 +1,80 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, inject } from '@angular/core';
 import { FollowButtonComponent } from "../../follow-button/follow-button.component";
+import { FollowService } from '../../../services/follow.service';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-info-user',
-  imports: [FollowButtonComponent],
+  standalone: true,
+  imports: [FollowButtonComponent, CommonModule],
   templateUrl: './info-user.component.html',
   styleUrl: './info-user.component.css'
 })
-export class InfoUserComponent {
-  // Déclare les propriétés utilisées dans ton template
-  // userId: number = 123; // Ou récupère cette valeur dynamiquement
-  // initialIsFollowing: boolean = false;
 
-  // Gestionnaire de l'événement followChange (optionnel)
-  // onFollowChange(isFollowing: boolean) {
-  //   console.log('Follow status changed:', isFollowing);
-  //   // Tu peux faire ce que tu veux avec cette info, par exemple mettre à jour une variable
-  // }
+export class InfoUserComponent implements OnInit {
   @Input() userId: number = 0;
   @Input() initialIsFollowing: boolean = false;
 
+   @Input() userProfile?: {
+    name: string;
+    profile_photo?: string;
+    job_title?: string;
+    location?: string;
+    email?: string;
+    phone?: string;
+    portfolio_url?: string;
+    availability?: string;
+    about?: string;
+  }; 
+
   @Output() followChange = new EventEmitter<boolean>();
-  @Output() messageClick = new EventEmitter<string>(); // Nouvel événement
+  @Output() messageClick = new EventEmitter<string>();
+
+  followersCount: number = 0;
+  followingCount: number = 0;
+   totalConnections: number = 0;
+
+  get userInitials(): string {
+    if (this.userProfile?.name) {
+      return this.userProfile.name.split(' ').map(n => n[0]).join('');
+    }
+    return 'JD';
+  }
+
+  private followService = inject(FollowService);
+  private router = inject(Router);
+
+  ngOnInit(): void {
+    this.loadFollowCounts();
+  }
+
+ loadFollowCounts(): void {
+  if (!this.userId) return;
+
+  this.followService.getFollowCounts(this.userId).subscribe({
+    next: (counts) => {
+      this.followersCount = counts.followers_count;
+      this.followingCount = counts.following_count;
+      this.totalConnections = counts.total_connections; 
+    },
+    error: (err) => {
+      console.error('Erreur lors du chargement des follow counts:', err);
+    }
+  });
+}
+
 
   onMessageClick() {
-    // Émettre l'événement vers le composant parent
     this.messageClick.emit(this.userId.toString());
-
   }
 
   onFollowChange(isFollowing: boolean) {
     this.followChange.emit(isFollowing);
+    this.loadFollowCounts();
+  }
+
+  navigateToConnections(): void {
+    this.router.navigate(['/profile', this.userId, 'connections']);
   }
 }

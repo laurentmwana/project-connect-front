@@ -30,13 +30,13 @@
   <div #messagesContainer class="chat-messages overflow-y-auto px-4 py-2">
     <!-- Loading -->
     <div *ngIf="isLoadingMessages" class="flex justify-center py-6">
-      <div class="animate-spin h-8 w-8 rounded-full border-b-2 border-primary"></div>
+      <div class="animate-spin h-8 w-8 rounded-full border-2 border-primary border-t-transparent"></div>
     </div>
 
     <!-- Error -->
     <div *ngIf="error && !isLoadingMessages" class="empty-state text-center">
       <p class="mb-2 text-sm text-destructive">{{ error }}</p>
-      <button (click)="loadMessages()" class="btn-primary">Réessayer</button>
+      <button (click)="loadMessages()" class="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm">Réessayer</button>
     </div>
 
     <!-- Messages Loaded -->

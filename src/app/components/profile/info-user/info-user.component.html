@@ -1,12 +1,24 @@
-<div class="p-6 pt-6">
+<div *ngIf="userProfile" class="p-6 pt-6">
   <div class="flex flex-col items-center text-center mb-6">
     <div
-      class="h-32 w-32 rounded-full border-4 border-background bg-orange-100 flex items-center justify-center text-orange-500 text-4xl font-bold mb-4"
+      class="h-32 w-32 rounded-full border-4 border-background bg-accent flex items-center justify-center text-accent-foreground text-4xl font-bold mb-4 overflow-hidden"
     >
-      JD
+      <img
+        *ngIf="userProfile?.profile_photo; else initialsTemplate"
+        [src]="userProfile.profile_photo"
+        [alt]="userProfile.name || 'User photo'"
+        class="h-full w-full object-cover"
+      />
+      <ng-template #initialsTemplate>
+        {{ userInitials }}
+      </ng-template>
     </div>
-    <h1 class="text-2xl font-bold">John Doe</h1>
-    <p class="text-muted-foreground">UX/UI Designer &amp; Developer</p>
+    <h1 class="text-2xl font-bold">
+      {{ userProfile.name || 'John Doe' }}
+    </h1>
+    <p class="text-muted-foreground">
+      {{ userProfile.job_title || 'UX/UI Designer & Developer' }}
+    </p>
     <div class="flex items-center text-sm text-muted-foreground mt-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -25,14 +37,16 @@
         ></path>
         <circle cx="12" cy="10" r="3"></circle>
       </svg>
-      <span>San Francisco, CA</span>
+      <span>{{ userProfile.location || 'San Francisco, CA' }}</span>
     </div>
   </div>
+
   <div
     data-orientation="horizontal"
     role="none"
     class="shrink-0 bg-border h-[1px] w-full my-4"
   ></div>
+
   <div class="space-y-4">
     <div class="flex items-center">
       <svg
@@ -50,9 +64,7 @@
         <rect width="20" height="16" x="2" y="4" rx="2"></rect>
         <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
       </svg>
-      <span class="text-sm">
-        john.doeexample.com
-      </span>
+      <span class="text-sm">{{ userProfile.email || 'john.doe@example.com' }}</span>
     </div>
     <div class="flex items-center">
       <svg
@@ -71,7 +83,7 @@
           d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
         ></path>
       </svg>
-      <span class="text-sm">+1 (555) 123-4567</span>
+      <span class="text-sm">{{ userProfile.phone || '+1 (555) 123-4567' }}</span>
     </div>
     <div class="flex items-center">
       <svg
@@ -90,7 +102,7 @@
         <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
         <path d="M2 12h20"></path>
       </svg>
-      <span class="text-sm">johndoe.portfolio.com</span>
+      <span class="text-sm">{{ userProfile.portfolio_url || 'johndoe.portfolio.com' }}</span>
     </div>
     <div class="flex items-center">
       <svg
@@ -110,17 +122,19 @@
         <rect width="18" height="18" x="3" y="4" rx="2"></rect>
         <path d="M3 10h18"></path>
       </svg>
-      <span class="text-sm">Available for freelance</span>
+      <span class="text-sm">{{ userProfile.availability || 'Available for freelance' }}</span>
     </div>
   </div>
+
   <div
     data-orientation="horizontal"
     role="none"
     class="shrink-0 bg-border h-[1px] w-full my-4"
   ></div>
+
   <div class="grid grid-cols-2 gap-4 text-center">
-    <div>
-      <p class="text-2xl font-bold">142</p>
+    <div (click)="navigateToConnections()" class="cursor-pointer">
+      <p class="text-2xl font-bold">{{ totalConnections }}</p>
       <p class="text-sm text-muted-foreground">Connections</p>
     </div>
     <div>
@@ -141,7 +155,7 @@
     <!-- Bouton Message -->
     <button
       (click)="onMessageClick()"
-      class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 py-2 w-full bg-orange-500 text-white hover:bg-orange-600"
+      class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 py-2 w-full bg-primary text-primary-foreground hover:bg-primary/90"
     >
       Message
     </button>

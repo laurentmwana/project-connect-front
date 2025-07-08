@@ -1,5 +1,7 @@
-<div class="container max-w-5xl mx-auto p-6">
-  <div
+<div class="container max-w-5xl mx-auto p-6 flex gap-6">
+
+  <main class="flex-grow">
+      <div
     class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8"
   >
     <h2 class="text-2xl font-bold text-foreground">Parcourir les projets</h2>
@@ -9,7 +11,6 @@
       >
     </div>
   </div>
-
   <div *ngIf="pprojects.length > 0; else noData" class="grid gap-6">
     <!-- Projet -->
     <div
@@ -244,4 +245,11 @@
       </p>
     </div>
   </ng-template>
+
+  </main>
+<aside class="w-64 sticky top-6 self-start">
+    <app-suggestion></app-suggestion>
+  </aside>
 </div>
+
+
