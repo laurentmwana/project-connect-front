@@ -263,30 +263,8 @@ export class ProjectDetailComponent {
     //TODO:Gerer la suppression ?
   }
 
-  //rendre la progress bar dynamique
-  getProjectProgress(): number {
-    if (!this.project?.date_start || !this.project?.date_end) {
-      return 0;
-    }
 
-    const startDate = new Date(this.project.date_start);
-    const endDate = new Date(this.project.date_end);
-    const today = new Date();
 
-    // Vérifier si le projet n'a pas encore commencé
-    if (today < startDate) return 0;
-
-    // Vérifier si le projet est déjà terminé
-    if (today > endDate) return 100;
-
-    const totalDuration = endDate.getTime() - startDate.getTime();
-    const elapsedDuration = today.getTime() - startDate.getTime();
-
-    // Calculer le pourcentage de progression
-    const progress = (elapsedDuration / totalDuration) * 100;
-
-    return Math.min(100, Math.max(0, Math.round(progress)));
-  }
 
   //Traitement candidature
   toggleViewMenu(candidacyId: number) {
