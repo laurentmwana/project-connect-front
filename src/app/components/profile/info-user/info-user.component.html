@@ -143,7 +143,7 @@
     </div>
   </div>
 
-  <div class="mt-6 space-y-5">
+  <div class="mt-6 space-y-5" *ngIf="!isOwnProfile">
     <!-- Bouton Follow / Unfollow -->
     <app-follow-button
       [userId]="userId"
