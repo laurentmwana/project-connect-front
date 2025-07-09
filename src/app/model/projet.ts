@@ -1,6 +1,4 @@
-import { Domain, ProjectRoleSkill, User } from "./project";
-
-
+import { Domain, ProjectRoleSkill, User } from './project';
 
 export interface getProject {
   id: number;

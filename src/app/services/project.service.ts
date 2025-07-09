@@ -33,6 +33,26 @@ export class ProjectService {
     return this.http.get<PaginatedProjects>(url);
   }
 
+  // methode  getAllUserProject pour recupere les projects cree par l'utilisateur
+  getAllUserProject(
+    page: number = 1,
+    searchTerm: string = ''
+  ): Observable<PaginatedProjects> {
+    let url = `${this.baseUrl}users/projects?page=${page}`;
+    const user = this.userLocalService.getUser();
+
+    if (searchTerm.trim()) {
+      url += `&search=${encodeURIComponent(searchTerm.trim())}`;
+    }
+
+    return this.http.get<PaginatedProjects>(url, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${user?.token}`,
+      },
+    });
+  }
+
   /**
    * Crée un nouveau projet
    */
