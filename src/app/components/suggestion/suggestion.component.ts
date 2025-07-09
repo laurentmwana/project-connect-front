@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FollowService, User } from '@/services/follow.service';
 import { NgFor, NgIf } from '@angular/common';
 import { FollowButtonComponent } from "../follow-button/follow-button.component";
-import { InfoUserComponent } from '../profile/info-user/info-user.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-suggestion',
-  imports: [NgFor, FollowButtonComponent, NgIf],
+  imports: [NgFor, FollowButtonComponent, NgIf, RouterLink],
   templateUrl: './suggestion.component.html',
   styleUrls: ['./suggestion.component.css']
 })
