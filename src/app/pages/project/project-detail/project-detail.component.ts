@@ -263,9 +263,6 @@ export class ProjectDetailComponent {
     //TODO:Gerer la suppression ?
   }
 
-
-
-
   //Traitement candidature
   toggleViewMenu(candidacyId: number) {
     this.viewMenuOpen = !this.viewMenuOpen;
@@ -389,5 +386,12 @@ export class ProjectDetailComponent {
         this.showToast(`${error.message}`, 'error');
       },
     });
+  }
+
+  isOpen: boolean[] = [];
+
+  toggleAccordion(index: number): void {
+    this.isOpen[index] = !this.isOpen[index];
+    this.isOpen = [...this.isOpen]; // Trigger change detection
   }
 }

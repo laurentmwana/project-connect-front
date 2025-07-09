@@ -54,21 +54,46 @@
   <nav class="flex mb-6">
     <ol class="flex items-center space-x-2 text-sm text-muted-foreground">
       <li class="flex items-center">
-        <a href="/" class="inline-flex items-center hover:text-primary hover:underline underline-offset-4 transition-colors duration-200 ease-in-out">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5">
+        <a
+          href="/"
+          class="inline-flex items-center hover:text-primary hover:underline underline-offset-4 transition-colors duration-200 ease-in-out"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="mr-1.5"
+          >
             <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
           </svg>
           Accueil
         </a>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-2 text-muted-foreground/60">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="mx-2 text-muted-foreground/60"
+        >
           <path d="m9 18 6-6-6-6"></path>
         </svg>
       </li>
       <li class="flex items-center">
-            <span class="text-foreground font-medium ">
-                {{ project.title }}
-            </span>
+        <span class="text-foreground font-medium">
+          {{ project.title }}
+        </span>
       </li>
     </ol>
   </nav>
@@ -81,7 +106,7 @@
           {{ project.title }}
         </h1>
         <p class="text-muted-foreground mt-1 text-sm">
-          Projet créé le {{ project.created_at | date:'mediumDate' }}
+          Créé le {{ project.created_at | date : "d MMM yyyy" | lowercase }}
         </p>
       </div>
 
@@ -158,87 +183,88 @@
         </div>
       </div>
     </div>
-
-
   </div>
 
   <!-- Aperçu du Projet -->
   <div class="grid gap-6">
-    <section class="bg-card rounded-lg shadow-sm border border-border p-6">
-      <div class="flex justify-between items-center">
-        <h2 class="text-xl font-semibold text-foreground">Aperçu du projet</h2>
-        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
-              [ngClass]="{
-            'bg-green-500/10 text-green-400': project.status.name === 'En cours',
-            'bg-green-500/10 text-red-500': project.status.name === 'Terminé'
-          }">
-      {{project.status.name}}
-    </span>
-
-      </div>
-
-      <div class="grid gap-6 mt-4">
+    <!-- Section Principale -->
+    <section class="bg-card rounded-lg border border-border p-6">
+      <!-- En-tête avec description et statut -->
+      <div
+        class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6"
+      >
         <!-- Description -->
-        <div class="grid gap-4">  <!-- Changé de flex à grid -->
-          <h3 class="text-base font-medium text-foreground">Description</h3>
-          <p class="text-muted-foreground leading-relaxed">
+        <div class="flex-1">
+          <h3 class="text-base font-medium text-foreground mb-2">
+            Description
+          </h3>
+          <p class="text-muted-foreground leading-relaxed whitespace-pre-line">
             {{ project.description || "Aucune description fournie" }}
           </p>
         </div>
 
-        <!-- Métadonnées -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <!-- Budget -->
-          <div class="flex items-start gap-3">
-            <div class="p-2 rounded-full bg-blue-500/10 text-blue-500">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <line x1="12" x2="12" y1="2" y2="22"></line>
-                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-              </svg>
-            </div>
-            <div>
-              <p class="text-xs text-muted-foreground">Budget</p>
-              <p class="text-sm font-medium text-foreground">{{ project.budget || "Non spécifié" }}</p>
-            </div>
-          </div>
+        <!-- Statut -->
+        <span
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border"
+          [ngClass]="{
+            'bg-green-500/10 text-green-600 border-green-500/20':
+              project.status.name === 'En cours',
+            'bg-red-500/10 text-red-600 border-red-500/20':
+              project.status.name === 'Terminé',
+            'bg-accent text-foreground border-border':
+              project.status.name !== 'En cours' &&
+              project.status.name !== 'Terminé'
+          }"
+        >
+          <span class="relative flex h-2 w-2">
+            <span
+              *ngIf="project.status.name === 'En cours'"
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
+            ></span>
+            <span
+              *ngIf="project.status.name === 'En cours'"
+              class="relative inline-flex rounded-full h-2 w-2 bg-green-500"
+            ></span>
+            <span
+              *ngIf="project.status.name === 'Terminé'"
+              class="relative inline-flex rounded-full h-2 w-2 bg-red-500"
+            ></span>
+          </span>
+          {{ project.status.name }}
+        </span>
+      </div>
 
-          <!-- Localisation -->
-          <div class="flex items-start gap-3">
-            <div class="p-2 rounded-full bg-purple-500/10 text-purple-500">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-              </svg>
-            </div>
-            <div>
-              <p class="text-xs text-muted-foreground">Localisation</p>
-              <p class="text-sm font-medium text-foreground">{{ project.location || "Non spécifié" }}</p>
-            </div>
-          </div>
+      <!-- Domaines avec couleurs adaptées -->
+      <div class="mb-6">
+        <h3 class="text-base font-medium text-foreground mb-3">
+          Domaines concernés
+        </h3>
+        <div class="flex flex-wrap gap-2">
+          <span
+            *ngFor="let domain of project.domains"
+            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-orange-500/10 text-orange-600 border border-orange-500/20"
+          >
+            {{ domain.name }}
+          </span>
+          <span
+            *ngIf="!project.domains?.length"
+            class="text-sm text-muted-foreground"
+          >
+            Aucun domaine spécifié
+          </span>
+        </div>
+      </div>
 
+      <div class="mb-6">
+        <h3 class="text-base font-medium text-foreground mb-3">
+          Détails du projet
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <!-- Date de début -->
-          <div class="flex items-start gap-3">
-            <div class="p-2 rounded-full bg-green-500/10 text-green-500">
+          <div
+            class="flex items-center gap-3 p-3 bg-accent rounded-lg border border-border"
+          >
+            <div class="p-2 rounded-lg bg-accent text-muted-foreground">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -246,7 +272,7 @@
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
+                stroke-width="1.5"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               >
@@ -258,13 +284,17 @@
             </div>
             <div>
               <p class="text-xs text-muted-foreground">Début</p>
-              <p class="text-sm font-medium text-foreground">{{ project.date_start | date:'mediumDate' }}</p>
+              <p class="text-sm font-medium text-foreground">
+                {{ project.date_start | date : "d MMM yyyy" | lowercase }}
+              </p>
             </div>
           </div>
 
           <!-- Date de fin -->
-          <div class="flex items-start gap-3">
-            <div class="p-2 rounded-full bg-orange-500/10 text-orange-500">
+          <div
+            class="flex items-center gap-3 p-3 bg-accent rounded-lg border border-border"
+          >
+            <div class="p-2 rounded-lg bg-accent text-muted-foreground">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -272,7 +302,7 @@
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
+                stroke-width="1.5"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               >
@@ -280,122 +310,223 @@
                 <path d="M16 2v4"></path>
                 <rect width="18" height="18" x="3" y="4" rx="2"></rect>
                 <path d="M3 10h18"></path>
+                <path d="M9 16l2 2 4-4"></path>
               </svg>
             </div>
             <div>
-              <p class="text-xs text-muted-foreground">Fin estimée</p>
-              <p class="text-sm font-medium text-foreground">{{ project.date_end | date:'mediumDate' }}</p>
+              <p class="text-xs text-muted-foreground">Fin prévue</p>
+              <p class="text-sm font-medium text-foreground">
+                {{ project.date_end | date : "d MMM yyyy" | lowercase }}
+              </p>
             </div>
           </div>
-        </div>
 
-        <!-- Compétences -->
-        <div>
-          <h3 class="text-base font-medium text-foreground">Compétences recherchées</h3>
-          <div class="flex flex-wrap gap-2 mt-2">
-            <ng-container *ngFor="let roleSkill of project.project_roles_skills">
-          <span
-            *ngFor="let skill of roleSkill.skills"
-            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-orange-500/10 text-orange-500"
+          <!-- Budget -->
+          <div
+            class="flex items-center gap-3 p-3 bg-accent rounded-lg border border-border"
           >
-            {{ skill.name }}
-          </span>
-            </ng-container>
+            <div class="p-2 rounded-lg bg-accent text-muted-foreground">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="12" x2="12" y1="2" y2="22"></line>
+                <path
+                  d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+                ></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs text-muted-foreground">Budget</p>
+              <p class="text-sm font-medium text-foreground">
+                {{ project.budget || "Non spécifié" }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Localisation -->
+          <div
+            class="flex items-center gap-3 p-3 bg-accent rounded-lg border border-border"
+          >
+            <div class="p-2 rounded-lg bg-accent text-muted-foreground">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+                ></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs text-muted-foreground">Localisation</p>
+              <p class="text-sm font-medium text-foreground">
+                {{ project.location || "Non spécifié" }}
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Rôles du Projet -->
+    <!-- Rôles -->
     <section>
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-foreground">Postes à pourvoir</h2>
-        <span class="text-sm text-muted-foreground">
-          {{ project.project_roles_skills.length }} rôles disponibles
-        </span>
+      <div class="flex justify-start items-center mb-4">
+        <h2 class="text-lg font-semibold text-foreground">
+          Postes à pourvoir ({{ project.project_roles_skills.length }})
+        </h2>
       </div>
 
-      <div class="grid gap-4">
-        <div
-          *ngFor="let roleSkill of project.project_roles_skills"
-          class="bg-card rounded-lg shadow-sm border border-border overflow-hidden hover:shadow-md transition-shadow"
+      <div class="space-y-2">
+        <ng-container
+          *ngFor="let roleSkill of project.project_roles_skills; let i = index"
         >
-          <div class="p-6">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div class="flex-1 min-w-0">
-                <h3 class="text-lg font-semibold text-foreground">
+          <div class="border border-border rounded-lg overflow-hidden">
+            <!-- En-tête de l'accordéon -->
+            <button
+              (click)="toggleAccordion(i)"
+              class="w-full flex justify-between items-center p-4 hover:bg-accent transition-colors"
+            >
+              <div class="flex items-center gap-3">
+                <h3 class="text-base font-semibold text-foreground text-left">
                   {{ roleSkill.role.name }}
                 </h3>
-                <div class="flex flex-wrap gap-2 mt-2">
+                <div class="flex flex-wrap gap-1">
                   <span
                     *ngFor="let skill of roleSkill.skills"
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-500/10 text-orange-500"
+                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-500/10 text-orange-500"
                   >
                     {{ skill.name }}
                   </span>
                 </div>
               </div>
+              <svg
+                [class.rotate-180]="isOpen[i]"
+                class="w-5 h-5 text-muted-foreground transform transition-transform"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
 
-              <div class="flex-shrink-0">
-                <button
-                  *ngIf="!isOwner"
-                  (click)="openCandidacyModal(roleSkill)"
-                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
-                >
-                  Postuler
-                </button>
-                <button
-                  *ngIf="isOwner"
-                  (click)="openInviteModal(roleSkill)"
-                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
-                >
-                  Inviter
-                </button>
+            <!-- Contenu de l'accordéon -->
+            <div
+              [class.hidden]="!isOpen[i]"
+              class="p-4 pt-0 border-t border-border"
+            >
+              <div class="flex flex-col gap-4">
+                <div>
+                  <p class="text-muted-foreground">
+                    {{
+                      roleSkill.description ||
+                        "Aucune description spécifique pour ce rôle."
+                    }}
+                  </p>
+                </div>
+
+                <div *ngIf="roleSkill.skills.length > 0" class="mt-2">
+                  <h4 class="text-sm font-medium text-foreground mb-2">
+                    Compétences requises
+                  </h4>
+                  <div class="flex flex-wrap gap-2">
+                    <span
+                      *ngFor="let skill of roleSkill.skills"
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-500/10 text-orange-500"
+                    >
+                      {{ skill.name }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="flex justify-between items-center mt-4">
+                  <div
+                    *ngIf="isOwner"
+                    class="flex gap-4 text-sm text-muted-foreground"
+                  >
+                    <span class="flex items-center gap-1">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path
+                          d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+                        ></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                      </svg>
+                      {{ roleSkill.candidacies_count }} candidature(s)
+                    </span>
+                    <span
+                      *ngIf="roleSkill.invitations_count > 0"
+                      class="flex items-center gap-1"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path
+                          d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                        ></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                      </svg>
+                      {{ roleSkill.invitations_count }} invitation(s)
+                    </span>
+                  </div>
+
+                  <button
+                    *ngIf="!isOwner"
+                    (click)="openCandidacyModal(roleSkill)"
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary/90"
+                  >
+                    Postuler
+                  </button>
+                  <button
+                    *ngIf="isOwner"
+                    (click)="openInviteModal(roleSkill)"
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary/90"
+                  >
+                    Inviter
+                  </button>
+                </div>
               </div>
             </div>
-
-            <p class="text-muted-foreground mt-3">
-              {{ roleSkill.description || "Aucune description spécifique pour ce rôle." }}
-            </p>
-
-            <div *ngIf="isOwner" class="flex gap-4 mt-4 text-sm text-muted-foreground">
-              <span class="flex items-center gap-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
-                </svg>
-                {{ roleSkill.candidacies_count }} candidature(s)
-              </span>
-              <span *ngIf="roleSkill.invitations_count > 0" class="flex items-center gap-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                  <polyline points="22,6 12,13 2,6"></polyline>
-                </svg>
-                {{ roleSkill.invitations_count }} invitation(s)
-              </span>
-            </div>
           </div>
-        </div>
+        </ng-container>
       </div>
     </section>
   </div>
@@ -474,7 +605,7 @@
             <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mt-3">
               <div>
                 <label class="block text-sm font-medium text-foreground mb-1"
-                >Rôle</label
+                  >Rôle</label
                 >
                 <input
                   type="text"
@@ -485,7 +616,7 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-foreground mb-1"
-                >Utilisateur</label
+                  >Utilisateur</label
                 >
                 <input
                   type="text"
@@ -496,7 +627,7 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-foreground mb-1"
-                >Statut</label
+                  >Statut</label
                 >
                 <select
                   [(ngModel)]="validatedFilter"
@@ -509,7 +640,7 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-foreground mb-1"
-                >Par page</label
+                  >Par page</label
                 >
                 <select
                   [(ngModel)]="perPage"
@@ -543,79 +674,79 @@
             <div class="overflow-x-auto rounded-lg border border-border">
               <table class="min-w-full text-sm text-left">
                 <thead class="bg-muted">
-                <tr>
-                  <th class="px-4 py-3 font-medium text-foreground">
-                    Candidat
-                  </th>
-                  <th class="px-4 py-3 font-medium text-foreground">Email</th>
-                  <th class="px-4 py-3 font-medium text-foreground">
-                    Rôle Postulé
-                  </th>
-                  <th class="px-4 py-3 font-medium text-foreground">
-                    Validation
-                  </th>
-                  <th class="px-4 py-3 font-medium text-foreground">
-                    Statut
-                  </th>
-                  <th class="px-4 py-3 font-medium text-foreground">Date</th>
-                  <th class="px-4 py-3 font-medium text-foreground">
-                    Actions
-                  </th>
-                </tr>
+                  <tr>
+                    <th class="px-4 py-3 font-medium text-foreground">
+                      Candidat
+                    </th>
+                    <th class="px-4 py-3 font-medium text-foreground">Email</th>
+                    <th class="px-4 py-3 font-medium text-foreground">
+                      Rôle Postulé
+                    </th>
+                    <th class="px-4 py-3 font-medium text-foreground">
+                      Validation
+                    </th>
+                    <th class="px-4 py-3 font-medium text-foreground">
+                      Statut
+                    </th>
+                    <th class="px-4 py-3 font-medium text-foreground">Date</th>
+                    <th class="px-4 py-3 font-medium text-foreground">
+                      Actions
+                    </th>
+                  </tr>
                 </thead>
                 <tbody class="divide-y divide-border">
-                <!-- État de Chargement -->
-                <tr *ngIf="isLoading">
-                  <td colspan="7" class="py-6 text-center">
-                    <div class="flex justify-center items-center space-x-2">
-                      <div
-                        class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary"
-                      ></div>
-                      <span class="text-muted-foreground">Chargement...</span>
-                    </div>
-                  </td>
-                </tr>
+                  <!-- État de Chargement -->
+                  <tr *ngIf="isLoading">
+                    <td colspan="7" class="py-6 text-center">
+                      <div class="flex justify-center items-center space-x-2">
+                        <div
+                          class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary"
+                        ></div>
+                        <span class="text-muted-foreground">Chargement...</span>
+                      </div>
+                    </td>
+                  </tr>
 
-                <!-- État Vide -->
-                <tr *ngIf="!isLoading && candidacies.length === 0">
-                  <td colspan="7" class="py-6 text-center">
-                    <div
-                      class="flex flex-col items-center justify-center space-y-2 text-muted-foreground"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="lucide lucide-file-search"
-                      >
-                        <path
-                          d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v3"
-                        />
-                        <path d="M14 2v6h6" />
-                        <circle cx="10" cy="13" r="3" />
-                        <path d="m12 12-1 1" />
-                      </svg>
-                      <span>Aucune candidature trouvée</span>
-                    </div>
-                  </td>
-                </tr>
-
-                <!-- Candidatures -->
-                <tr
-                  *ngFor="let candidacy of candidacies"
-                  class="hover:bg-muted/50 transition-colors"
-                >
-                  <td class="px-4 py-3 font-medium">
-                    <div class="flex items-center space-x-3">
+                  <!-- État Vide -->
+                  <tr *ngIf="!isLoading && candidacies.length === 0">
+                    <td colspan="7" class="py-6 text-center">
                       <div
-                        class="flex-shrink-0 h-8 w-8 rounded-full bg-muted flex items-center justify-center"
+                        class="flex flex-col items-center justify-center space-y-2 text-muted-foreground"
                       >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-file-search"
+                        >
+                          <path
+                            d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v3"
+                          />
+                          <path d="M14 2v6h6" />
+                          <circle cx="10" cy="13" r="3" />
+                          <path d="m12 12-1 1" />
+                        </svg>
+                        <span>Aucune candidature trouvée</span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Candidatures -->
+                  <tr
+                    *ngFor="let candidacy of candidacies"
+                    class="hover:bg-muted/50 transition-colors"
+                  >
+                    <td class="px-4 py-3 font-medium">
+                      <div class="flex items-center space-x-3">
+                        <div
+                          class="flex-shrink-0 h-8 w-8 rounded-full bg-muted flex items-center justify-center"
+                        >
                           <span
                             class="text-sm font-medium text-muted-foreground"
                           >
@@ -623,23 +754,23 @@
                               candidacy.user.name | slice : 0 : 1 | uppercase
                             }}
                           </span>
-                      </div>
-                      <span class="text-foreground">{{
+                        </div>
+                        <span class="text-foreground">{{
                           candidacy.user.name
                         }}</span>
-                    </div>
-                  </td>
-                  <td class="px-4 py-3 text-muted-foreground">
-                    {{ candidacy.user.email }}
-                  </td>
-                  <td class="px-4 py-3">
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 text-muted-foreground">
+                      {{ candidacy.user.email }}
+                    </td>
+                    <td class="px-4 py-3">
                       <span
                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
                       >
                         {{ candidacy.project_role.role.name }}
                       </span>
-                  </td>
-                  <td class="px-4 py-3">
+                    </td>
+                    <td class="px-4 py-3">
                       <span
                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                         [ngClass]="{
@@ -651,51 +782,22 @@
                       >
                         {{ candidacy.is_validated ? "Oui" : "Non" }}
                       </span>
-                  </td>
-                  <td class="px-4 py-3 text-muted-foreground">
-                    {{ candidacy.status }}
-                  </td>
-                  <td
-                    class="px-4 py-3 whitespace-nowrap text-muted-foreground"
-                  >
-                    {{ candidacy.created_at | date : "dd/MM/yyyy" }}
-                  </td>
-                  <td class="px-4 py-3 relative">
-                    <!-- Bouton d'actions -->
-                    <div class="dropdown relative">
-                      <button
-                        (click)="toggleViewMenu(candidacy.id)"
-                        class="inline-flex items-center justify-center p-2 rounded-md hover:bg-muted/50 transition-colors"
-                        aria-label="Actions"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="lucide lucide-more-horizontal"
-                        >
-                          <circle cx="12" cy="12" r="1" />
-                          <circle cx="19" cy="12" r="1" />
-                          <circle cx="5" cy="12" r="1" />
-                        </svg>
-                      </button>
-
-                      <!-- Menu déroulant -->
-                      <div
-                        *ngIf="selectedCandidacyId === candidacy.id"
-                        class="dropdown-menu absolute right-0 mt-1 w-48 bg-card border border-border rounded-md shadow-lg z-20 py-1 transition-all duration-200 origin-top-right"
-                        @fadeInOut
-                      >
-                        <!-- Option Voir le profil -->
+                    </td>
+                    <td class="px-4 py-3 text-muted-foreground">
+                      {{ candidacy.status }}
+                    </td>
+                    <td
+                      class="px-4 py-3 whitespace-nowrap text-muted-foreground"
+                    >
+                      {{ candidacy.created_at | date : "dd/MM/yyyy" }}
+                    </td>
+                    <td class="px-4 py-3 relative">
+                      <!-- Bouton d'actions -->
+                      <div class="dropdown relative">
                         <button
-                          [routerLink]="['/profile', candidacy.user.id]"
-                          class="flex items-center w-full px-4 py-2 text-sm text-foreground hover:bg-muted/50 transition-colors"
+                          (click)="toggleViewMenu(candidacy.id)"
+                          class="inline-flex items-center justify-center p-2 rounded-md hover:bg-muted/50 transition-colors"
+                          aria-label="Actions"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -707,66 +809,95 @@
                             stroke-width="2"
                             stroke-linecap="round"
                             stroke-linejoin="round"
-                            class="lucide lucide-user mr-2"
+                            class="lucide lucide-more-horizontal"
                           >
-                            <path
-                              d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"
-                            />
-                            <circle cx="12" cy="7" r="4" />
+                            <circle cx="12" cy="12" r="1" />
+                            <circle cx="19" cy="12" r="1" />
+                            <circle cx="5" cy="12" r="1" />
                           </svg>
-                          Voir le profil
                         </button>
 
-                        <!-- Option Valider -->
-                        <button
-                          (click)="onValidate(candidacy.id)"
-                          class="flex items-center w-full px-4 py-2 text-sm text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors"
+                        <!-- Menu déroulant -->
+                        <div
+                          *ngIf="selectedCandidacyId === candidacy.id"
+                          class="dropdown-menu absolute right-0 mt-1 w-48 bg-card border border-border rounded-md shadow-lg z-20 py-1 transition-all duration-200 origin-top-right"
+                          @fadeInOut
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            class="lucide lucide-check-circle mr-2"
+                          <!-- Option Voir le profil -->
+                          <button
+                            [routerLink]="['/profile', candidacy.user.id]"
+                            class="flex items-center w-full px-4 py-2 text-sm text-foreground hover:bg-muted/50 transition-colors"
                           >
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                            <polyline points="22 4 12 14.01 9 11.01" />
-                          </svg>
-                          Valider
-                        </button>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="lucide lucide-user mr-2"
+                            >
+                              <path
+                                d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"
+                              />
+                              <circle cx="12" cy="7" r="4" />
+                            </svg>
+                            Voir le profil
+                          </button>
 
-                        <!-- Option Rejeter -->
-                        <button
-                          (click)="onReject(candidacy.id)"
-                          class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            class="lucide lucide-x-circle mr-2"
+                          <!-- Option Valider -->
+                          <button
+                            (click)="onValidate(candidacy.id)"
+                            class="flex items-center w-full px-4 py-2 text-sm text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors"
                           >
-                            <circle cx="12" cy="12" r="10" />
-                            <line x1="15" y1="9" x2="9" y2="15" />
-                            <line x1="9" y1="9" x2="15" y2="15" />
-                          </svg>
-                          Rejeter
-                        </button>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="lucide lucide-check-circle mr-2"
+                            >
+                              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                              <polyline points="22 4 12 14.01 9 11.01" />
+                            </svg>
+                            Valider
+                          </button>
+
+                          <!-- Option Rejeter -->
+                          <button
+                            (click)="onReject(candidacy.id)"
+                            class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="lucide lucide-x-circle mr-2"
+                            >
+                              <circle cx="12" cy="12" r="10" />
+                              <line x1="15" y1="9" x2="9" y2="15" />
+                              <line x1="9" y1="9" x2="15" y2="15" />
+                            </svg>
+                            Rejeter
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -779,19 +910,19 @@
               <div class="text-sm text-muted-foreground">
                 Affichage
                 <span class="font-medium text-foreground">{{
-                    (candidacyMeta.current_page - 1) * candidacyMeta.per_page + 1
-                  }}</span>
+                  (candidacyMeta.current_page - 1) * candidacyMeta.per_page + 1
+                }}</span>
                 à
                 <span class="font-medium text-foreground">{{
-                    Math.min(
-                      candidacyMeta.current_page * candidacyMeta.per_page,
-                      candidacyMeta.total
-                    )
-                  }}</span>
+                  Math.min(
+                    candidacyMeta.current_page * candidacyMeta.per_page,
+                    candidacyMeta.total
+                  )
+                }}</span>
                 sur
                 <span class="font-medium text-foreground">{{
-                    candidacyMeta.total
-                  }}</span>
+                  candidacyMeta.total
+                }}</span>
                 résultats
               </div>
 
@@ -892,7 +1023,7 @@
             <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mt-3">
               <div>
                 <label class="block text-sm font-medium text-foreground mb-1"
-                >Rôle</label
+                  >Rôle</label
                 >
                 <input
                   type="text"
@@ -903,7 +1034,7 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-foreground mb-1"
-                >Email</label
+                  >Email</label
                 >
                 <input
                   type="text"
@@ -914,7 +1045,7 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-foreground mb-1"
-                >Statut</label
+                  >Statut</label
                 >
                 <select
                   [(ngModel)]="invitationStatusFilter"
@@ -928,7 +1059,7 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-foreground mb-1"
-                >Par page</label
+                  >Par page</label
                 >
                 <select
                   [(ngModel)]="perPage"
@@ -962,98 +1093,98 @@
             <div class="overflow-x-auto rounded-lg border border-border">
               <table class="min-w-full text-sm text-left">
                 <thead class="bg-muted">
-                <tr>
-                  <th class="px-4 py-3 font-medium text-foreground">
-                    Candidat
-                  </th>
-                  <th class="px-4 py-3 font-medium text-foreground">Email</th>
-                  <th class="px-4 py-3 font-medium text-foreground">
-                    Rôle Invité
-                  </th>
-                  <th class="px-4 py-3 font-medium text-foreground">
-                    Statut
-                  </th>
-                  <th class="px-4 py-3 font-medium text-foreground">Date</th>
-                  <th class="px-4 py-3 font-medium text-foreground">
-                    Actions
-                  </th>
-                </tr>
+                  <tr>
+                    <th class="px-4 py-3 font-medium text-foreground">
+                      Candidat
+                    </th>
+                    <th class="px-4 py-3 font-medium text-foreground">Email</th>
+                    <th class="px-4 py-3 font-medium text-foreground">
+                      Rôle Invité
+                    </th>
+                    <th class="px-4 py-3 font-medium text-foreground">
+                      Statut
+                    </th>
+                    <th class="px-4 py-3 font-medium text-foreground">Date</th>
+                    <th class="px-4 py-3 font-medium text-foreground">
+                      Actions
+                    </th>
+                  </tr>
                 </thead>
                 <tbody class="divide-y divide-border">
-                <!-- État de Chargement -->
-                <tr *ngIf="isLoading">
-                  <td colspan="6" class="py-6 text-center">
-                    <div class="flex justify-center items-center space-x-2">
-                      <div
-                        class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary"
-                      ></div>
-                      <span class="text-muted-foreground">Chargement...</span>
-                    </div>
-                  </td>
-                </tr>
+                  <!-- État de Chargement -->
+                  <tr *ngIf="isLoading">
+                    <td colspan="6" class="py-6 text-center">
+                      <div class="flex justify-center items-center space-x-2">
+                        <div
+                          class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary"
+                        ></div>
+                        <span class="text-muted-foreground">Chargement...</span>
+                      </div>
+                    </td>
+                  </tr>
 
-                <!-- État Vide -->
-                <tr *ngIf="!isLoading && invitations.length === 0">
-                  <td colspan="6" class="py-6 text-center">
-                    <div
-                      class="flex flex-col items-center justify-center space-y-2 text-muted-foreground"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="lucide lucide-file-search"
-                      >
-                        <path
-                          d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v3"
-                        />
-                        <path d="M14 2v6h6" />
-                        <circle cx="10" cy="13" r="3" />
-                        <path d="m12 12-1 1" />
-                      </svg>
-                      <span>Aucune invitation trouvée</span>
-                    </div>
-                  </td>
-                </tr>
-
-                <!-- Invitations -->
-                <tr
-                  *ngFor="let invitation of invitations"
-                  class="hover:bg-muted/50 transition-colors"
-                >
-                  <td class="px-4 py-3 font-medium">
-                    <div class="flex items-center space-x-3">
+                  <!-- État Vide -->
+                  <tr *ngIf="!isLoading && invitations.length === 0">
+                    <td colspan="6" class="py-6 text-center">
                       <div
-                        class="flex-shrink-0 h-8 w-8 rounded-full bg-muted flex items-center justify-center"
+                        class="flex flex-col items-center justify-center space-y-2 text-muted-foreground"
                       >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-file-search"
+                        >
+                          <path
+                            d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v3"
+                          />
+                          <path d="M14 2v6h6" />
+                          <circle cx="10" cy="13" r="3" />
+                          <path d="m12 12-1 1" />
+                        </svg>
+                        <span>Aucune invitation trouvée</span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Invitations -->
+                  <tr
+                    *ngFor="let invitation of invitations"
+                    class="hover:bg-muted/50 transition-colors"
+                  >
+                    <td class="px-4 py-3 font-medium">
+                      <div class="flex items-center space-x-3">
+                        <div
+                          class="flex-shrink-0 h-8 w-8 rounded-full bg-muted flex items-center justify-center"
+                        >
                           <span
                             class="text-sm font-medium text-muted-foreground"
                           >
                             {{ invitation.email | slice : 0 : 1 | uppercase }}
                           </span>
-                      </div>
-                      <span class="text-foreground">{{
+                        </div>
+                        <span class="text-foreground">{{
                           invitation.email
                         }}</span>
-                    </div>
-                  </td>
-                  <td class="px-4 py-3 text-muted-foreground">
-                    {{ invitation.email }}
-                  </td>
-                  <td class="px-4 py-3">
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 text-muted-foreground">
+                      {{ invitation.email }}
+                    </td>
+                    <td class="px-4 py-3">
                       <span
                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
                       >
                         {{ invitation.project_role.role.name }}
                       </span>
-                  </td>
-                  <td class="px-4 py-3">
+                    </td>
+                    <td class="px-4 py-3">
                       <span
                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                         [ngClass]="{
@@ -1069,52 +1200,23 @@
                           invitation.status === "pending"
                             ? "En attente"
                             : invitation.status === "accepted"
-                              ? "Accepté"
-                              : "Refusé"
+                            ? "Accepté"
+                            : "Refusé"
                         }}
                       </span>
-                  </td>
-                  <td
-                    class="px-4 py-3 whitespace-nowrap text-muted-foreground"
-                  >
-                    {{ invitation.created_at | date : "dd/MM/yyyy" }}
-                  </td>
-                  <td class="px-4 py-3 relative">
-                    <!-- Bouton d'actions -->
-                    <div class="dropdown relative">
-                      <button
-                        (click)="toggleViewMenuInvite(invitation.id)"
-                        class="inline-flex items-center justify-center p-2 rounded-md hover:bg-muted/50 transition-colors"
-                        aria-label="Actions"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="lucide lucide-more-horizontal"
-                        >
-                          <circle cx="12" cy="12" r="1" />
-                          <circle cx="19" cy="12" r="1" />
-                          <circle cx="5" cy="12" r="1" />
-                        </svg>
-                      </button>
-
-                      <!-- Menu déroulant -->
-                      <div
-                        *ngIf="selectedInvitationId === invitation.id"
-                        class="dropdown-menu absolute right-0 mt-1 w-48 bg-card border border-border rounded-md shadow-lg z-20 py-1 transition-all duration-200 origin-top-right"
-                        @fadeInOut
-                      >
-                        <!-- Option Renvoyer -->
+                    </td>
+                    <td
+                      class="px-4 py-3 whitespace-nowrap text-muted-foreground"
+                    >
+                      {{ invitation.created_at | date : "dd/MM/yyyy" }}
+                    </td>
+                    <td class="px-4 py-3 relative">
+                      <!-- Bouton d'actions -->
+                      <div class="dropdown relative">
                         <button
-                          [disabled]="invitation.status === 'accepted'"
-                          class="flex items-center w-full px-4 py-2 text-sm text-foreground hover:bg-muted/50 transition-colors disabled:opacity-50"
+                          (click)="toggleViewMenuInvite(invitation.id)"
+                          class="inline-flex items-center justify-center p-2 rounded-md hover:bg-muted/50 transition-colors"
+                          aria-label="Actions"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -1126,42 +1228,71 @@
                             stroke-width="2"
                             stroke-linecap="round"
                             stroke-linejoin="round"
-                            class="lucide lucide-send mr-2"
+                            class="lucide lucide-more-horizontal"
                           >
-                            <path d="m22 2-7 20-4-9-9-4Z" />
-                            <path d="M22 2 11 13" />
+                            <circle cx="12" cy="12" r="1" />
+                            <circle cx="19" cy="12" r="1" />
+                            <circle cx="5" cy="12" r="1" />
                           </svg>
-                          Renvoyer
                         </button>
 
-                        <!-- Option Annuler -->
-                        <button
-                          (click)="cancel(invitation.id)"
-                          [disabled]="invitation.status !== 'pending'"
-                          class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50"
+                        <!-- Menu déroulant -->
+                        <div
+                          *ngIf="selectedInvitationId === invitation.id"
+                          class="dropdown-menu absolute right-0 mt-1 w-48 bg-card border border-border rounded-md shadow-lg z-20 py-1 transition-all duration-200 origin-top-right"
+                          @fadeInOut
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            class="lucide lucide-x-circle mr-2"
+                          <!-- Option Renvoyer -->
+                          <button
+                            [disabled]="invitation.status === 'accepted'"
+                            class="flex items-center w-full px-4 py-2 text-sm text-foreground hover:bg-muted/50 transition-colors disabled:opacity-50"
                           >
-                            <circle cx="12" cy="12" r="10" />
-                            <line x1="15" y1="9" x2="9" y2="15" />
-                            <line x1="9" y1="9" x2="15" y2="15" />
-                          </svg>
-                          Annuler
-                        </button>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="lucide lucide-send mr-2"
+                            >
+                              <path d="m22 2-7 20-4-9-9-4Z" />
+                              <path d="M22 2 11 13" />
+                            </svg>
+                            Renvoyer
+                          </button>
+
+                          <!-- Option Annuler -->
+                          <button
+                            (click)="cancel(invitation.id)"
+                            [disabled]="invitation.status !== 'pending'"
+                            class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="lucide lucide-x-circle mr-2"
+                            >
+                              <circle cx="12" cy="12" r="10" />
+                              <line x1="15" y1="9" x2="9" y2="15" />
+                              <line x1="9" y1="9" x2="15" y2="15" />
+                            </svg>
+                            Annuler
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -1174,20 +1305,20 @@
               <div class="text-sm text-muted-foreground">
                 Affichage
                 <span class="font-medium text-foreground">{{
-                    (invitationMeta.current_page - 1) * invitationMeta.per_page +
+                  (invitationMeta.current_page - 1) * invitationMeta.per_page +
                     1
-                  }}</span>
+                }}</span>
                 à
                 <span class="font-medium text-foreground">{{
-                    Math.min(
-                      invitationMeta.current_page * invitationMeta.per_page,
-                      invitationMeta.total
-                    )
-                  }}</span>
+                  Math.min(
+                    invitationMeta.current_page * invitationMeta.per_page,
+                    invitationMeta.total
+                  )
+                }}</span>
                 sur
                 <span class="font-medium text-foreground">{{
-                    invitationMeta.total
-                  }}</span>
+                  invitationMeta.total
+                }}</span>
                 résultats
               </div>
 
