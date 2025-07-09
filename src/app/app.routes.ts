@@ -56,7 +56,8 @@ export const routes: Routes = [
           },
         ],
       },
-      { path: 'profile', component: ProfileComponent },
+      { path: 'profile', component: ProfileComponent, title: 'Mon profil - ProjectConnect' },
+      { path: 'profile/:id', component: ProfileComponent, title: 'Profil utilisateur - ProjectConnect' },
     ],
   },
   {
