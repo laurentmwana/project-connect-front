@@ -64,7 +64,7 @@ export interface ProjectRoleSkill {
 export interface ProjectData {
   id: number;
   title: string;
-  status: Status
+  status: Status;
   description: string;
   date_start: string; // ou Date si vous transformez après
   date_end: string;
@@ -77,6 +77,8 @@ export interface ProjectData {
   updated_at: string;
   domains: Domain[];
   project_roles_skills: ProjectRoleSkill[];
+  total_candidacies_count: number;
+  total_pending_invitation: number;
 }
 
 export interface PaginatedProjects {
@@ -109,9 +111,9 @@ export interface Link {
   active: boolean;
 }
 
-export interface Status{
-  name: string
+export interface Status {
+  name: string;
 
-  created_at: string
-  updated_at: string
+  created_at: string;
+  updated_at: string;
 }
