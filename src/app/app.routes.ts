@@ -35,7 +35,7 @@ export const routes: Routes = [
         canActivate: [protectedGuard],
       },
       {
-        path: 'project/edit/:id',
+        path: 'project/edit/:slug',
         component: ProjectEditComponent,
         title: 'Modifier un projet - ProjectConnect',
         canActivate: [canEditGuard],
@@ -56,8 +56,16 @@ export const routes: Routes = [
           },
         ],
       },
-      { path: 'profile', component: ProfileComponent, title: 'Mon profil - ProjectConnect' },
-      { path: 'profile/:id', component: ProfileComponent, title: 'Profil utilisateur - ProjectConnect' },
+      {
+        path: 'profile',
+        component: ProfileComponent,
+        title: 'Mon profil - ProjectConnect',
+      },
+      {
+        path: 'profile/:id',
+        component: ProfileComponent,
+        title: 'Profil utilisateur - ProjectConnect',
+      },
     ],
   },
   {
@@ -97,5 +105,5 @@ export const routes: Routes = [
     path: 'projectsss',
     component: DisplayComponent,
   },
-  { path: 'project/:id', component: ProjectDetailComponent },
+  { path: 'project/:slug', component: ProjectDetailComponent },
 ];
