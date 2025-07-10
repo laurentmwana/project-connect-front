@@ -7,13 +7,14 @@ import { NgIf } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserLocalService } from '@/services/user-local.service';
 import { ChatService } from '@/services/chat.service';
+import { ChatType } from '@/model/message.model';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
-  imports: [ReactiveFormsModule, InfoUserComponent, TabsComponent, NgIf],
+  imports: [ReactiveFormsModule, InfoUserComponent, TabsComponent],
 })
 export class ProfileComponent implements OnInit {
   profileForm!: FormGroup;
@@ -96,16 +97,29 @@ export class ProfileComponent implements OnInit {
     if (this.userId) {
       const currentUser = this.userLocalService.getUser();
       if (currentUser) {
-        const data = {
-          type: 'direct',
-          user_ids: [currentUser.id, this.userId]
-        };
-        this.chatService.createChat(data).subscribe({
-          next: (chat) => {
-            this.router.navigate(['/message', chat.id]);
-          },
-          error: (err) => {
-            console.error('Erreur lors de la création du chat', err);
+        this.chatService.getChats().subscribe(chats => {
+          const existingChat = chats.find(chat =>
+            chat.type === ChatType.Private &&
+            chat.users.length === 2 &&
+            chat.users.some(user => user.id === currentUser.id) &&
+            chat.users.some(user => user.id === this.userId)
+          );
+
+          if (existingChat) {
+            this.router.navigate(['/message', existingChat.id]);
+          } else {
+            const data = {
+              type: ChatType.Private,
+              user_ids: [currentUser.id, this.userId]
+            };
+            this.chatService.createChat(data).subscribe({
+              next: (chat) => {
+                this.router.navigate(['/message', chat.id]);
+              },
+              error: (err) => {
+                console.error('Erreur lors de la création du chat', err);
+              }
+            });
           }
         });
       }
