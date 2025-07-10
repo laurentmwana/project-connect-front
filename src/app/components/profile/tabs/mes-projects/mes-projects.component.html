@@ -35,7 +35,7 @@
             <!-- Contenu principal -->
             <div>
               <h3 class="font-medium">{{ project.title }}</h3>
-              <p class="text-sm text-muted-foreground mt-4">
+              <p class="text-sm text-muted-foreground mt-4 line-clamp-2">
                 {{ project.description }}
               </p>
               <p class="text-muted-foreground mt-2">
@@ -44,7 +44,7 @@
             </div>
 
             <!-- Bouton en bas -->
-            <div class="flex justify-between items-end mt-4">
+            <div class="flex justify-between items-end mt-1 mb-4">
               <div>
                 <p class="text-left mt-5 font-bold">
                   {{
@@ -63,7 +63,6 @@
                       : "Aucune invitation"
                   }}
                 </p>
-                <!-- <p class="text-sm text-muted-foreground">Invitation</p> -->
               </div>
               <button
                 class="bg-amber-600 hover:bg-amber-600 text-white font-bold py-1 px-2 rounded"
@@ -83,16 +82,39 @@
         ></div>
       </div>
 
-      <!-- Pagination -->
-      <div class="flex justify-center mt-6 space-x-2">
+      <!--la pagination avec les boutons -->
+      <div class="flex justify-center items-center mt-6 space-x-2">
+        <!-- Bouton Précédent -->
         <button
-          *ngFor="let page of pages"
+          class="px-3 py-1 border rounded"
+          [class.opacity-50]="currentPage === 1"
+          [disabled]="currentPage === 1"
+          (click)="changePage(currentPage - 1)"
+        >
+          Précédent
+        </button>
+
+        <!-- Boutons de pagination -->
+        <button
+          *ngFor="let page of [1, 2]"
           class="px-3 py-1 border rounded"
           [class.bg-amber-600]="page === currentPage"
           [class.text-white]="page === currentPage"
-          (click)="changePage(page)"
+          [class.opacity-50]="page > totalPages"
+          [disabled]="page > totalPages"
+          (click)="page <= totalPages && changePage(page)"
         >
           {{ page }}
+        </button>
+
+        <!-- Bouton Suivant -->
+        <button
+          class="px-3 py-1 border rounded"
+          [class.opacity-50]="currentPage === totalPages"
+          [disabled]="currentPage === totalPages"
+          (click)="changePage(currentPage + 1)"
+        >
+          Suivant
         </button>
       </div>
     </div>
