@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ProfileService, UserProfile } from '@/services/profile.service';
-import { FormBuilder, FormGroup, NgForm, NgModelGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InfoUserComponent } from "../../components/profile/info-user/info-user.component";
 import { TabsComponent } from "../../components/profile/tabs/tabs.component";
 import { NgIf } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UserLocalService } from '@/services/user-local.service';
+import { ChatService } from '@/services/chat.service';
 
 @Component({
   selector: 'app-profile',
@@ -22,8 +24,14 @@ export class ProfileComponent implements OnInit {
   errorMessage = '';
   userId: number = 0;
   initialIsFollowing: boolean = false;
+  isOwnProfile: boolean = false;
 
-  constructor(private profileService: ProfileService, private fb: FormBuilder, private route: ActivatedRoute) {}
+  private profileService = inject(ProfileService);
+  private fb = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
+  private userLocalService = inject(UserLocalService);
+  private chatService = inject(ChatService);
+  private router = inject(Router);
 
   ngOnInit(): void {
     this.profileForm = this.fb.group({
@@ -37,26 +45,47 @@ export class ProfileComponent implements OnInit {
       about : [''],
     });
 
-    this.loadProfile();
+    this.route.params.subscribe(params => {
+      const profileId = params['id'];
+      if (profileId) {
+        this.loadUserProfile(profileId);
+      } else {
+        this.loadOwnProfile();
+      }
+    });
   }
 
-  loadProfile(): void {
+  loadOwnProfile(): void {
+    this.isOwnProfile = true;
     this.profileService.getProfile().subscribe({
-      next: (profile) => {
-        this.userProfile = profile;
-        if (this.userProfile && 'id' in this.userProfile) {
-          this.userId = this.userProfile.id as number;
-        }
-        this.profileForm.patchValue(profile);
-        if (profile.profile_photo) {
-          this.profilePhotoPreview = profile.profile_photo;
-        }
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement du profil', err);
-        this.errorMessage = 'Impossible de charger le profil. Veuillez réessayer.';
-      },
+      next: (profile) => this.handleProfileResponse(profile),
+      error: (err) => this.handleProfileError(err),
     });
+  }
+
+  loadUserProfile(id: number): void {
+    this.profileService.getProfileById(id).subscribe({
+      next: (profile) => {
+        const currentUser = this.userLocalService.getUser();
+        this.isOwnProfile = currentUser ? currentUser.id === profile.id : false;
+        this.handleProfileResponse(profile);
+      },
+      error: (err) => this.handleProfileError(err),
+    });
+  }
+
+  handleProfileResponse(profile: UserProfile): void {
+    this.userProfile = profile;
+    this.userId = profile.id;
+    this.profileForm.patchValue(profile);
+    if (profile.profile_photo) {
+      this.profilePhotoPreview = profile.profile_photo;
+    }
+  }
+
+  handleProfileError(err: any): void {
+    console.error('Erreur lors du chargement du profil', err);
+    this.errorMessage = 'Impossible de charger le profil. Veuillez réessayer.';
   }
 
   onFollowChange(isFollowing: boolean): void {
@@ -64,7 +93,23 @@ export class ProfileComponent implements OnInit {
   }
 
   onMessageClick(): void {
-    // Logic for message click
+    if (this.userId) {
+      const currentUser = this.userLocalService.getUser();
+      if (currentUser) {
+        const data = {
+          type: 'direct',
+          user_ids: [currentUser.id, this.userId]
+        };
+        this.chatService.createChat(data).subscribe({
+          next: (chat) => {
+            this.router.navigate(['/message', chat.id]);
+          },
+          error: (err) => {
+            console.error('Erreur lors de la création du chat', err);
+          }
+        });
+      }
+    }
   }
 
   onFileChange(event: any): void {
@@ -105,7 +150,7 @@ export class ProfileComponent implements OnInit {
     next: () => {
       this.successMessage = 'Profil mis à jour avec succès.';
       this.loading = false;
-      this.loadProfile();
+      this.loadOwnProfile();
     },
     error: err => {
       this.errorMessage = 'Erreur lors de la mise à jour du profil.';
