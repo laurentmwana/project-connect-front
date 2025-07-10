@@ -64,6 +64,7 @@ export interface ProjectRoleSkill {
 export interface ProjectData {
   id: number;
   title: string;
+  slug: string;
   status: Status;
   description: string;
   date_start: string; // ou Date si vous transformez après
