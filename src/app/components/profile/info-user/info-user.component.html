@@ -160,4 +160,19 @@
       Message
     </button>
   </div>
+
+  <div class="mt-6 space-y-5" *ngIf="isOwnProfile">
+    <button
+      (click)="onEditProfileClick()"
+      class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 py-2 w-full bg-primary text-primary-foreground hover:bg-primary/90"
+    >
+      Modifier le profil
+    </button>
+    <button
+      (click)="onLogoutClick()"
+      class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 py-2 w-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+    >
+      Déconnexion
+    </button>
+  </div>
 </div>
