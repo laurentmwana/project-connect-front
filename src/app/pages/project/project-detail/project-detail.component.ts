@@ -35,7 +35,7 @@ export class ProjectDetailComponent {
     if (this.isLoading) return;
     this.loadInvitations();
   }
-  projectId!: string;
+  projectSlug!: string;
   project!: ProjectData;
   errorMessage = '';
   meta: Meta | null = null;
@@ -134,12 +134,12 @@ export class ProjectDetailComponent {
   ) {}
 
   ngOnInit(): void {
-    this.projectId = this.route.snapshot.paramMap.get('id')!;
+    this.projectSlug = this.route.snapshot.paramMap.get('slug')!;
     this.loadProject();
   }
 
   loadProject(): void {
-    this.projectService.getProjectById(this.projectId).subscribe({
+    this.projectService.getProjectBySlug(this.projectSlug).subscribe({
       next: (response) => {
         this.project = response.data;
         const user = this.userLocalService.getUser();
@@ -182,7 +182,7 @@ export class ProjectDetailComponent {
     console.log('Paramètres envoyés au backend:', params);
 
     this.candidacyService
-      .getCandidacies(Number(this.projectId), params)
+      .getCandidacies(Number(this.project.id), params)
       .subscribe({
         next: (response: PaginatedCandidacyResponse) => {
           console.log('Réponse complète du backend:', response);
@@ -327,7 +327,7 @@ export class ProjectDetailComponent {
     console.log('Paramètres envoyés:', params);
 
     this.candidacyService
-      .getInvitations(Number(this.projectId), params)
+      .getInvitations(Number(this.project.id), params)
       .subscribe({
         next: (response: PaginatedInvitationResponse) => {
           this.invitations = response.data;
