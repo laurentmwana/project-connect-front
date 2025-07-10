@@ -2,7 +2,7 @@ import { ProjectData } from '@/model/project';
 import { ProjectService } from '@/services/project.service';
 import { CommonModule, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NavbarComponent } from '../../../components/navbar/navbar.component';
 import { CandidacyService } from '@/services/candidacy.service';
 import { Candidacy, Meta, PaginatedCandidacyResponse } from '@/model/candidacy';
@@ -105,6 +105,9 @@ export class ProjectDetailComponent {
   showCandidacyModal = false;
   // Méthodes
   openCandidacyModal(role: any) {
+    if (!this.userLocalService.isLoggedIn()) {
+      this.router.navigate(['/login']);
+    }
     this.selectedRole = role;
     this.showCandidacyModal = true;
   }
@@ -126,7 +129,8 @@ export class ProjectDetailComponent {
     private route: ActivatedRoute,
     private projectService: ProjectService,
     private candidacyService: CandidacyService,
-    private userLocalService: UserLocalService
+    private userLocalService: UserLocalService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
