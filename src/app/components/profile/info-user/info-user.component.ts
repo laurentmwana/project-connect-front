@@ -31,6 +31,8 @@ export class InfoUserComponent implements OnInit {
 
   @Output() followChange = new EventEmitter<boolean>();
   @Output() messageClick = new EventEmitter<string>();
+  @Output() editProfileClick = new EventEmitter<void>();
+  @Output() logoutClick = new EventEmitter<void>();
 
   followersCount: number = 0;
   followingCount: number = 0;
@@ -79,5 +81,13 @@ export class InfoUserComponent implements OnInit {
 
   navigateToConnections(): void {
     this.router.navigate(['/profile', this.userId, 'connections']);
+  }
+
+  onEditProfileClick(): void {
+    this.editProfileClick.emit();
+  }
+
+  onLogoutClick(): void {
+    this.logoutClick.emit();
   }
 }

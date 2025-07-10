@@ -26,6 +26,7 @@ export class ProfileComponent implements OnInit {
   userId: number = 0;
   initialIsFollowing: boolean = false;
   isOwnProfile: boolean = false;
+  isEditModalOpen: boolean = false;
 
   private profileService = inject(ProfileService);
   private fb = inject(FormBuilder);
@@ -137,7 +138,16 @@ export class ProfileComponent implements OnInit {
     }
   }
 
- onSubmit(): void {
+  onEditProfile(): void {
+    this.isEditModalOpen = true;
+  }
+
+  onLogout(): void {
+    this.userLocalService.removeUser();
+    this.router.navigate(['/login']);
+  }
+
+  onSubmit(): void {
   if (this.profileForm.invalid) return;
 
   this.loading = true;
