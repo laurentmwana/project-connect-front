@@ -23,7 +23,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class ProjectEditComponent {
   projectForm: FormGroup;
-  projectId: string = '';
+  projectSlug: string = '';
 
   availableDomains: string[] = [];
   availableRoles: string[] = [];
@@ -83,10 +83,10 @@ export class ProjectEditComponent {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      this.projectId = params['id'];
-      console.log('id du projet:', this.projectId);
+      this.projectSlug = params['slug'];
+      console.log('id du projet:', this.projectSlug);
 
-      if (this.projectId) {
+      if (this.projectSlug) {
         this.loadFormData();
         this.loadProjectData();
       } else {
@@ -137,9 +137,9 @@ export class ProjectEditComponent {
   }
 
   loadProjectData(): void {
-    console.log('Loading project data for ID:', this.projectId);
+    console.log('Loading project data for ID:', this.projectSlug);
 
-    this.projectService.getProject(this.projectId).subscribe({
+    this.projectService.getProject(this.projectSlug).subscribe({
       next: (response) => {
         console.log('Project data received:', response.data);
         const project = response.data;
@@ -260,7 +260,7 @@ export class ProjectEditComponent {
 
     const data: Project = this.projectForm.value;
 
-    this.projectService.updateProject(this.projectId, data).subscribe({
+    this.projectService.updateProject(this.projectSlug, data).subscribe({
       next: (response) => {
         console.log('Project updated successfully:', response);
         this.submitting = false;
@@ -268,7 +268,7 @@ export class ProjectEditComponent {
         setTimeout(() => {
           this.successMessage = '';
         }, 3000);
-        this.location.back();
+        this.router.navigate(['/project', response.data.slug]);
       },
       error: (error) => {
         console.error('Error updating project:', error);

@@ -2,7 +2,7 @@ import { ProjectData } from '@/model/project';
 import { ProjectService } from '@/services/project.service';
 import { CommonModule, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NavbarComponent } from '../../../components/navbar/navbar.component';
 import { CandidacyService } from '@/services/candidacy.service';
 import { Candidacy, Meta, PaginatedCandidacyResponse } from '@/model/candidacy';
@@ -35,7 +35,7 @@ export class ProjectDetailComponent {
     if (this.isLoading) return;
     this.loadInvitations();
   }
-  projectId!: string;
+  projectSlug!: string;
   project!: ProjectData;
   errorMessage = '';
   meta: Meta | null = null;
@@ -105,6 +105,9 @@ export class ProjectDetailComponent {
   showCandidacyModal = false;
   // Méthodes
   openCandidacyModal(role: any) {
+    if (!this.userLocalService.isLoggedIn()) {
+      this.router.navigate(['/login']);
+    }
     this.selectedRole = role;
     this.showCandidacyModal = true;
   }
@@ -126,16 +129,17 @@ export class ProjectDetailComponent {
     private route: ActivatedRoute,
     private projectService: ProjectService,
     private candidacyService: CandidacyService,
-    private userLocalService: UserLocalService
+    private userLocalService: UserLocalService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.projectId = this.route.snapshot.paramMap.get('id')!;
+    this.projectSlug = this.route.snapshot.paramMap.get('slug')!;
     this.loadProject();
   }
 
   loadProject(): void {
-    this.projectService.getProjectById(this.projectId).subscribe({
+    this.projectService.getProjectBySlug(this.projectSlug).subscribe({
       next: (response) => {
         this.project = response.data;
         const user = this.userLocalService.getUser();
@@ -178,7 +182,7 @@ export class ProjectDetailComponent {
     console.log('Paramètres envoyés au backend:', params);
 
     this.candidacyService
-      .getCandidacies(Number(this.projectId), params)
+      .getCandidacies(Number(this.project.id), params)
       .subscribe({
         next: (response: PaginatedCandidacyResponse) => {
           console.log('Réponse complète du backend:', response);
@@ -263,9 +267,6 @@ export class ProjectDetailComponent {
     //TODO:Gerer la suppression ?
   }
 
-
-
-
   //Traitement candidature
   toggleViewMenu(candidacyId: number) {
     this.viewMenuOpen = !this.viewMenuOpen;
@@ -326,7 +327,7 @@ export class ProjectDetailComponent {
     console.log('Paramètres envoyés:', params);
 
     this.candidacyService
-      .getInvitations(Number(this.projectId), params)
+      .getInvitations(Number(this.project.id), params)
       .subscribe({
         next: (response: PaginatedInvitationResponse) => {
           this.invitations = response.data;
@@ -389,5 +390,12 @@ export class ProjectDetailComponent {
         this.showToast(`${error.message}`, 'error');
       },
     });
+  }
+
+  isOpen: boolean[] = [];
+
+  toggleAccordion(index: number): void {
+    this.isOpen[index] = !this.isOpen[index];
+    this.isOpen = [...this.isOpen]; // Trigger change detection
   }
 }

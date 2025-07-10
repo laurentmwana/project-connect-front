@@ -33,6 +33,26 @@ export class ProjectService {
     return this.http.get<PaginatedProjects>(url);
   }
 
+  // methode  getAllUserProject pour recupere les projects cree par l'utilisateur
+  getAllUserProject(
+    page: number = 1,
+    searchTerm: string = ''
+  ): Observable<PaginatedProjects> {
+    let url = `${this.baseUrl}users/projects?page=${page}`;
+    const user = this.userLocalService.getUser();
+
+    if (searchTerm.trim()) {
+      url += `&search=${encodeURIComponent(searchTerm.trim())}`;
+    }
+
+    return this.http.get<PaginatedProjects>(url, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${user?.token}`,
+      },
+    });
+  }
+
   /**
    * Crée un nouveau projet
    */
@@ -50,10 +70,10 @@ export class ProjectService {
 
   //modifier un projet
 
-  updateProject(id: string, data: any): Observable<any> {
+  updateProject(slug: string, data: any): Observable<any> {
     const user = this.userLocalService.getUser();
 
-    return this.http.put(`${this.baseUrl}projects/${id}`, data, {
+    return this.http.put(`${this.baseUrl}projects/${slug}`, data, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -66,13 +86,13 @@ export class ProjectService {
    * Récupère un projet par ID
    */
 
-  getProjectById(id: string) {
+  getProjectBySlug(slug: string) {
     return this.http.get<{ data: ProjectData }>(
-      `http://127.0.0.1:8000/api/projects/${id}`
+      `http://127.0.0.1:8000/api/projects/${slug}`
     );
   }
-  getProject(id: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}projects/${id}`);
+  getProject(slug: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}projects/${slug}`);
   }
   /**
    * Récupère les domaines disponibles

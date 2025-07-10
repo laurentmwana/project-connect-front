@@ -12,20 +12,20 @@ export const canEditGuard: CanActivateFn = (route, state) => {
   const location = inject(Location);
 
   const user = userService.getUser();
-  const projectId = route.paramMap.get('id');
+  const projectSlug = route.paramMap.get('slug');
 
   if (!user) {
     router.navigate(['/login']);
     return of(false);
   }
 
-  if (!projectId) {
+  if (!projectSlug) {
     location.back();
     return of(false);
   }
 
   // Recuperer le projet pour comparer l'auteur
-  return projectService.getProjectById(projectId).pipe(
+  return projectService.getProjectBySlug(projectSlug).pipe(
     map((project) => {
       if (project.data.created_by.id === user.id) {
         return true;
