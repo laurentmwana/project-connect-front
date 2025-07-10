@@ -55,4 +55,21 @@ export class ProfileService {
       headers: this.getAuthHeaders(),
     });
   }
+
+  getProfileById(id: number): Observable<UserProfile> {
+    return this.http
+      .get<{ user: UserProfile }>(`${this.apiUrl}/profiles/${id}`, {
+        headers: this.getAuthHeaders(),
+      })
+      .pipe(
+        map((response) => {
+          const user = response.user;
+          if (user && user.profile_photo) {
+            const baseUrl = Environment.apiUrl.replace('/api', '');
+            user.profile_photo = `${baseUrl}/storage/${user.profile_photo}`;
+          }
+          return user;
+        })
+      );
+  }
 }

@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 export class InfoUserComponent implements OnInit {
   @Input() userId: number = 0;
   @Input() initialIsFollowing: boolean = false;
+  @Input() isOwnProfile: boolean = false;
 
    @Input() userProfile?: {
     name: string;
@@ -57,6 +58,8 @@ export class InfoUserComponent implements OnInit {
       this.followersCount = counts.followers_count;
       this.followingCount = counts.following_count;
       this.totalConnections = counts.total_connections; 
+
+      console.log()
     },
     error: (err) => {
       console.error('Erreur lors du chargement des follow counts:', err);
