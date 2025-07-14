@@ -18,6 +18,8 @@ import { MessageComponent } from './pages/message/message.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ProjectEditComponent } from './pages/project/project-edit/project-edit.component';
 import { canEditGuard } from './guards/can-edit.guard';
+import { AdminComponent } from './pages/admin/admin/admin.component';
+import { adminGuard } from './guards/admin.guard';
 export const routes: Routes = [
   {
     path: '',
@@ -106,4 +108,7 @@ export const routes: Routes = [
     component: DisplayComponent,
   },
   { path: 'project/:slug', component: ProjectDetailComponent },
+
+  //admin
+  { path: 'admin', component: AdminComponent, canActivate: [adminGuard] },
 ];

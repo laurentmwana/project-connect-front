@@ -9,6 +9,7 @@ export interface AuthenticatedUser {
   email: string;
   email_verified_at: string | null;
   token: string;
+  role: string;
 }
 
 export interface ForgotPasswordResponse {
