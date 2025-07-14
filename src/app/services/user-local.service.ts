@@ -18,10 +18,15 @@ export class UserLocalService {
 
     return user;
   }
-   getToken(): string | null {
+  getToken(): string | null {
     const user = this.getUser();
     // recupération de token est stocké dans user.token
     return user ? user.token ?? null : null;
+  }
+
+  getRole(): string | null {
+    const user = this.getUser();
+    return user?.role ?? null;
   }
 
   removeUser() {
@@ -41,6 +46,4 @@ export class UserLocalService {
   isLoggedIn(): boolean {
     return this.getUser() !== null;
   }
-  
- 
 }
