@@ -14,7 +14,7 @@ import { ChatType } from '@/model/message.model';
   standalone: true,
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
-  imports: [ReactiveFormsModule, InfoUserComponent, TabsComponent],
+  imports: [ReactiveFormsModule, InfoUserComponent, TabsComponent,NgIf],
 })
 export class ProfileComponent implements OnInit {
   profileForm!: FormGroup;
