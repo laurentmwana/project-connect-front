@@ -68,7 +68,9 @@ export class ProjectDetailComponent {
   viewMenuOpen = false;
   selectedCandidacyId: number | null = null;
 
-  activeTab: 'candidatures' | 'invitations' = 'candidatures';
+  // Pour les onglets
+  activeTab: 'informations' | 'roles' | 'candidatures' | 'invitations' =
+    'informations';
 
   openInviteModal(role: any) {
     this.selectedRole = role;
