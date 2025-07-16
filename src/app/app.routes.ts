@@ -49,24 +49,26 @@ export const routes: Routes = [
         children: [
           {
             path: '',
-            component: MessageComponent, // inbox par défaut
+            component: MessageComponent,
+            canActivate: [protectedGuard]
           },
           {
             path: ':chatId',
-            component: MessageComponent, // ou ChatDetailComponent si séparé
+            component: MessageComponent,
             title: 'Détail du chat - ProjectConnect',
+            canActivate: [protectedGuard]
           },
         ],
       },
       {
         path: 'profile',
         component: ProfileComponent,
-        title: 'Mon profil - ProjectConnect',
+        title: 'Mon profil - ProjectConnect', canActivate: [protectedGuard]
       },
       {
         path: 'profile/:id',
         component: ProfileComponent,
-        title: 'Profil utilisateur - ProjectConnect',
+        title: 'Profil utilisateur - ProjectConnect',canActivate: [protectedGuard]
       },
     ],
   },
