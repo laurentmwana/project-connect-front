@@ -20,6 +20,8 @@ import { ProjectEditComponent } from './pages/project/project-edit/project-edit.
 import { canEditGuard } from './guards/can-edit.guard';
 import { AdminComponent } from './pages/admin/admin/admin.component';
 import { adminGuard } from './guards/admin.guard';
+import { NotificationDetailComponent } from './pages/notification/notification-detail/notification-detail.component';
+import { NotificationListComponent } from './pages/notification/notification-list/notification-list.component';
 export const routes: Routes = [
   {
     path: '',
@@ -50,25 +52,45 @@ export const routes: Routes = [
           {
             path: '',
             component: MessageComponent,
-            canActivate: [protectedGuard]
+            canActivate: [protectedGuard],
           },
           {
             path: ':chatId',
             component: MessageComponent,
             title: 'Détail du chat - ProjectConnect',
-            canActivate: [protectedGuard]
+            canActivate: [protectedGuard],
           },
         ],
       },
       {
         path: 'profile',
         component: ProfileComponent,
-        title: 'Mon profil - ProjectConnect', canActivate: [protectedGuard]
+        title: 'Mon profil - ProjectConnect',
+        canActivate: [protectedGuard],
       },
       {
         path: 'profile/:id',
         component: ProfileComponent,
-        title: 'Profil utilisateur - ProjectConnect',canActivate: [protectedGuard]
+        title: 'Profil utilisateur - ProjectConnect',
+        canActivate: [protectedGuard],
+      },
+
+      {
+        path: 'notification',
+        children: [
+          {
+            path: '',
+            title: 'Notifications - ProjectConnect',
+            component: NotificationListComponent,
+          },
+
+          {
+            path: ':id',
+            title: 'En savoir plus sur une notification - ProjectConnect',
+            component: NotificationDetailComponent,
+          },
+        ],
+        canActivate: [protectedGuard],
       },
     ],
   },

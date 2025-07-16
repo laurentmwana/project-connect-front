@@ -1,0 +1,376 @@
+<!-- Skeleton Loading State -->
+<div class="container py-12" *ngIf="isPending">
+  <div class="flex items-center mb-6">
+    <a
+      class="flex items-center text-muted-foreground hover:text-foreground mr-4"
+      href="/"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="h-4 w-4 mr-2"
+      >
+        <path d="m12 19-7-7 7-7"></path>
+        <path d="M19 12H5"></path>
+      </svg>
+      Retour
+    </a>
+    <div
+      class="h-8 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"
+    ></div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <!-- Sidebar Skeleton -->
+    <div class="md:col-span-1">
+      <div class="rounded-lg border bg-card text-card-foreground shadow-sm p-4">
+        <div class="space-y-2">
+          <div
+            class="flex items-center h-10 px-4 py-2 w-full bg-gray-100 dark:bg-gray-800 rounded-md animate-pulse"
+          >
+            <div
+              class="h-4 w-4 mr-2 bg-gray-300 dark:bg-gray-400 rounded-full"
+            ></div>
+            <div class="h-4 w-24 bg-gray-300 dark:bg-gray-400 rounded"></div>
+            <div
+              class="ml-auto h-4 w-6 bg-gray-300 dark:bg-gray-400 rounded-full"
+            ></div>
+          </div>
+
+          <div
+            class="flex items-center h-10 px-4 py-2 w-full rounded-md animate-pulse"
+          >
+            <div
+              class="h-4 w-4 mr-2 bg-gray-200 dark:bg-gray-700 rounded-full"
+            ></div>
+            <div class="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            <div
+              class="ml-auto h-4 w-6 bg-gray-200 dark:bg-gray-700 rounded-full"
+            ></div>
+          </div>
+        </div>
+
+        <div
+          class="shrink-0 bg-gray-200 dark:bg-gray-700 h-[1px] w-full my-4"
+        ></div>
+
+        <div
+          class="h-10 w-full bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Main Content Skeleton -->
+    <div class="md:col-span-3">
+      <div
+        class="h-10 bg-gray-200 dark:bg-gray-700 rounded-md mb-6 grid grid-cols-3 gap-1 p-1 animate-pulse"
+      >
+        <div class="bg-white dark:bg-gray-800 rounded-sm"></div>
+        <div class="bg-gray-200 dark:bg-gray-700 rounded-sm"></div>
+      </div>
+
+      <div class="space-y-4">
+        <div
+          *ngFor="let item of skeletonItems"
+          class="p-4 rounded-lg border flex items-start gap-4 animate-pulse"
+        >
+          <div
+            class="h-10 w-10 bg-gray-200 dark:bg-gray-700 rounded-full"
+          ></div>
+          <div class="flex-1 space-y-3">
+            <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+            <div
+              class="h-9 w-28 bg-gray-200 dark:bg-gray-700 rounded-md mt-2"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Empty State -->
+<div
+  class="container py-12"
+  *ngIf="!isPending && (!notifications || !hasNotifications)"
+>
+  <div class="flex items-center mb-6">
+    <a
+      class="flex items-center text-muted-foreground hover:text-foreground mr-4"
+      href="/"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="h-4 w-4 mr-2"
+      >
+        <path d="m12 19-7-7 7-7"></path>
+        <path d="M19 12H5"></path>
+      </svg>
+      Retour
+    </a>
+    <h1 class="text-2xl font-bold">Notifications</h1>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <!-- Sidebar -->
+    <div class="md:col-span-1">
+      <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+        <div class="p-4">
+          <div class="space-y-1">
+            <a
+              [ngClass]="{ 'bg-accent': isFilterAll }"
+              class="inline-flex items-center w-full px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
+              href="/notification"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4 mr-2"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+              </svg>
+              Toutes notifications
+              <span
+                class="ml-auto inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary text-primary-foreground"
+                >{{ notifications?.counts?.all_notifications || 0 }}</span
+              >
+            </a>
+
+            <a
+              [ngClass]="{ 'bg-accent': isFilterUnread }"
+              class="inline-flex items-center w-full px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
+              href="/notification?filter=unread"
+            >
+              <div class="h-4 w-4 mr-2"></div>
+              Non lu
+              <span
+                class="ml-auto inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary text-primary-foreground"
+                >{{ notifications?.counts?.unread_notifications || 0 }}</span
+              >
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty Content -->
+    <div class="md:col-span-3">
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm p-8 text-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="mx-auto h-12 w-12 text-muted-foreground mb-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+        </svg>
+        <h3 class="text-lg font-semibold mb-2">Aucune notification</h3>
+        <p class="text-muted-foreground mb-4">
+          Vous n'avez pas encore de notifications. Revenez plus tard.
+        </p>
+        <a
+          href="/"
+          class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+          >Retour à l'accueil</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Notifications Content -->
+<div
+  class="container py-12"
+  *ngIf="!isPending && notifications && hasNotifications"
+>
+  <div class="flex items-center mb-6">
+    <a
+      class="flex items-center text-muted-foreground hover:text-foreground mr-4"
+      href="/"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4 mr-2"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="m12 19-7-7 7-7"></path>
+        <path d="M19 12H5"></path>
+      </svg>
+      Retour
+    </a>
+    <h1 class="text-2xl font-bold">Notifications</h1>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <!-- Sidebar -->
+    <div class="md:col-span-1">
+      <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+        <div class="p-4">
+          <div class="space-y-1">
+            <a
+              [ngClass]="{ 'bg-accent': isFilterAll }"
+              class="inline-flex items-center w-full px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
+              href="/notification"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4 mr-2"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+              </svg>
+              Toutes notifications
+              <span
+                class="ml-auto inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary text-primary-foreground"
+                >{{ notifications.counts.all_notifications }}</span
+              >
+            </a>
+
+            <a
+              [ngClass]="{ 'bg-accent': isFilterUnread }"
+              class="inline-flex items-center w-full px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
+              href="/notification?filter=unread"
+            >
+              <div class="h-4 w-4 mr-2"></div>
+              Non lu
+              <span
+                class="ml-auto inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary text-primary-foreground"
+                >{{ notifications.counts.unread_notifications }}</span
+              >
+            </a>
+          </div>
+
+          <div *ngIf="unreadCount > 0" class="border-t my-4"></div>
+
+          <button
+            *ngIf="unreadCount > 0"
+            (click)="markAllAsRead()"
+            class="w-full inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 mt-2"
+          >
+            Marquer tout comme lu
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications List -->
+    <div class="md:col-span-3">
+      <div class="space-y-4">
+        <div
+          *ngFor="let notification of notifications.data"
+          class="p-4 rounded-lg border flex items-start gap-4"
+        >
+          <span
+            class="shrink-0 flex h-10 w-10 items-center justify-center rounded-full bg-muted"
+          >
+            {{ notification.data.title | textInitial }}
+          </span>
+
+          <div class="flex-1">
+            <p class="font-medium">{{ notification.data.title }}</p>
+            <p class="text-sm text-muted-foreground mt-1">
+              {{ notification.data.message }}
+            </p>
+            <p class="text-sm text-muted-foreground mt-1">
+              {{ notification.created_at }}
+            </p>
+
+            <div *ngIf="notification.data.link" class="flex gap-2 mt-3">
+              <a
+                [href]="notification.data.link"
+                class="inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground py-2 h-9 px-3 text-sm"
+              >
+                En savoir plus
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error State -->
+<div class="container py-12" *ngIf="!isPending && !notifications">
+  <div
+    class="rounded-lg border bg-card text-card-foreground shadow-sm p-8 text-center"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="mx-auto h-12 w-12 text-destructive mb-4"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <h3 class="text-lg font-semibold mb-2">Erreur de chargement</h3>
+    <p class="text-muted-foreground mb-4">
+      Impossible de charger vos notifications. Veuillez réessayer plus tard.
+    </p>
+    <button (click)="loadNotifications()" class="btn">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4 mr-2"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+        <path d="M21 3v5h-5"></path>
+        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+        <path d="M3 21v-5h5"></path>
+      </svg>
+      Réessayer
+    </button>
+  </div>
+</div>
