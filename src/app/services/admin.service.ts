@@ -48,4 +48,19 @@ export class AdminService {
       params,
     });
   }
+
+  toggleUser(id: number) {
+    const user = this.userLocalService.getUser();
+
+    return this.http.post(
+      `${this.url}users/${id}/state`,
+      {},
+      {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${user?.token}`,
+        },
+      }
+    );
+  }
 }
