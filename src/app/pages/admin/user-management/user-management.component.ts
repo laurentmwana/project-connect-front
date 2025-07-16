@@ -28,6 +28,8 @@ export class UserManagementComponent {
   currentPage = 1;
   filterForm: FormGroup;
   Math: Math = Math;
+  errorMessage = '';
+  successMessage = '';
 
   constructor(private adminService: AdminService, private fb: FormBuilder) {
     this.filterForm = this.fb.group({
@@ -88,7 +90,15 @@ export class UserManagementComponent {
   }
 
   toggleUserState(id: number) {
-    // Implémentez cette méthode selon vos besoins
+    this.adminService.toggleUser(id).subscribe({
+      next: (res) => {
+        this.loadAllUsers(this.currentPage);
+        console.log(res);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   getPagesArray(start: number, end: number): number[] {
