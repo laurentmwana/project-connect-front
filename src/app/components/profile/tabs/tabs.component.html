@@ -35,14 +35,14 @@
       Portfolio
     </button>
     <button
-      data-tabs-target="#recommandations"
+      data-tabs-target="#project-participed"
       type="button"
       role="tab"
-      aria-controls="recommandations"
+      aria-controls="project-participed"
       aria-selected="false"
       class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium"
     >
-      Recommandations
+      Project Participed
     </button>
     <button
       data-tabs-target="#mes-projects"
@@ -59,12 +59,15 @@
   <!-- Tab Content -->
   <div id="tab-content" class="mt-6">
     <div id="about" role="tabpanel" class="hidden">
-      <app-about-me></app-about-me>
+      <app-about-me
+        [userProfile]="userprofile"
+        [skills]="skills"
+      ></app-about-me>
     </div>
 
     <app-experience></app-experience>
     <app-portfolio></app-portfolio>
-    <app-recommandation></app-recommandation>
+    <app-project-participed></app-project-participed>
 
     <div id="mes-projects" role="tabpanel" class="hidden">
       <app-mes-projects></app-mes-projects>
