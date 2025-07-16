@@ -127,7 +127,7 @@ body {
 }
 
 .container {
-  @apply mx-auto w-full max-w-5xl px-2 lg:px-4;
+  @apply mx-auto w-full max-w-[1400px] px-2 lg:px-4;
 }
 
 .input-field {
