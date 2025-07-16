@@ -1,0 +1,308 @@
+<div class="w-full h-full">
+  <!-- Filtres -->
+  <div class="mb-6 rounded-lg bg-card p-4 shadow-sm">
+    <form
+      [formGroup]="filterForm"
+      (ngSubmit)="applyFilters()"
+      class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5"
+    >
+      <div>
+        <label for="email" class="label-form">Email</label>
+        <input
+          type="text"
+          id="email"
+          formControlName="email"
+          class="input-field"
+          placeholder="Filtrer par email"
+        />
+      </div>
+
+      <div>
+        <label for="name" class="label-form">Nom</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          class="input-field"
+          placeholder="Filtrer par nom"
+        />
+      </div>
+
+      <div>
+        <label for="state" class="label-form">État</label>
+        <select id="state" formControlName="state" class="input-field">
+          <option value="">Tous</option>
+          <option value="1">Actif</option>
+          <option value="0">Inactif</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="per_page" class="label-form">Résultats/page</label>
+        <select id="per_page" formControlName="per_page" class="input-field">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+
+      <div class="flex items-end gap-2">
+        <button type="submit" class="button-primary-sm">
+          <span>Filtrer</span>
+        </button>
+        <button
+          type="button"
+          (click)="resetFilters()"
+          class="button-outline-sm"
+        >
+          <span>Réinitialiser</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Liste des utilisateurs -->
+  <div class="overflow-hidden rounded-lg border shadow-sm">
+    <table class="w-full text-sm">
+      <thead class="bg-muted">
+        <tr>
+          <th class="px-3 py-2 text-left text-xs font-medium">ID</th>
+          <th class="px-3 py-2 text-left text-xs font-medium">Nom</th>
+          <th class="px-3 py-2 text-left text-xs font-medium">Email</th>
+          <th class="px-3 py-2 text-left text-xs font-medium">État</th>
+          <th class="px-3 py-2 text-left text-xs font-medium">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y">
+        <tr
+          *ngFor="let user of users"
+          class="hover:bg-accent/50 transition-colors"
+        >
+          <td class="px-3 py-2">{{ user.id }}</td>
+          <td class="px-3 py-2 font-medium">{{ user.name }}</td>
+          <td class="px-3 py-2">{{ user.email }}</td>
+          <td class="px-3 py-2">
+            <span
+              [class]="user.state === 0 ? 'text-destructive' : 'text-green-600'"
+              class="inline-flex items-center gap-1.5"
+            >
+              <svg
+                [class]="
+                  user.state === 0 ? 'text-destructive' : 'text-green-600'
+                "
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  *ngIf="user.state === 1"
+                  d="M22 11.08V12a10 10 0 1 1-5.93-9.14"
+                ></path>
+                <path *ngIf="user.state === 0" d="M18 6 6 18"></path>
+                <path *ngIf="user.state === 0" d="m6 6 12 12"></path>
+                <path *ngIf="user.state === 1" d="m9 11 3 3L22 4"></path>
+              </svg>
+              {{ user.state === 0 ? "Inactif" : "Actif" }}
+            </span>
+          </td>
+          <td class="px-3 py-2">
+            <button
+              (click)="toggleUserState(user.id)"
+              [class]="
+                user.state === 0 ? 'button-primary-sm' : 'button-outline-sm'
+              "
+              class="h-7 px-2 text-xs"
+            >
+              {{ user.state === 0 ? "Activer" : "Désactiver" }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination améliorée -->
+  <div
+    class="mt-6 flex flex-col items-center justify-between gap-4 sm:flex-row"
+  >
+    <div class="text-sm text-muted-foreground">
+      Affichage de <span class="font-medium">{{ paginationInfo.from }}</span> à
+      <span class="font-medium">{{ paginationInfo.to }}</span> sur
+      <span class="font-medium">{{ paginationInfo.total }}</span> résultats
+    </div>
+
+    <div class="flex items-center gap-1">
+      <!-- Première page -->
+      <button
+        (click)="changePage(1)"
+        [disabled]="currentPage === 1"
+        class="button-outline-sm h-8 w-8 p-0 disabled:opacity-50 disabled:cursor-not-allowed"
+        title="Première page"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m18 6-6 6 6 6"></path>
+          <path d="m6 6 6 6-6 6"></path>
+        </svg>
+      </button>
+
+      <!-- Page précédente -->
+      <button
+        (click)="changePage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        class="button-outline-sm h-8 w-8 p-0 disabled:opacity-50 disabled:cursor-not-allowed"
+        title="Page précédente"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m15 6-6 6 6 6"></path>
+        </svg>
+      </button>
+
+      <!-- Pages numérotées -->
+      <div class="flex items-center gap-1">
+        <ng-container *ngIf="paginationInfo.lastPage <= 5">
+          <button
+            *ngFor="let page of getPagesArray(1, paginationInfo.lastPage)"
+            (click)="changePage(page)"
+            [class]="
+              page === currentPage ? 'button-primary-sm' : 'button-outline-sm'
+            "
+            class="h-8 w-8 p-0 text-sm"
+          >
+            {{ page }}
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="paginationInfo.lastPage > 5">
+          <!-- Afficher les premières pages -->
+          <button
+            *ngFor="
+              let page of getPagesArray(1, Math.min(3, paginationInfo.lastPage))
+            "
+            (click)="changePage(page)"
+            [class]="
+              page === currentPage ? 'button-primary-sm' : 'button-outline-sm'
+            "
+            class="h-8 w-8 p-0 text-sm"
+          >
+            {{ page }}
+          </button>
+
+          <!-- Afficher les points de suspension si nécessaire -->
+          <span
+            *ngIf="currentPage > 4 && paginationInfo.lastPage > 5"
+            class="px-2"
+            >...</span
+          >
+
+          <!-- Afficher la page courante et ses voisines -->
+          <button
+            *ngIf="currentPage > 3 && currentPage < paginationInfo.lastPage - 2"
+            (click)="changePage(currentPage)"
+            class="button-primary-sm h-8 w-8 p-0 text-sm"
+          >
+            {{ currentPage }}
+          </button>
+
+          <!-- Afficher les points de suspension si nécessaire -->
+          <span
+            *ngIf="
+              currentPage < paginationInfo.lastPage - 3 &&
+              paginationInfo.lastPage > 5
+            "
+            class="px-2"
+            >...</span
+          >
+
+          <!-- Afficher les dernières pages -->
+          <button
+            *ngFor="
+              let page of getPagesArray(
+                Math.max(paginationInfo.lastPage - 2, 4),
+                paginationInfo.lastPage
+              )
+            "
+            (click)="changePage(page)"
+            [class]="
+              page === currentPage ? 'button-primary-sm' : 'button-outline-sm'
+            "
+            class="h-8 w-8 p-0 text-sm"
+          >
+            {{ page }}
+          </button>
+        </ng-container>
+      </div>
+
+      <!-- Page suivante -->
+      <button
+        (click)="changePage(currentPage + 1)"
+        [disabled]="currentPage === paginationInfo.lastPage"
+        class="button-outline-sm h-8 w-8 p-0 disabled:opacity-50 disabled:cursor-not-allowed"
+        title="Page suivante"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m9 6 6 6-6 6"></path>
+        </svg>
+      </button>
+
+      <!-- Dernière page -->
+      <button
+        (click)="changePage(paginationInfo.lastPage)"
+        [disabled]="currentPage === paginationInfo.lastPage"
+        class="button-outline-sm h-8 w-8 p-0 disabled:opacity-50 disabled:cursor-not-allowed"
+        title="Dernière page"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m6 6 6 6-6 6"></path>
+          <path d="m12 6 6 6-6 6"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
