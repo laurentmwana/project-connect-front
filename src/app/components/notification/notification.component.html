@@ -1,0 +1,176 @@
+<button
+  *ngIf="isAuthenticated"
+  id="dropdownInformationButton"
+  data-dropdown-toggle="dropdownInformation"
+  class="inline-flex text-muted-foreground hover:border items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-9 w-9 relative"
+  type="button"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="lucide lucide-bell h-5 w-5"
+  >
+    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+  </svg>
+  <span
+    *ngIf="hasUnreadNotifications"
+    class="absolute top-1 right-1 flex h-3 w-3"
+  >
+    <span
+      class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"
+    ></span>
+    <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+  </span>
+</button>
+
+<div id="dropdownInformation" class="hidden">
+  <div
+    class="z-50 rounded-md border border-gray-100 bg-popover text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 w-80 p-0"
+  >
+    <div *ngIf="!isPending">
+      <div class="flex items-center justify-between p-4 border-b">
+        <h3 class="font-medium">Notifications</h3>
+        <div
+          *ngIf="unreadCount > 0"
+          class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground"
+        >
+          {{ unreadCount }} {{ unreadCount === 1 ? "nouvelle" : "nouvelles" }}
+        </div>
+      </div>
+      <div class="max-h-[300px] overflow-y-auto">
+        <div
+          *ngIf="notifications.length === 0"
+          class="p-4 text-center text-sm text-muted-foreground"
+        >
+          Aucune notification
+        </div>
+
+        <div
+          *ngFor="let notification of notifications"
+          [ngClass]="{
+            'bg-orange-50 dark:bg-orange-950/20': notification.read_at === null
+          }"
+          class="p-3 border-b last:border-b-0 hover:bg-accent"
+        >
+          <div class="flex items-start gap-3">
+            <span
+              class="relative flex shrink-0 overflow-hidden rounded-full h-8 w-8"
+            >
+              <span
+                [ngClass]="
+                  notification.read_at === null
+                    ? 'bg-orange-100 text-orange-500'
+                    : 'bg-muted'
+                "
+                class="flex h-full w-full items-center justify-center rounded-full"
+              >
+                {{ notification.data.title | textInitial }}
+              </span>
+            </span>
+            <div class="flex-1 text-sm">
+              <p>
+                {{ notification.data.title }}
+              </p>
+              <p class="text-xs text-muted-foreground mt-1 mb-2">
+                {{ notification.created_at }}
+              </p>
+
+              <a
+                [href]="['/notification/' + notification.id]"
+                class="text-primary hover:underline text-sm"
+              >
+                Voir plus
+              </a>
+            </div>
+            <div
+              *ngIf="notification.read_at === null"
+              class="h-2 w-2 rounded-full bg-primary"
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div class="p-2 border-t">
+        <div class="flex gap-2">
+          <button
+            *ngIf="unreadCount > 0"
+            (click)="markAllAsRead()"
+            class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 w-full"
+          >
+            Marquer tout comme lu
+          </button>
+          <a
+            class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground h-9 rounded-md px-3 w-full bg-primary hover:bg-orange-600"
+            href="/notification"
+          >
+            Voir tout
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isPending">
+      <div class="flex items-center justify-between p-4 border-b">
+        <div
+          class="h-5 w-24 bg-gray-300 dark:bg-muted rounded-md animate-pulse"
+        ></div>
+        <div
+          class="h-5 w-12 bg-gray-300 dark:bg-muted rounded-full animate-pulse"
+        ></div>
+      </div>
+
+      <div class="max-h-[300px] overflow-y-auto">
+        <div
+          *ngFor="let item of skeletonItems; let i = index"
+          class="p-3 border-b last:border-b-0"
+        >
+          <div class="flex items-start gap-3">
+            <div
+              class="relative flex shrink-0 overflow-hidden rounded-full h-8 w-8 bg-gray-300 dark:bg-muted animate-pulse"
+            ></div>
+
+            <div class="flex-1">
+              <div
+                class="h-4 bg-gray-300 dark:bg-muted rounded-md w-full mb-2 animate-pulse"
+              ></div>
+
+              <div
+                class="h-3 bg-gray-300 dark:bg-muted rounded-md w-3/4 animate-pulse"
+              ></div>
+
+              <div
+                class="h-3 bg-gray-300 dark:bg-muted rounded-md w-16 mt-1 mb-2 animate-pulse"
+              ></div>
+              <div
+                class="h-3 bg-gray-300 dark:bg-muted rounded-md w-16 animate-pulse"
+              ></div>
+            </div>
+
+            <div
+              *ngIf="i < 2"
+              class="h-2 w-2 rounded-full bg-gray-300 dark:bg-muted animate-pulse"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-2 border-t">
+        <div class="flex gap-2">
+          <div
+            class="h-9 rounded-md w-full bg-gray-300 dark:bg-muted animate-pulse"
+          ></div>
+          <div
+            class="h-9 rounded-md w-full bg-gray-300 dark:bg-muted animate-pulse"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
