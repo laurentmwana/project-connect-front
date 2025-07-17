@@ -53,6 +53,23 @@ export class ProjectService {
     });
   }
 
+
+// méthode pour recuperer les prjets sur lesquels l'utilisateur a participer 
+getProjectParticiped(): Observable<Project[]> {
+  const user = this.userLocalService.getUser();
+
+  return this.http
+    .get<{ data: Project[] }>(`${this.baseUrl}users_projects_participed`, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${user?.token}`,
+      },
+    })
+    .pipe(map((response) => response.data));
+}
+
+  
+
   /**
    * Crée un nouveau projet
    */
