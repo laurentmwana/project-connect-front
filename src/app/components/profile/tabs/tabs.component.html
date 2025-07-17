@@ -34,6 +34,7 @@
     >
       Portfolio
     </button>
+
     <button
       data-tabs-target="#project-participed"
       type="button"
@@ -42,8 +43,9 @@
       aria-selected="false"
       class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium"
     >
-      Project Participed
+      Projet participé
     </button>
+
     <button
       data-tabs-target="#mes-projects"
       type="button"
@@ -67,7 +69,10 @@
 
     <app-experience></app-experience>
     <app-portfolio></app-portfolio>
-    <app-project-participed></app-project-participed>
+
+    <div id="project-participed">
+      <app-project-participed />
+    </div>
 
     <div id="mes-projects" role="tabpanel" class="hidden">
       <app-mes-projects></app-mes-projects>
