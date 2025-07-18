@@ -20,7 +20,7 @@ export interface Project {
   budget: number;
   location: string;
   visibility: 'public' | 'private';
-  domains: string[];
+  domains: Domain[];
   role_skills: RoleSkill[];
 }
 
