@@ -5,7 +5,7 @@ import { ExperienceComponent } from './experience/experience/experience.componen
 import { PortfolioComponent } from './portfolio/portfolio/portfolio.component';
 import { MesProjectsComponent } from './mes-projects/mes-projects.component';
 import { Skill } from '@/model/skill';
-import { projectParticipedComponent } from "./recommandation/recommandation/project-participed.component";
+// import { projectParticipedComponent } from "./recommandation/recommandation/project-participed.component";
 
 @Component({
   selector: 'app-tabs',
@@ -14,8 +14,7 @@ import { projectParticipedComponent } from "./recommandation/recommandation/proj
     ExperienceComponent,
     PortfolioComponent,
     MesProjectsComponent,
-    projectParticipedComponent
-],
+  ],
   templateUrl: './tabs.component.html',
   styleUrl: './tabs.component.css',
 })
