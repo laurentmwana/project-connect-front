@@ -1,0 +1,107 @@
+<!-- Loading Skeleton -->
+<div
+  *ngIf="isPending"
+  class="flex flex-col lg:flex-row-reverse lg:justify-between items-center gap-3 py-6 animate-pulse"
+  role="status"
+  aria-label="Chargement de la pagination"
+>
+  <!-- Navigation skeleton -->
+  <div class="flex items-center gap-1.5">
+    <!-- Previous button skeleton -->
+    <div class="h-9 w-9 bg-muted rounded-md"></div>
+
+    <!-- Page numbers skeleton -->
+    <div class="flex items-center gap-1.5">
+      <div *ngFor="let i of [1,2,3,4,5]" class="h-9 w-9 bg-muted rounded-md"></div>
+    </div>
+
+    <!-- Next button skeleton -->
+    <div class="h-9 w-9 bg-muted rounded-md"></div>
+  </div>
+
+  <!-- Display info skeleton -->
+  <div class="h-4 w-48 bg-muted rounded"></div>
+</div>
+
+<!-- Actual Pagination -->
+<div
+  *ngIf="hasResults && !isPending"
+  [class]="containerClasses"
+  role="navigation"
+  aria-label="Navigation de pagination"
+>
+  <!-- Navigation des pages -->
+  <div class="flex items-center gap-1.5">
+    <!-- Bouton précédent -->
+    <button
+      type="button"
+      (click)="handlePreviousPage()"
+      [disabled]="!canGoPrevious"
+      [attr.aria-label]="'Page précédente'"
+      class="inline-flex items-center justify-center h-9 w-9 rounded-md border border-border bg-background hover:bg-muted hover:text-foreground transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+
+    <!-- Numéros de pages -->
+    <div class="flex items-center gap-1.5">
+      <ng-container *ngFor="let page of getPageNumbers; let index = index; trackBy: trackByPage">
+        <!-- Ellipsis -->
+        <span
+          *ngIf="page === '...'"
+          class="flex h-9 w-9 items-center justify-center text-sm text-muted-foreground"
+          [attr.aria-hidden]="true"
+        >
+          &#8230;
+        </span>
+
+        <!-- Page number button -->
+        <button
+          *ngIf="page !== '...'"
+          type="button"
+          (click)="handlePageClick(page)"
+          [ngClass]="getPageButtonClasses(page)"
+          [attr.aria-label]="'Aller à la page ' + page"
+          [attr.aria-current]="isCurrentPage(page) ? 'page' : null"
+          [disabled]="isPending"
+        >
+          {{ page }}
+        </button>
+      </ng-container>
+    </div>
+
+    <!-- Bouton suivant -->
+    <button
+      type="button"
+      (click)="handleNextPage()"
+      [disabled]="!canGoNext"
+      [attr.aria-label]="'Page suivante'"
+      class="inline-flex items-center justify-center h-9 w-9 rounded-md border border-border bg-background hover:bg-muted hover:text-foreground transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Informations d'affichage -->
+  <div class="text-xs text-muted-foreground">
+    Affichage de
+    <span class="font-medium">{{ displayInfo.from }}</span> à
+    <span class="font-medium">{{ displayInfo.to }}</span> sur
+    <span class="font-medium">{{ displayInfo.total }}</span>
+    {{ displayInfo.total > 1 ? 'résultats' : 'résultat' }}
+  </div>
+</div>
+
+<!-- Message quand aucun résultat -->
+<div
+  *ngIf="isEmptyResults && !isPending"
+  class="flex items-center justify-center py-6"
+  role="status"
+  aria-label="Aucun résultat trouvé"
+>
+  <!-- Vous pouvez ajouter un message ou laisser vide -->
+</div>
