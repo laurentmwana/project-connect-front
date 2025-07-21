@@ -7,6 +7,7 @@ import { PaginatedProjects, Project, ProjectData } from '../model/project';
 import { Domain } from '@/model/domain';
 import { Role } from '@/model/role';
 import { Skill } from '@/model/skill';
+import { PaginationDataResponse } from '@/model/paginate';
 
 @Injectable({
   providedIn: 'root',
@@ -23,17 +24,22 @@ export class ProjectService {
   getAllProjects(
     page: number = 1,
     searchTerm: string = ''
-  ): Observable<PaginatedProjects> {
+  ): Observable<PaginationDataResponse<ProjectData[]>> {
     let url = `${this.baseUrl}projects?page=${page}`;
 
     if (searchTerm.trim()) {
       url += `&search=${encodeURIComponent(searchTerm.trim())}`;
     }
 
-    return this.http.get<PaginatedProjects>(url);
+    return this.http.get<PaginationDataResponse<ProjectData[]>>(url);
   }
 
-  // methode  getAllUserProject pour recupere les projects cree par l'utilisateur
+  /**
+   *
+   * @param page
+   * @param searchTerm
+   * @returns
+   */
   getAllUserProject(
     page: number = 1,
     searchTerm: string = ''
@@ -53,22 +59,19 @@ export class ProjectService {
     });
   }
 
+  // méthode pour recuperer les prjets sur lesquels l'utilisateur a participer
+  getProjectParticiped(): Observable<Project[]> {
+    const user = this.userLocalService.getUser();
 
-// méthode pour recuperer les prjets sur lesquels l'utilisateur a participer 
-getProjectParticiped(): Observable<Project[]> {
-  const user = this.userLocalService.getUser();
-
-  return this.http
-    .get<{ data: Project[] }>(`${this.baseUrl}users_projects_participed`, {
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${user?.token}`,
-      },
-    })
-    .pipe(map((response) => response.data));
-}
-
-  
+    return this.http
+      .get<{ data: Project[] }>(`${this.baseUrl}users_projects_participed`, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${user?.token}`,
+        },
+      })
+      .pipe(map((response) => response.data));
+  }
 
   /**
    * Crée un nouveau projet
