@@ -10,10 +10,16 @@
         class="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 mt-6"
       >
         <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-          <div class="flex flex-col space-y-1.5 p-6">
+          <div class="flex justify-between   space-y-1.5 p-6">
+
             <div class="text-2xl font-semibold leading-none tracking-tight">
               Portfolio Projects
+
             </div>
+            <button [routerLink]="['/portfolio/create']"
+                    class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2">
+              Ajouter un Portfolio
+            </button>
             <div class="text-sm text-muted-foreground">
               Recent projects I've worked on
             </div>
@@ -33,7 +39,8 @@
                   }}</span>
                 </div>
                 <div class="p-4">
-                  <h3 class="font-medium">{{ portfolio.name }}</h3>
+                  <h3 class="font-medium" [routerLink]="portfolio.link">{{ portfolio.name }}</h3>
+
                   <p class="text-sm text-muted-foreground mt-1">
                     {{ portfolio.description }}
                   </p>
@@ -45,6 +52,7 @@
                       {{ skill.name }}</span
                     >
                   </div>
+
                 </div>
               </div>
 
