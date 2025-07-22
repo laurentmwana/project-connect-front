@@ -9,28 +9,32 @@ import { NgFor, NgIf } from '@angular/common';
   imports:[NgFor]
 })
 export class ProjectParticipedComponent implements OnInit {
-totalPages: any;
-changePage(arg0: number) {
-throw new Error('Method not implemented.');
-}
-  projectparticiped: Project[] = [];
-currentPage: any;
 
+  projectparticiped: Project[] = [];
+  currentPage: number = 1;
+  totalPages: number = 1;
+  searchTerm: string = '';
   constructor(private projectService: ProjectService) {}
 
   ngOnInit(): void {
     this.loadProjectParticiped();
   }
 
-  loadProjectParticiped() {
+  loadProjectParticiped(page: number = 1) {
     this.projectService.getProjectParticiped().subscribe({
-      next: (projects) => {
-        console.log(' projets récupérés :', projects);
-        this.projectparticiped = projects;
+      next: (res) => {
+        this.projectparticiped = res.data;
+        this.currentPage = res.meta.current_page;
+        this.totalPages = res.meta.last_page;
       },
       error: (error) => {
         console.error('Erreur :', error);
       },
     });
+
+  }
+  changePage(page: number) {
+    console.log(page)
+    this.loadProjectParticiped(page);
   }
 }
