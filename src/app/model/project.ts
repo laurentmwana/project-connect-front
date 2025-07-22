@@ -82,6 +82,13 @@ export interface ProjectData {
   total_pending_invitation: number;
 }
 
+// interface pour la pagination des projects sur lesquels il a participer
+export interface PaginatedProjectsParticiped {
+  data: Project[];
+  meta: Meta;
+  links: Links;
+}
+
 export interface PaginatedProjects {
   data: ProjectData[];
   meta: Meta;
