@@ -56,10 +56,15 @@ export class ExperienceService {
   /**
    * Crée un nouveau experience avec les données envoyées
    */
-  createExperience(data: any): Observable<any> {
-    return this.http.post(this.apiUrl, data);
+  createExperience(data: Omit<Experience, "create_by"|"id">): Observable<any> {
+    const user = this.userLocalService.getUser();
+    return this.http.post(this.apiUrl, data,{headers: {
+      Accept: 'application/json',
+      'content-type': 'application/json',
+      Authorization: `Bearer ${user?.token}`,
+    }},);
   }
-
+  
   /**
    * Supprime un Experience via son ID
    */
