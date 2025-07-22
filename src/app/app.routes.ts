@@ -22,6 +22,8 @@ import { AdminComponent } from './pages/admin/admin/admin.component';
 import { adminGuard } from './guards/admin.guard';
 import { NotificationDetailComponent } from './pages/notification/notification-detail/notification-detail.component';
 import { NotificationListComponent } from './pages/notification/notification-list/notification-list.component';
+import { ExperienceformComponent } from './components/profile/tabs/experience/experienceform/experienceform.component';
+import { PortfolioformComponent } from './components/profile/tabs/portfolio/portfolioform/portfolioform.component';
 export const routes: Routes = [
   {
     path: '',
@@ -43,6 +45,19 @@ export const routes: Routes = [
         component: ProjectEditComponent,
         title: 'Modifier un projet - ProjectConnect',
         canActivate: [canEditGuard],
+      },
+      {
+        path: 'experience/create',
+        component: ExperienceformComponent,
+        title: 'Ajouter une Experience',
+        canActivate: [protectedGuard],
+      },
+
+       {
+        path: 'portfolio/create',
+        component: PortfolioformComponent,
+        title: 'Ajouter un Portfolio',
+        canActivate: [protectedGuard],
       },
 
       {
