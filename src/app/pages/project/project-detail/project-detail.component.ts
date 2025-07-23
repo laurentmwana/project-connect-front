@@ -1,26 +1,18 @@
 import { ProjectData } from '@/model/project';
 import { ProjectService } from '@/services/project.service';
-import { CommonModule, NgClass, NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { NavbarComponent } from '../../../components/navbar/navbar.component';
 import { CandidacyService } from '@/services/candidacy.service';
 import { Candidacy, Meta, PaginatedCandidacyResponse } from '@/model/candidacy';
 import { UserLocalService } from '@/services/user-local.service';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Invitation, PaginatedInvitationResponse } from '@/model/invitation';
+import { ToasterModel } from '@/model/toaster';
 
 @Component({
   selector: 'app-project-detail',
-  imports: [
-    NgIf,
-    NgFor,
-    NavbarComponent,
-    NgClass,
-    FormsModule,
-    RouterLink,
-    CommonModule,
-  ],
+  imports: [NgIf, FormsModule, RouterLink, CommonModule],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.css',
 })
@@ -43,7 +35,7 @@ export class ProjectDetailComponent {
   currentPage: number = 1;
   perPage: number = 10; // Valeur par défaut
   isOwner: boolean = false;
-  isLoading: boolean = false;
+  isLoading: boolean = true;
   projectMenuOpen = false;
   Math: Math = Math;
   invitations: Invitation[] = [];
@@ -88,16 +80,20 @@ export class ProjectDetailComponent {
       .inviteCandidate(this.selectedRole.id, this.inviteEmail)
       .subscribe({
         next: (response) => {
-          this.showToast("Email d'invitation envoyé avec succès.", 'success');
+          this.toast = {
+            message: "Email d'invitation envoyé avec succès.",
+            type: 'success',
+          };
           this.inviteEmail = '';
           this.showInviteModal = false;
         },
         error: (err) => {
           const error = err?.error;
-          this.showToast(
-            error?.message || "Erreur lors de l'envoi de l'invitation.",
-            'error'
-          );
+          this.toast = {
+            message:
+              error?.message || "Erreur lors de l'envoi de l'invitation.",
+            type: 'error',
+          };
         },
       });
   }
@@ -124,8 +120,7 @@ export class ProjectDetailComponent {
       this.showCandidacyModal = false;
     }
   }
-
-  toasts: { message: string; type: 'success' | 'error' }[] = [];
+  toast: ToasterModel | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -141,6 +136,8 @@ export class ProjectDetailComponent {
   }
 
   loadProject(): void {
+    this.isLoading = true;
+
     this.projectService.getProjectBySlug(this.projectSlug).subscribe({
       next: (response) => {
         this.project = response.data;
@@ -151,10 +148,14 @@ export class ProjectDetailComponent {
           this.loadCandidacies();
           this.loadInvitations();
         }
+        this.isLoading = false;
       },
       error: () => {
-        this.errorMessage = 'Erreur lors du chargement du projet';
-        this.showToast(this.errorMessage, 'error');
+        this.toast = {
+          message: 'Erreur lors du chargement du projet',
+          type: 'error',
+        };
+        this.isLoading = false;
       },
     });
   }
@@ -199,8 +200,12 @@ export class ProjectDetailComponent {
           console.error('Erreur reçue du backend:', error);
           console.error("Détails de l'erreur:", error.error);
 
+          this.toast = {
+            message: 'Erreur lors du chargement des candidatures',
+            type: 'error',
+          };
+
           this.isLoading = false;
-          this.showToast('Erreur lors du chargement des candidatures', 'error');
         },
       });
   }
@@ -230,35 +235,21 @@ export class ProjectDetailComponent {
   onApplyRole(id: number) {
     this.candidacyService.applyForRole(id).subscribe({
       next: () => {
-        this.showToast('Candidature soumise avec succès.', 'success');
         this.showCandidacyModal = false; // Ferme la modale après succès
+
+        this.toast = {
+          message: 'Candidature soumise avec succès.',
+          type: 'success',
+        };
       },
       error: (err) => {
         let error = err.error;
-        this.showToast(`${error.message}`, 'error');
+        this.toast = {
+          message: error.message,
+          type: 'error',
+        };
       },
     });
-  }
-
-  showToast(message: string, type: 'success' | 'error'): void {
-    const toast = { message, type };
-    this.toasts.push(toast);
-    setTimeout(() => {
-      this.toasts = this.toasts.filter((t) => t !== toast);
-    }, 3000);
-  }
-
-  getPageNumbers(): number[] {
-    if (!this.meta) return [];
-
-    const pages = [];
-    const startPage = Math.max(1, this.meta.current_page - 2);
-    const endPage = Math.min(this.meta.last_page, this.meta.current_page + 2);
-
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-    }
-    return pages;
   }
 
   toggleProjectMenu() {
@@ -279,11 +270,17 @@ export class ProjectDetailComponent {
   onValidate(candidacyId: number) {
     this.candidacyService.updateCandidacy(candidacyId, 'accepted').subscribe({
       next: () => {
-        this.showToast('Candidature acceptée avec succès.', 'success');
+        this.toast = {
+          message: 'Candidature acceptée avec succès.',
+          type: 'success',
+        };
       },
       error: (err) => {
         let error = err.error;
-        this.showToast(`${error.message}`, 'error');
+        this.toast = {
+          message: error,
+          type: 'error',
+        };
       },
     });
     this.viewMenuOpen = false;
@@ -292,12 +289,18 @@ export class ProjectDetailComponent {
   onReject(candidacyId: number) {
     this.candidacyService.updateCandidacy(candidacyId, 'declined').subscribe({
       next: () => {
-        this.showToast('Candidature refusée avec succès.', 'error');
+        this.toast = {
+          message: 'Candidature refusée avec succès.',
+          type: 'error',
+        };
         this.selectedCandidacyId = null;
       },
       error: (err) => {
         let error = err.error;
-        this.showToast(`${error.message}`, 'error');
+        this.toast = {
+          message: error.message,
+          type: 'error',
+        };
         this.selectedCandidacyId = null;
       },
     });
@@ -344,8 +347,11 @@ export class ProjectDetailComponent {
         },
         error: (err) => {
           console.error('Erreur:', err);
+          this.toast = {
+            message: 'Erreur lors du chargement des invitations',
+            type: 'error',
+          };
           this.isLoading = false;
-          this.showToast('Erreur lors du chargement des invitations', 'error');
         },
       });
   }
@@ -384,12 +390,18 @@ export class ProjectDetailComponent {
   cancel(id: number) {
     this.candidacyService.cancelInvitation(id).subscribe({
       next: () => {
-        this.showToast('Invitation annulée avec succès.', 'success');
+        this.toast = {
+          message: 'Invitation annulée avec succès.',
+          type: 'success',
+        };
         this.loadInvitations();
       },
       error: (err) => {
         let error = err.error;
-        this.showToast(`${error.message}`, 'error');
+        this.toast = {
+          message: error.message,
+          type: 'error',
+        };
       },
     });
   }
