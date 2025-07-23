@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 import { UserLocalService } from './user-local.service';
 import { Environment } from 'environments/environment';
+import { FollowUser } from '@/model/follow';
 
 export interface User {
   id: number;
@@ -21,11 +22,13 @@ export class FollowService {
   private getAuthHeaders(): HttpHeaders {
     const token = this.userService.getToken();
     return new HttpHeaders({
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
   }
 
-  follow(userId: number): Observable<{ message: string; is_following: boolean }> {
+  follow(
+    userId: number
+  ): Observable<{ message: string; is_following: boolean }> {
     return this.http.post<{ message: string; is_following: boolean }>(
       `${this.apiUrl}/users/${userId}/follow`,
       {},
@@ -33,7 +36,9 @@ export class FollowService {
     );
   }
 
-  unfollow(userId: number): Observable<{ message: string; is_following: boolean }> {
+  unfollow(
+    userId: number
+  ): Observable<{ message: string; is_following: boolean }> {
     return this.http.post<{ message: string; is_following: boolean }>(
       `${this.apiUrl}/users/${userId}/unfollow`,
       {},
@@ -49,38 +54,33 @@ export class FollowService {
   }
 
   getFollowers(userId: number): Observable<User[]> {
-    return this.http.get<User[]>(
-      `${this.apiUrl}/users/${userId}/followers`,
-      { headers: this.getAuthHeaders() }
-    );
+    return this.http.get<User[]>(`${this.apiUrl}/users/${userId}/followers`, {
+      headers: this.getAuthHeaders(),
+    });
   }
 
   getFollowing(userId: number): Observable<User[]> {
-    return this.http.get<User[]>(
-      `${this.apiUrl}/users/${userId}/following`,
-      { headers: this.getAuthHeaders() }
-    );
+    return this.http.get<User[]>(`${this.apiUrl}/users/${userId}/following`, {
+      headers: this.getAuthHeaders(),
+    });
   }
 
-  getFollowCounts(userId: number): Observable<{ 
-    followers_count: number; 
-    following_count: number; 
-    total_connections : number 
+  getFollowCounts(userId: number): Observable<{
+    followers_count: number;
+    following_count: number;
+    total_connections: number;
   }> {
-    return this.http.get<{ 
-      followers_count: number; 
+    return this.http.get<{
+      followers_count: number;
       following_count: number;
-      total_connections : number
-    }>(
-      `${this.apiUrl}/users/${userId}/follow-counts`,
-      { headers: this.getAuthHeaders() }
-    );
+      total_connections: number;
+    }>(`${this.apiUrl}/users/${userId}/follow-counts`, {
+      headers: this.getAuthHeaders(),
+    });
   }
-  getSuggestions(): Observable<User[]> {
-  return this.http.get<User[]>(
-    `${this.apiUrl}/users/suggestions`,
-    { headers: this.getAuthHeaders() }
-  );
-}
-
+  getSuggestions(): Observable<FollowUser[]> {
+    return this.http.get<FollowUser[]>(`${this.apiUrl}/users/suggestions`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
 }

@@ -1,23 +1,28 @@
-import { Component, EventEmitter, Input, Output, OnInit, inject } from '@angular/core';
-import { FollowButtonComponent } from "../../follow-button/follow-button.component";
-import { FollowService } from '../../../services/follow.service';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit,
+  inject,
+} from '@angular/core';
+import { FollowService } from '@/services/follow.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-info-user',
   standalone: true,
-  imports: [FollowButtonComponent, CommonModule],
+  imports: [CommonModule],
   templateUrl: './info-user.component.html',
-  styleUrl: './info-user.component.css'
+  styleUrl: './info-user.component.css',
 })
-
 export class InfoUserComponent implements OnInit {
   @Input() userId: number = 0;
   @Input() initialIsFollowing: boolean = false;
   @Input() isOwnProfile: boolean = false;
 
-   @Input() userProfile?: {
+  @Input() userProfile?: {
     name: string;
     profile_photo?: string;
     job_title?: string;
@@ -27,7 +32,7 @@ export class InfoUserComponent implements OnInit {
     portfolio_url?: string;
     availability?: string;
     about?: string;
-  }; 
+  };
 
   @Output() followChange = new EventEmitter<boolean>();
   @Output() messageClick = new EventEmitter<string>();
@@ -36,11 +41,14 @@ export class InfoUserComponent implements OnInit {
 
   followersCount: number = 0;
   followingCount: number = 0;
-   totalConnections: number = 0;
+  totalConnections: number = 0;
 
   get userInitials(): string {
     if (this.userProfile?.name) {
-      return this.userProfile.name.split(' ').map(n => n[0]).join('');
+      return this.userProfile.name
+        .split(' ')
+        .map((n) => n[0])
+        .join('');
     }
     return 'JD';
   }
@@ -52,23 +60,22 @@ export class InfoUserComponent implements OnInit {
     this.loadFollowCounts();
   }
 
- loadFollowCounts(): void {
-  if (!this.userId) return;
+  loadFollowCounts(): void {
+    if (!this.userId) return;
 
-  this.followService.getFollowCounts(this.userId).subscribe({
-    next: (counts) => {
-      this.followersCount = counts.followers_count;
-      this.followingCount = counts.following_count;
-      this.totalConnections = counts.total_connections; 
+    this.followService.getFollowCounts(this.userId).subscribe({
+      next: (counts) => {
+        this.followersCount = counts.followers_count;
+        this.followingCount = counts.following_count;
+        this.totalConnections = counts.total_connections;
 
-      console.log()
-    },
-    error: (err) => {
-      console.error('Erreur lors du chargement des follow counts:', err);
-    }
-  });
-}
-
+        console.log();
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des follow counts:', err);
+      },
+    });
+  }
 
   onMessageClick() {
     this.messageClick.emit(this.userId.toString());

@@ -34,6 +34,13 @@ export const routes: Routes = [
         component: DisplayComponent,
         title: 'Projets - ProjectConnect',
       },
+
+      {
+        path: 'projects',
+        component: DisplayComponent,
+      },
+      { path: 'project/:slug', component: ProjectDetailComponent },
+
       {
         path: 'project/create',
         component: CreateComponent,
@@ -53,7 +60,7 @@ export const routes: Routes = [
         canActivate: [protectedGuard],
       },
 
-       {
+      {
         path: 'portfolio/create',
         component: PortfolioformComponent,
         title: 'Ajouter un Portfolio',
@@ -141,12 +148,6 @@ export const routes: Routes = [
       },
     ],
   },
-  // Route supplémentaire si besoin
-  {
-    path: 'projectsss',
-    component: DisplayComponent,
-  },
-  { path: 'project/:slug', component: ProjectDetailComponent },
 
   //admin
   { path: 'admin', component: AdminComponent, canActivate: [adminGuard] },
