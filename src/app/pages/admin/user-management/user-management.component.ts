@@ -1,4 +1,4 @@
-import { User } from '@/model/user';
+import {User, UserStats} from '@/model/user';
 import { AdminService } from '@/services/admin.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -11,7 +11,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './user-management.component.css',
 })
 export class UserManagementComponent {
+
+  userStats: UserStats = { total: 0, active: 0, inactive: 0 };
   users: User[] = [];
+  allUsers: User[] = []; // Nouvelle propriété pour stocker tous les utilisateurs
   paginationInfo: {
     from: number;
     to: number;
@@ -42,6 +45,32 @@ export class UserManagementComponent {
 
   ngOnInit() {
     this.loadAllUsers();
+    this.loadCompleteUserListForStats();
+  }
+  // Méthode pour calculer les statistiques
+  calculateUserStats(): void {
+    this.userStats = {
+      total: this.users.length,
+      active: this.users.filter(user => user.state === 1).length,
+      inactive: this.users.filter(user => user.state === 0).length
+    };
+  }
+
+  // Dans user-management.component.ts
+
+  loadCompleteUserListForStats() {
+    this.adminService.getAllUsers(1, { per_page: 10000 }).subscribe({
+      next: (res) => {
+        this.userStats = {
+          total: res.meta.total, // Total depuis les métadonnées
+          active: res.data.filter(u => u.state === 1).length,
+          inactive: res.data.filter(u => u.state === 0).length
+        };
+      },
+      error: (err) => {
+        console.error('Erreur stats globales', err);
+      }
+    });
   }
 
   loadAllUsers(page: number = 1) {
