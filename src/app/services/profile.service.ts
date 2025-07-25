@@ -80,7 +80,7 @@ export class ProfileService {
   // methode pour afficher les skills de la personnes
   getmyskill(): Observable<Skill[]> {
     return this.http
-      .get<{ data: Skill[] }>(`${this.apiUrl}/skill_user`, {
+      .get<{ data: Skill[] }>(`${this.apiUrl}/skill/user`, {
         headers: this.getAuthHeaders(),
       })
       .pipe(
