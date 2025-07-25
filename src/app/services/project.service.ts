@@ -1,8 +1,13 @@
 import { UserLocalService } from '@/services/user-local.service';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
-import { PaginatedProjects, PaginatedProjectsParticiped, Project, ProjectData } from '../model/project';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import {
+  PaginatedProjects,
+  PaginatedProjectsParticiped,
+  Project,
+  ProjectData,
+} from '../model/project';
 import { Domain } from '@/model/domain';
 import { Role } from '@/model/role';
 import { Skill } from '@/model/skill';
@@ -60,18 +65,19 @@ export class ProjectService {
 
   // méthode pour recuperer les projets sur lesquels l'utilisateur a participer
   getProjectParticiped(
-    page: number = 1,
+    page: number = 1
   ): Observable<PaginatedProjectsParticiped> {
     const user = this.userLocalService.getUser();
 
-    return this.http
-      .get<PaginatedProjectsParticiped>(`${this.baseUrl}users_projects_participed=${page}`, {
+    return this.http.get<PaginatedProjectsParticiped>(
+      `${this.baseUrl}users/projects/participed?page=${page}`,
+      {
         headers: {
           Accept: 'application/json',
           Authorization: `Bearer ${user?.token}`,
         },
-      })
-     
+      }
+    );
   }
 
   /**
