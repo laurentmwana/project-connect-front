@@ -1,4 +1,4 @@
-import { Meta, Project, ProjectData } from '@/model/project';
+import { ProjectData } from '@/model/project';
 import { ProjectService } from '@/services/project.service';
 import { RechercheService } from '@/services/recherche.service';
 import { CommonModule } from '@angular/common';
