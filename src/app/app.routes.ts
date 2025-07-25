@@ -39,14 +39,14 @@ export const routes: Routes = [
         path: 'projects',
         component: DisplayComponent,
       },
-      { path: 'project/:slug', component: ProjectDetailComponent },
-
       {
         path: 'project/create',
         component: CreateComponent,
         title: "Création d'un projet - ProjectConnect",
         canActivate: [protectedGuard],
       },
+      { path: 'project/:slug', component: ProjectDetailComponent },
+
       {
         path: 'project/edit/:slug',
         component: ProjectEditComponent,
