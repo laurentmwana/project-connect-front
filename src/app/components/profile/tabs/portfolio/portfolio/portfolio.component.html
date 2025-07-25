@@ -1,64 +1,63 @@
- <!-- PORTFOLIO -->
-    <div id="portfolio" role="tabpanel" class="hidden">
-      <div
-        data-state="active"
-        data-orientation="horizontal"
-        role="tabpanel"
-        aria-labelledby="radix-«rc»-trigger-portfolio"
-        id="radix-«rc»-content-portfolio"
-        tabindex="0"
-        class="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 mt-6"
-      >
-        <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-          <div class="flex justify-between   space-y-1.5 p-6">
+<!-- PORTFOLIO -->
+<div id="portfolio" role="tabpanel" class="hidden">
+  <div
+    data-state="active"
+    data-orientation="horizontal"
+    role="tabpanel"
+    aria-labelledby="radix-«rc»-trigger-portfolio"
+    id="radix-«rc»-content-portfolio"
+    tabindex="0"
+    class="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 mt-6"
+  >
+    <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+      <div class="flex justify-between space-y-1.5 p-6">
+        <div class="text-2xl font-semibold leading-none tracking-tight">
+          Portfolio Projects
+        </div>
+        <button
+          [routerLink]="['/portfolio/create']"
+          class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2"
+        >
+          Ajouter un Portfolio
+        </button>
+      </div>
 
-            <div class="text-2xl font-semibold leading-none tracking-tight">
-              Portfolio Projects
+      <div class="p-6 pt-0">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Debut blog =============================================== -->
+          <div
+            class="rounded-lg overflow-hidden border"
+            *ngFor="let portfolio of portfolios; let i = index"
+          >
+            <div
+              class="h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center"
+            >
+              <span class="text-white font-bold text-xl">{{
+                portfolio.name
+              }}</span>
+            </div>
+            <div class="p-4">
+              <h3 class="font-medium" [routerLink]="portfolio.link">
+                {{ portfolio.name }}
+              </h3>
 
-            </div>
-            <button [routerLink]="['/portfolio/create']"
-                    class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2">
-              Ajouter un Portfolio
-            </button>
-            <div class="text-sm text-muted-foreground">
-              Recent projects I've worked on
-            </div>
-          </div>
-          <div class="p-6 pt-0">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Debut blog =============================================== -->
-              <div
-                class="rounded-lg overflow-hidden border"
-                *ngFor="let portfolio of portfolios; let i = index"
-              >
-                <div
-                  class="h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center"
+              <p class="text-sm text-muted-foreground mt-1">
+                {{ portfolio.description }}
+              </p>
+              <div class="flex flex-wrap gap-1 mt-3">
+                <span
+                  *ngFor="let skill of portfolio.skills"
+                  class="text-xs bg-orange-100 dark:bg-orange-950/30 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full"
                 >
-                  <span class="text-white font-bold text-xl">{{
-                    portfolio.name
-                  }}</span>
-                </div>
-                <div class="p-4">
-                  <h3 class="font-medium" [routerLink]="portfolio.link">{{ portfolio.name }}</h3>
-
-                  <p class="text-sm text-muted-foreground mt-1">
-                    {{ portfolio.description }}
-                  </p>
-                  <div class="flex flex-wrap gap-1 mt-3">
-                    <span
-                      *ngFor="let skill of portfolio.skills"
-                      class="text-xs bg-orange-100 dark:bg-orange-950/30 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full"
-                    >
-                      {{ skill.name }}</span
-                    >
-                  </div>
-
-                </div>
+                  {{ skill.name }}</span
+                >
               </div>
-
-              <!-- Debut blog =============================================== -->
             </div>
           </div>
+
+          <!-- Debut blog =============================================== -->
         </div>
       </div>
     </div>
+  </div>
+</div>

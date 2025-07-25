@@ -1,5 +1,7 @@
-<div class="container max-w-3xl mx-auto p-6">
-  <div class="space-y-4 pt-4 border border-gray-500 shadow-lg rounded-lg p-7">
+<div
+  class="container flex items-center justify-center bg-background max-w-lg mx-auto p-4"
+>
+  <div class="bg-card p-8 rounded-lg shadow-lg w-full max-w-lg">
     <h1 class="text-3xl font-bold text-foreground mb-8">
       Ajouter un Portfolio
     </h1>
@@ -23,15 +25,13 @@
 
       <!-- Informations de base -->
       <div class="space-y-4">
-        <!-- name-->
+        <!-- Nom-->
         <div>
-          <label for="name" class="block text-foreground font-medium"
-            >name</label
-          >
+          <label for="nom" class="block text-foreground font-medium">Nom</label>
           <input
-            id="name"
+            id="nom"
             type="text"
-            formControlName="name"
+            formControlName="nom"
             class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
             placeholder="Entrez le nom de votre  portfolio"
             required
@@ -40,24 +40,24 @@
             *ngIf="formSubmitted && portfoliofrom.get('name')?.errors?.['required']"
             class="text-destructive text-sm mt-1"
           >
-            Le name est requis
+            Le nom est requis
           </div>
 
-          <!-- link -->
+          <!-- Lien -->
           <div>
-            <label for="link" class="block text-foreground font-medium"
-              >link</label
+            <label for="lien" class="block text-foreground font-medium"
+              >Lien</label
             >
             <input
-              id="link"
+              id="lien"
               type="text"
-              formControlName="link"
+              formControlName="lien"
               class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
-              placeholder="Entrez le lien de  votre portfolio"
+              placeholder="Entrez le lien de votre portfolio"
               required
             />
             <div
-              *ngIf="formSubmitted && portfoliofrom.get('link')?.errors?.['required']"
+              *ngIf="formSubmitted && portfoliofrom.get('lien')?.errors?.['required']"
               class="text-destructive text-sm mt-1"
             >
               Le lien est requis
@@ -67,13 +67,13 @@
           <!-- descriptoion-->
           <div>
             <label for="description" class="block text-foreground font-medium"
-              >description</label
+              >Description</label
             >
             <textarea
-              id="link"
+              id="description"
               formControlName="description"
               class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm min-h-[120px] bg-background text-foreground"
-              placeholder="Entrez la description de  votre portfolio"
+              placeholder="Entrez la description de votre portfolio"
               required
             ></textarea>
             <div
@@ -82,19 +82,95 @@
             >
               La description est requise
             </div>
-          </div>
-        </div>
 
-        <!-- Bouton de soumission -->
-        <div class="pt-4">
-          <button
-            type="submit"
-            [disabled]="submitting"
-            class="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 text-lg rounded-md shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            <span *ngIf="submitting">Enregistrement en cours...</span>
-            <span *ngIf="!submitting">Enregistrer portfolio</span>
-          </button>
+            <!-- COMPÉTENCES -->
+            <div class="mb-6">
+              <label
+                for="skillInput"
+                class="block text-sm font-medium text-foreground"
+              >
+                Compétences
+              </label>
+
+              <div class="flex gap-2 mt-1">
+                <input
+                  [(ngModel)]="newSkill"
+                  [ngModelOptions]="{ standalone: true }"
+                  [attr.list]="'skills-list'"
+                  id="skillInput"
+                  type="text"
+                  (keydown.enter)="
+                    addCompetence(newSkill); $event.preventDefault()
+                  "
+                  [attr.list]="'skills-list'"
+                  placeholder="Entrez une compétence et appuyez sur Entrée"
+                  class="flex-1 border border-border rounded-md px-3 py-2 text-foreground bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+
+                <button
+                  type="button"
+                  (click)="addCompetence(newSkill)"
+                  class="bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-md"
+                >
+                  Ajouter
+                </button>
+              </div>
+
+              <datalist id="skills-list">
+                <option
+                  *ngFor="let skill of skillSuggestions"
+                  [value]="skill"
+                ></option>
+              </datalist>
+
+              <!-- Chips affichés -->
+              <div class="flex flex-wrap gap-2 mt-4">
+                <ng-container
+                  *ngIf="competences.controls.length > 0; else noSkills"
+                >
+                  <div
+                    *ngFor="let skill of competences.controls; let i = index"
+                    class="flex items-center bg-muted text-muted-foreground px-3 py-1 rounded-full shadow-sm"
+                  >
+                    {{ skill.value }}
+                    <button
+                      type="button"
+                      (click)="removeCompetence(i)"
+                      class="ml-2 text-red-500 hover:text-red-700 focus:outline-none"
+                      aria-label="Supprimer"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </ng-container>
+
+                <ng-template #noSkills>
+                  <p class="text-sm italic text-muted">
+                    Aucune compétence ajoutée.
+                  </p>
+                </ng-template>
+              </div>
+            </div>
+
+            <div
+              *ngIf="formSubmitted && portfoliofrom.get('Compétence')?.errors?.['required']"
+              class="text-destructive text-sm mt-1"
+            >
+              La Compétence est requis
+            </div>
+          </div>
+
+          <!-- Bouton de soumission -->
+          <div class="pt-4">
+            <button
+              type="submit"
+              [disabled]="submitting"
+              class="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 text-lg rounded-md shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              <span *ngIf="submitting">Enregistrement en cours...</span>
+              <span *ngIf="!submitting">Enregistrer portfolio</span>
+            </button>
+          </div>
         </div>
       </div>
     </form>
