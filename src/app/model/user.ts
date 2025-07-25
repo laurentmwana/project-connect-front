@@ -26,3 +26,8 @@ export interface Meta {
   to: number;
   total: number;
 }
+export interface UserStats {
+  total: number;
+  active: number;
+  inactive: number;
+}

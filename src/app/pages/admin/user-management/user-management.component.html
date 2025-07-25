@@ -1,4 +1,27 @@
 <div class="w-full h-full">
+  <!-- Statistiques des utilisateurs -->
+  <div class="mb-4 rounded-lg bg-card p-4 shadow-sm">
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div class="rounded-lg border p-3">
+        <h3 class="text-sm font-medium text-muted-foreground">Total Utilisateurs</h3>
+        <p class="text-2xl font-bold">{{ userStats.total }}</p>
+      </div>
+      <div class="rounded-lg border p-3">
+        <h3 class="text-sm font-medium text-muted-foreground">Actifs</h3>
+        <p class="text-2xl font-bold text-green-600">{{ userStats.active }}</p>
+      </div>
+      <div class="rounded-lg border p-3">
+        <h3 class="text-sm font-medium text-muted-foreground">Inactifs</h3>
+        <p class="text-2xl font-bold text-destructive">{{ userStats.inactive }}</p>
+      </div>
+      <div class="rounded-lg border p-3">
+        <h3 class="text-sm font-medium text-muted-foreground">Pourcentage Actifs</h3>
+        <p class="text-2xl font-bold">
+          {{ (userStats.total > 0 ? (userStats.active / userStats.total * 100) : 0) | number:'1.0-0' }}%
+        </p>
+      </div>
+    </div>
+  </div>
   <!-- Filtres -->
   <div class="mb-6 rounded-lg bg-card p-4 shadow-sm">
     <form
