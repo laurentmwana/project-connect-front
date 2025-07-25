@@ -1,3 +1,5 @@
+import { PaginationDataResponse } from './paginate';
+
 /**
  * Interface représentant une paire rôle-compétence
  * Contient le rôle, les compétences associées et une description du rôle
@@ -83,41 +85,12 @@ export interface ProjectData {
 }
 
 // interface pour la pagination des projects sur lesquels il a participer
-export interface PaginatedProjectsParticiped {
-  data: Project[];
-  meta: Meta;
-  links: Links;
-}
 
-export interface PaginatedProjects {
-  data: ProjectData[];
-  meta: Meta;
-  links: Links;
-}
+export interface PaginatedProjectsParticiped
+  extends PaginationDataResponse<Project[]> {}
 
-export interface Links {
-  first: string;
-  last: string;
-  prev: string | null;
-  next: string | null;
-}
-
-export interface Meta {
-  current_page: number;
-  from: number;
-  last_page: number;
-  links: Link[];
-  path: string;
-  per_page: number;
-  to: number;
-  total: number;
-}
-
-export interface Link {
-  url: null | string;
-  label: string;
-  active: boolean;
-}
+export interface PaginatedProjects
+  extends PaginationDataResponse<ProjectData[]> {}
 
 export interface Status {
   name: string;
