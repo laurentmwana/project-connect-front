@@ -2,10 +2,11 @@ import { ThemeService } from '@/services/theme.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { UserManagementComponent } from "../user-management/user-management.component";
+import {ProjectManagementComponent} from '@/pages/admin/project-management/project-management.component';
 
 @Component({
   selector: 'app-admin',
-  imports: [CommonModule, UserManagementComponent],
+  imports: [CommonModule, UserManagementComponent, ProjectManagementComponent],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css',
 })
