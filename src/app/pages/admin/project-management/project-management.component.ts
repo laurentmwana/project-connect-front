@@ -8,6 +8,7 @@ import { RechercheService } from '@/services/recherche.service';
 import { CommonModule, NgForOf } from '@angular/common';
 import { PaginationComponent } from '@/components/ui/pagination/pagination.component';
 import { FormsModule } from '@angular/forms';
+import {AdminService} from '@/services/admin.service';
 
 @Component({
   selector: 'app-project-management',
@@ -26,7 +27,11 @@ export class ProjectManagementComponent {
   statsLoading = true;
   projects: PaginationDataResponse<ProjectData[]> | null = null;
   searchTerm = '';
+  successMessage =""
+  errorMessage =""
   page: number = 1;
+  showDeleteModal = false;
+  projectToDelete: number | null = null;
   private searchSubscription!: Subscription;
 
   projectStats = {
@@ -38,6 +43,7 @@ export class ProjectManagementComponent {
 
   constructor(
     private projectService: ProjectService,
+    private adminService:AdminService,
     private route: ActivatedRoute,
     private router: Router,
     private searchService: RechercheService
@@ -156,8 +162,30 @@ export class ProjectManagementComponent {
     this.router.navigate(['/project', project.slug]);
   }
 
-  deleteProject(project: ProjectData): void {
+  deleteProject(id: number): void {
+    this.projectToDelete = id;
+    this.showDeleteModal = true;
+  }
+  confirmDelete(): void {
+    if (!this.projectToDelete) return;
 
+    this.adminService.destroyProject(this.projectToDelete).subscribe({
+      next: (response) => {
+        this.successMessage = "Projet supprimé avec succès";
+        this.errorMessage = "";
+        this.showDeleteModal = false;
+
+        // Rafraîchir les données
+        this.fetchProjects(this.page);
+        this.loadGlobalStats();
+
+        setTimeout(() => this.successMessage = "", 3000);
+      },
+      error: (error) => {
+        this.errorMessage = error;
+        this.showDeleteModal = false;
+      }
+    });
   }
 
 }
