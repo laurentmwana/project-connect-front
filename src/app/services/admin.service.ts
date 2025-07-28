@@ -63,4 +63,20 @@ export class AdminService {
       }
     );
   }
+
+  destroyProject(id:number){
+    const user = this.userLocalService.getUser();
+
+    return this.http.post(
+      `${this.url}projects/destroy/${id}`,
+      {},
+      {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${user?.token}`,
+        },
+      }
+    );
+
+  }
 }
