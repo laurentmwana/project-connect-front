@@ -123,6 +123,7 @@ export class UserManagementComponent {
       next: (res) => {
         this.loadAllUsers(this.currentPage);
         console.log(res);
+        this.loadCompleteUserListForStats();
       },
       error: (err) => {
         console.log(err);
