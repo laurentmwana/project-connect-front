@@ -1,94 +1,71 @@
-<div class="chat-container" *ngIf="selectedChat; else noChatSelected">
-  <!-- Chat Header -->
-  <div class="chat-header border-b p-4">
+<div class="flex flex-col h-full" *ngIf="selectedChat; else noChatSelected">
+  <!-- Chat Header - Fixed -->
+  <div class="border-b p-3 sticky top-0 bg-white dark:bg-gray-900 z-10">
     <div class="flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="message-avatar">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 text-sm">
           {{ getChatInitials(selectedChat) }}
         </div>
         <div>
-          <h3 class="font-medium">{{ getChatDisplayName(selectedChat) }}</h3>
-          <p class="text-xs text-muted-foreground">
+          <h3 class="font-medium text-sm text-gray-900 dark:text-gray-100 truncate max-w-[180px]">{{ getChatDisplayName(selectedChat) }}</h3>
+          <p class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[180px]">
             {{ selectedChat.type === 'group' ? selectedChat.users.length + ' participants' : 'En ligne' }}
           </p>
         </div>
       </div>
 
-      <!-- Header Actions -->
-      <div class="flex items-center gap-2">
-        <button class="icon-button" aria-label="Appeler">
-          <svg ...> <!-- Phone icon --></svg>
+      <div class="flex items-center gap-1">
+        <button class="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+          </svg>
         </button>
-        <button class="icon-button" aria-label="Info">
-          <svg ...> <!-- Info icon --></svg>
+        <button class="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Chat Messages -->
-  <div #messagesContainer class="chat-messages overflow-y-auto px-4 py-2">
-    <!-- Loading -->
-    <div *ngIf="isLoadingMessages" class="flex justify-center py-6">
-      <div class="animate-spin h-8 w-8 rounded-full border-2 border-primary border-t-transparent"></div>
+  <!-- Chat Messages - Scrollable (même hauteur que la liste des chats) -->
+  <div #messagesContainer class="flex-1 overflow-y-auto px-3 py-2 max-h-[400px]">
+    <div *ngIf="isLoadingMessages" class="flex justify-center py-4">
+      <div class="animate-spin h-6 w-6 rounded-full border-2 border-blue-500 border-t-transparent"></div>
     </div>
 
-    <!-- Error -->
-    <div *ngIf="error && !isLoadingMessages" class="empty-state text-center">
-      <p class="mb-2 text-sm text-destructive">{{ error }}</p>
-      <button (click)="loadMessages()" class="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm">Réessayer</button>
-    </div>
-
-    <!-- Messages Loaded -->
-    <div *ngIf="!isLoadingMessages && !error">
-      <div *ngIf="messages.length > 0; else emptyState">
-        <div *ngFor="let messageGroup of groupedMessages; trackBy: trackByMessageGroup" [ngClass]="{'own': messageGroup.isOwn, 'other': !messageGroup.isOwn}" class="mb-4">
-          
-          <!-- Sender info (only for group chats and other users) -->
-          <div *ngIf="!messageGroup.isOwn && selectedChat.type === 'group'" class="message-info mb-1 text-xs text-muted-foreground flex items-center gap-2">
-            <div class="message-avatar">{{ getUserInitials(messageGroup.sender) }}</div>
-            <span class="font-medium">{{ messageGroup.sender.name }}</span>
-            <span class="ml-auto">{{ formatTime(messageGroup.messages[0].created_at) }}</span>
+    <div *ngIf="!isLoadingMessages" class="space-y-3">
+      <div *ngFor="let messageGroup of groupedMessages; trackBy: trackByMessageGroup" class="group">
+        <!-- Sender info for group chats (other users) -->
+        <div *ngIf="!messageGroup.isOwn && selectedChat.type === 'group'" class="mb-1 text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
+          <div class="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs">
+            {{ getUserInitials(messageGroup.sender) }}
           </div>
+          <span class="font-medium text-gray-700 dark:text-gray-300 truncate">{{ messageGroup.sender.name }}</span>
+          <span class="ml-auto">{{ formatTime(messageGroup.messages[0].created_at) }}</span>
+        </div>
 
-          <!-- Messages bubbles -->
-          <div *ngFor="let message of messageGroup.messages; trackBy: trackByMessage" class="mb-1">
-            <div [ngClass]="{'message-own': messageGroup.isOwn, 'message-other': !messageGroup.isOwn}" class="message-bubble">
+        <!-- "Vous" indicator for own messages -->
+        <div *ngIf="messageGroup.isOwn" class="mb-1 text-xs text-gray-500 dark:text-gray-400 flex justify-end items-center gap-2 pr-2">
+          <span class="font-medium text-gray-700 dark:text-gray-300">Vous</span>
+          <span>{{ formatTime(messageGroup.messages[0].created_at) }}</span>
+        </div>
+
+        <div class="flex flex-col" [ngClass]="{'items-end': messageGroup.isOwn, 'items-start': !messageGroup.isOwn}">
+          <div *ngFor="let message of messageGroup.messages; trackBy: trackByMessage" class="mb-1 max-w-[80%]">
+            <div [ngClass]="{'bg-blue-600 text-white': messageGroup.isOwn, 'bg-gray-200 dark:bg-gray-700': !messageGroup.isOwn}"
+                 class="rounded-xl px-3 py-2 text-sm">
               <p>{{ message.message }}</p>
             </div>
           </div>
-
-          <!-- Time for own messages -->
-          <div *ngIf="messageGroup.isOwn" class="text-xs text-muted-foreground text-end pr-2">
-            {{ formatTime(messageGroup.messages[0].created_at) }}
-          </div>
         </div>
-      </div>
-
-      <!-- No messages -->
-      <ng-template #emptyState>
-        <div class="empty-state text-center py-6">
-          <svg ... class="mx-auto mb-4 opacity-50 w-12 h-12">...</svg>
-          <p>Aucun message dans cette conversation</p>
-          <p class="text-sm mt-1 text-muted-foreground">Envoyez le premier message pour commencer la discussion</p>
-        </div>
-      </ng-template>
-    </div>
-
-    <!-- Typing -->
-    <div *ngIf="isTyping" class="typing-indicator flex items-center gap-2 mt-4">
-      <div class="message-avatar">{{ typingUser }}</div>
-      <span class="text-sm text-muted-foreground">{{ typingUserName }} est en train d'écrire</span>
-      <div class="typing-dots flex gap-1">
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
       </div>
     </div>
   </div>
 
-  <!-- Chat Input -->
-  <div class="chat-input border-t p-4">
+  <!-- Chat Input - Fixed -->
+  <div class="border-t p-3 sticky bottom-0 bg-white dark:bg-gray-900">
     <div class="flex items-end gap-2">
       <textarea
         [(ngModel)]="newMessage"
@@ -97,36 +74,33 @@
         [disabled]="isSending"
         placeholder="Tapez votre message..."
         #messageInput
-        class="message-textarea flex-1 resize-none rounded p-2 border text-sm"
+        class="flex-1 resize-none rounded-lg p-2 border text-sm focus:ring-1 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all min-h-[40px] max-h-[100px] bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100"
       ></textarea>
 
-      <div class="flex items-center gap-2">
-        <!-- Icons (attachment, emoji, etc.) -->
-        <button class="icon-button" aria-label="Ajouter un fichier"><svg ...></svg></button>
-        <button class="icon-button" aria-label="Emoji"><svg ...></svg></button>
-
-        <!-- Send -->
-        <button
-          (click)="sendMessage()"
-          [disabled]="!canSendMessage()"
-          class="send-button"
-          aria-label="Envoyer"
-        >
-          <svg *ngIf="!isSending" ...>...</svg>
-          <svg *ngIf="isSending" class="animate-spin" ...>...</svg>
-        </button>
-      </div>
+      <button
+        (click)="sendMessage()"
+        [disabled]="!canSendMessage()"
+        class="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-1"
+      >
+        <svg *ngIf="!isSending" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+        </svg>
+        <svg *ngIf="isSending" class="animate-spin w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+      </button>
     </div>
   </div>
 </div>
 
 <!-- No Chat Selected -->
 <ng-template #noChatSelected>
-  <div class="chat-container flex items-center justify-center">
-    <div class="empty-state text-center">
-      <svg ... class="mx-auto mb-4 opacity-50 w-16 h-16">...</svg>
-      <p class="text-muted-foreground">Aucune conversation sélectionnée</p>
-      <p class="text-sm mt-1">Choisissez un chat dans la liste pour commencer</p>
+  <div class="flex items-center justify-center h-full bg-white dark:bg-gray-900">
+    <div class="text-center p-4 max-w-xs">
+      <svg class="mx-auto mb-3 w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+      </svg>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Aucune conversation sélectionnée</p>
     </div>
   </div>
 </ng-template>
