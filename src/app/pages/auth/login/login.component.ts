@@ -99,6 +99,7 @@ export class LoginComponent implements OnInit {
               data?: AuthenticatedUser;
               errors?: FieldErrors;
             };
+            const role = data?.role;
 
             if ([403, 404, 422].includes(status)) {
               if (errors) {
@@ -116,6 +117,10 @@ export class LoginComponent implements OnInit {
 
             if (data) {
               this.userLocalService.createUser(data);
+              if (role == 'admin') {
+                this.router.navigate(['/admin']);
+                return; // Retourne ici pour éviter la redirection suivante
+              }
               this.router.navigate(['/']);
             } else {
               this.error = 'Une erreur est survenue, merci de réessayer';
