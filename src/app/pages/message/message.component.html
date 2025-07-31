@@ -101,13 +101,21 @@
         </div>
 
         <div *ngFor="let message of messages; trackBy: trackByMessage" class="flex gap-2" [class.justify-end]="isOwnMessage(message)">
+          <!-- Avatar avec lien vers profil -->
           <div *ngIf="!isOwnMessage(message)" class="flex-shrink-0 h-7 w-7 rounded-full bg-accent flex items-center justify-center text-accent-foreground text-xs font-medium">
-            {{ message.sender.name.charAt(0) }}
+            <a [routerLink]="['/profile', message.sender.id]" class="block w-full h-full flex items-center justify-center">
+              {{ message.sender.name.charAt(0) }}
+            </a>
           </div>
+
           <div class="flex flex-col" [class.items-end]="isOwnMessage(message)">
+            <!-- Nom avec lien vers profil -->
             <div *ngIf="!isOwnMessage(message)" class="text-xs font-medium text-muted-foreground mb-1">
-              {{ message.sender.name }}
+              <a [routerLink]="['/profile', message.sender.id]" class="hover:underline hover:text-primary">
+                {{ message.sender.name }}
+              </a>
             </div>
+
             <div class="flex gap-2" [class.flex-row-reverse]="isOwnMessage(message)">
               <div
                 [ngClass]="{

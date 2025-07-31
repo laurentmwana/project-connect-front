@@ -9,7 +9,7 @@ import {
 } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule } from "@angular/forms"
-import { ActivatedRoute, Router } from "@angular/router"
+import {ActivatedRoute, Router, RouterLink} from "@angular/router"
 import { Subject, takeUntil, interval } from "rxjs"
 import { ChatService } from "../../services/chat.service"
 import { UserLocalService } from "../../services/user-local.service"
@@ -21,7 +21,7 @@ import { ChatType, Message } from "@/model/message.model"
 @Component({
   selector: "app-message",
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: "./message.component.html",
   styleUrl: "./message.component.css",
 })
