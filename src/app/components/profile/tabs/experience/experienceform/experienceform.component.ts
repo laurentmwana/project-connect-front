@@ -1,70 +1,79 @@
-import { ExperienceService } from '@/services/experience.service';
 import { NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Input } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ExperienceService } from '@/services/experience.service';
+import { Experience } from '@/model/experience';
 
 @Component({
   selector: 'app-experienceform',
-  imports: [FormsModule, NgIf, ReactiveFormsModule],
   templateUrl: './experienceform.component.html',
-  styleUrl: './experienceform.component.css',
+  imports: [NgIf, ReactiveFormsModule],
 })
-export class ExperienceformComponent {
-  experienceService = inject(ExperienceService);
-  router = inject(Router);
+export class ExperienceFormComponent {
+  @Input() onSuccess!: () => void;
+  @Input() isOpen = false;
+  @Input() setIsOpen!: (value: boolean) => void;
 
+  experienceForm: FormGroup;
+  formSubmitted = false;
   successMessage = '';
   formError = '';
-  formSubmitted = false;
   submitting = false;
 
-  experienceForm = new FormGroup({
-    position: new FormControl('', [Validators.required]),
-    company: new FormControl('', [Validators.required]),
-    date_start: new FormControl('', [Validators.required]),
-    date_end: new FormControl('', [Validators.required]),
-    description: new FormControl('', [Validators.required]),
-  });
+  constructor(
+    private fb: FormBuilder,
+    private experienceService: ExperienceService
+  ) {
+    this.experienceForm = this.fb.group(
+      {
+        position: ['', Validators.required],
+        company: ['', Validators.required],
+        description: ['', Validators.required],
+        date_start: ['', Validators.required],
+        date_end: ['', Validators.required],
+      },
+      { validators: this.dateRangeValidator }
+    );
+  }
+
+  dateRangeValidator(group: FormGroup) {
+    const start = new Date(group.get('date_start')?.value);
+    const end = new Date(group.get('date_end')?.value);
+    return end >= start ? null : { invalidDateRange: true };
+  }
+
+  close() {
+    if (this.setIsOpen) {
+      this.setIsOpen(false);
+    }
+  }
 
   onSubmit() {
+    this.formSubmitted = true;
+    this.formError = '';
+    this.successMessage = '';
+
+    if (this.experienceForm.invalid) return;
+
     this.submitting = true;
 
-    if (this.experienceForm.invalid) {
-      this.submitting = false;
-      this.formError = 'Veuillez corriger les erreurs dans le formulaire.';
-      setTimeout(() => {
-        this.formError = '';
-      }, 5000);
-      this.experienceForm.markAllAsTouched();
-      return;
-    }
+    const experienceData: Experience = this.experienceForm.value;
 
-    this.experienceService
-      .createExperience({
-        position: this.experienceForm.value.position ?? '',
-        company: this.experienceForm.value.company ?? '',
-        date_start: this.experienceForm.value.date_start ?? '',
-        date_end: this.experienceForm.value.date_end ?? '',
-        description: this.experienceForm.value.description ?? '',
-      })
-      .subscribe({
-        next: (val) => {
-          this.submitting = false;
-          this.experienceForm.reset();
-          this.router.navigate(['/profile']);
-        },
-        error: (err) => {
-          this.submitting = false;
-          this.formError = 'Veuillez corriger les erreurs dans le formulaire.';
-          console.log(err);
-        },
-      });
+    this.experienceService.createExperience(experienceData).subscribe({
+      next: (res) => {
+        this.submitting = false;
+        this.successMessage = 'Expérience enregistrée avec succès !';
+        this.experienceForm.reset();
+        this.formSubmitted = false;
+
+        if (this.onSuccess) this.onSuccess();
+        if (this.setIsOpen) this.setIsOpen(false);
+      },
+      error: (err) => {
+        this.submitting = false;
+        this.formError = "Une erreur est survenue lors de l'enregistrement.";
+        console.error(err);
+      }
+    });
   }
 }
