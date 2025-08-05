@@ -65,19 +65,22 @@ export class ProjectService {
 
   // méthode pour recuperer les projets sur lesquels l'utilisateur a participer
   getProjectParticiped(
-    page: number = 1
+    page: number = 1,
+    search?: string | null
   ): Observable<PaginatedProjectsParticiped> {
     const user = this.userLocalService.getUser();
+    let url = `${this.baseUrl}users/projects/participed?page=${page}`;
 
-    return this.http.get<PaginatedProjectsParticiped>(
-      `${this.baseUrl}users/projects/participed?page=${page}`,
-      {
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${user?.token}`,
-        },
-      }
-    );
+    if (search && search.length > 0) {
+      url += `&search=${search}`;
+    }
+
+    return this.http.get<PaginatedProjectsParticiped>(url, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${user?.token}`,
+      },
+    });
   }
 
   /**
