@@ -2,21 +2,23 @@ import { Experience } from '@/model/experience';
 import { ExperienceService } from './../../../../../services/experience.service';
 import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
-import { ExperienceformComponent } from '../experienceform/experienceform.component';
-import { inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ExperienceFormComponent } from "../experienceform/experienceform.component";
+
+
 
 @Component({
   selector: 'app-experience',
-  imports: [NgFor,RouterLink],
+  imports: [NgFor, ExperienceFormComponent],
   templateUrl: './experience.component.html',
   styleUrl: './experience.component.css'
 })
 export class ExperienceComponent {
   constructor(private experienceService: ExperienceService){}
 
-
+ 
   experiences!:Experience[];
+   showExperienceModal = false;
+
 ngOnInit(){
   this.getExperiences();
 }
@@ -30,5 +32,13 @@ ngOnInit(){
   }
 
 
+  toggleModal(open: boolean) {
+    this.showExperienceModal = open;
+  }
 
+  onExperienceAdded() {
+    this.getExperiences(); // Recharger les expériences après ajout
+    this.toggleModal(false); // Fermer le modal
+  }
 }
+

@@ -6,10 +6,10 @@
         Work Experience
       </div>
       <button
-        [routerLink]="['/experience/create']"
+        (click)="toggleModal(true)"
         class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2"
       >
-        Ajouter une experience
+        Ajouter une expérience
       </button>
     </div>
 
@@ -45,10 +45,8 @@
             <p class="text-sm text-muted-foreground">
               {{ experience.company }}
             </p>
-
             <p class="text-sm text-muted-foreground">
-              {{ experience.date_start }}
-              {{ experience.date_end }}
+              {{ experience.date_start }} - {{ experience.date_end }}
             </p>
             <p class="text-sm mt-2">
               {{ experience.description }}
@@ -58,5 +56,13 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal d'ajout d'expérience -->
+  <app-experienceform
+    [isOpen]="showExperienceModal"
+    [setIsOpen]="toggleModal.bind(this)"
+    [onSuccess]="onExperienceAdded.bind(this)"
+  ></app-experienceform>
+
 </div>
 <!-- blog fin ======== -->
