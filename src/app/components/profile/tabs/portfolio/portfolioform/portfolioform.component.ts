@@ -1,5 +1,4 @@
-import { Component, inject } from '@angular/core';
-import { NgIf, NgFor } from '@angular/common';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -8,19 +7,21 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { PortfolioService } from '@/services/portfolio.service';
 
 @Component({
   selector: 'app-portfolioform',
   standalone: true,
-  imports: [NgIf, NgFor, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './portfolioform.component.html',
-  styleUrl: './portfolioform.component.css',
 })
 export class PortfolioformComponent {
+  @Input() isOpen = false;
+  @Output() closeModal = new EventEmitter<void>();
+  @Output() refreshPortfolios = new EventEmitter<void>();
+
   portfolioService = inject(PortfolioService);
-  router = inject(Router);
   fb = inject(FormBuilder);
 
   successMessage = '';
@@ -29,118 +30,45 @@ export class PortfolioformComponent {
   submitting = false;
 
   newSkill = '';
+
   skillSuggestions: string[] = [
-    // 🔹 Frontend
-    'HTML',
-    'CSS',
+    'Angular',
+    'Laravel',
+    'Flutter',
+    'PHP',
     'JavaScript',
     'TypeScript',
-    'React',
-    'Vue.js',
-    'Angular',
-    'Svelte',
-    'Next.js',
-    'Nuxt.js',
-    'Tailwind CSS',
-    'Bootstrap',
-    'Figma (intégration)',
-
-    // 🔹 Backend
-    'PHP',
-    'Laravel',
-    'Symfony',
-    'Node.js',
-    'Express.js',
-    'Python',
-    'Django',
-    'Flask',
-    'Java',
-    'Spring Boot',
-    '.NET Core',
     'MySQL',
-    'PostgreSQL',
-    'MongoDB',
-    'Redis',
-    'API REST',
-    'GraphQL',
-    'JWT',
-
-    // 🔹 Mobile
-    'Flutter',
-    'React Native',
-    'Kotlin',
-    'Swift',
-    'Dart',
-    'Xamarin',
-
-    // 🔹 IA / Data
+    'Node.js',
+    'HTML',
+    'CSS',
     'Python',
-    'TensorFlow',
-    'PyTorch',
-    'Scikit-learn',
-    'Keras',
-    'Pandas',
-    'Numpy',
-    'Computer Vision',
-    'NLP',
-    'Data Mining',
-    'Big Data',
-    'MLflow',
-    'Data Visualization',
-    'Prompt Engineering',
-
-    // 🔹 DevOps / Cloud
+    'Vue.js',
+    'React',
     'Docker',
-    'Kubernetes',
-    'GitHub Actions',
-    'Jenkins',
-    'GitLab CI/CD',
-    'AWS',
-    'Azure',
-    'Google Cloud',
-    'Terraform',
-    'Linux',
-    'Bash',
-
-    // 🔹 UI/UX / Design
+    'Git',
     'Figma',
-    'Adobe XD',
-    'Sketch',
-    'Illustrator',
-    'Photoshop',
-    'Design Thinking',
-    'Wireframing',
-    'Prototypage',
-
-    // 🔹 Gestion / Produit
-    'Agile Scrum',
-    'Jira',
-    'Trello',
-    'Gestion de projet',
-    'Analyse fonctionnelle',
-    'Conduite de réunion',
-    'User Stories',
-    'Product Roadmap',
-    'Communication',
-    'Leadership',
+    'Express.js',
+    'MongoDB',
+    'Tailwind CSS',
   ];
 
-  portfoliofrom = this.fb.group({
+  portfolioForm = this.fb.group({
     nom: ['', Validators.required],
     description: ['', Validators.required],
     lien: ['', Validators.required],
-    competences: this.fb.array([]), // ← FormArray pour les compétences
+    competences: this.fb.array([]),
   });
 
   get competences(): FormArray {
-    return this.portfoliofrom.get('competences') as FormArray;
+    return this.portfolioForm.get('competences') as FormArray;
   }
 
   addCompetence(skill: string) {
     const trimmedSkill = skill.trim();
     if (trimmedSkill && !this.competences.value.includes(trimmedSkill)) {
       this.competences.push(new FormControl(trimmedSkill));
-      this.newSkill = ''; // reset champ
+      this.newSkill = '';
     }
   }
 
@@ -148,37 +76,37 @@ export class PortfolioformComponent {
     this.competences.removeAt(index);
   }
 
+  close() {
+    this.closeModal.emit();
+  }
+
   onSubmit() {
     this.submitting = true;
     this.formSubmitted = true;
 
-    if (this.portfoliofrom.invalid) {
+    if (this.portfolioForm.invalid) {
       this.submitting = false;
       this.formError = 'Veuillez corriger les erreurs dans le formulaire.';
-      setTimeout(() => {
-        this.formError = '';
-      }, 5000);
-      this.portfoliofrom.markAllAsTouched();
+      this.portfolioForm.markAllAsTouched();
       return;
     }
 
     this.portfolioService
       .createPortfolio({
-        name: this.portfoliofrom.value.nom ?? '',
-        description: this.portfoliofrom.value.description ?? '',
-        link: this.portfoliofrom.value.lien ?? '',
+        name: this.portfolioForm.value.nom ?? '',
+        description: this.portfolioForm.value.description ?? '',
+        link: this.portfolioForm.value.lien ?? '',
         skill: this.competences.value,
       })
       .subscribe({
         next: () => {
           this.submitting = false;
           this.successMessage = 'Portfolio enregistré avec succès.';
-          this.portfoliofrom.reset();
+          this.portfolioForm.reset();
           this.formSubmitted = false;
           this.competences.clear();
-          setTimeout(() => {
-            this.router.navigate(['/profile']);
-          }, 1500);
+          this.refreshPortfolios.emit();
+          this.closeModal.emit();
         },
         error: (err) => {
           this.submitting = false;
