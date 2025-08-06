@@ -1,0 +1,37 @@
+<!-- Invitation-->
+ <div id="invitation" role="tabpanel" class="hidden">
+    <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+        <div class="flex space-y-1.5 p-6 justify-between">
+            <div class="text-2xl font-semibold leading-none tracking-tight">
+                Invitation
+            </div>
+        </div>
+    </div>
+    <div *ngIf="loading">Chargement des invitations...</div>
+
+<div *ngIf="!loading && invitations.length === 0">
+  Aucune invitation pour le moment.
+</div>
+
+<div *ngIf="invitations.length > 0" class="space-y-4">
+  <div *ngFor="let invitation of invitations" class="p-4 bg-white rounded shadow">
+    <p class="text-lg font-medium">Projet : {{ invitation.project_role.project.name }}</p>
+    <p>Rôle proposé : {{ invitation.project_role.role.name }}</p>
+
+    <div class="mt-2 flex gap-2">
+      <button
+        class="px-4 py-1 bg-green-500 text-white rounded"
+        (click)="respond(invitation.id, 'accepted')"
+      >
+        Accepter
+      </button>
+      <button
+        class="px-4 py-1 bg-red-500 text-white rounded"
+        (click)="respond(invitation.id, 'declined')"
+      >
+        Refuser
+      </button>
+    </div>
+  </div>
+</div>
+ </div>
