@@ -2,7 +2,7 @@
   <!-- Tab Triggers -->
   <div
     role="tablist"
-    class="h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground grid w-full grid-cols-5"
+    class="h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground grid w-full grid-cols-6"
   >
     <button
       data-tabs-target="#about"
@@ -34,7 +34,6 @@
     >
       Portfolio
     </button>
-
     <button
       data-tabs-target="#project-participed"
       type="button"
@@ -45,7 +44,6 @@
     >
       Projet participes
     </button>
-
     <button
       data-tabs-target="#mes-projects"
       type="button"
@@ -55,6 +53,17 @@
       class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium"
     >
       Mes Projects
+    </button>
+    <!--  NOUVEL ONGLET : INVITATION -->
+    <button
+      data-tabs-target="#invitation"
+      type="button"
+      role="tab"
+      aria-controls="invitation"
+      aria-selected="false"
+      class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium"
+    >
+      Invitation
     </button>
   </div>
 
@@ -71,11 +80,16 @@
     <app-portfolio></app-portfolio>
 
     <div id="project-participed">
-      <app-project-participed />
+      <app-project-participed></app-project-participed>
     </div>
 
     <div id="mes-projects" role="tabpanel" class="hidden">
       <app-mes-projects></app-mes-projects>
+    </div>
+
+    <!--  NOUVEAU CONTENU DE L'ONGLET "Invitation" -->
+    <div id="invitation" role="tabpanel" class="hidden">
+      <app-invitation></app-invitation>
     </div>
   </div>
 </div>
