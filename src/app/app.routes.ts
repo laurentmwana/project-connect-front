@@ -22,7 +22,7 @@ import { AdminComponent } from './pages/admin/admin/admin.component';
 import { adminGuard } from './guards/admin.guard';
 import { NotificationDetailComponent } from './pages/notification/notification-detail/notification-detail.component';
 import { NotificationListComponent } from './pages/notification/notification-list/notification-list.component';
-import { PortfolioformComponent } from './components/profile/tabs/portfolio/portfolioform/portfolioform.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -51,13 +51,6 @@ export const routes: Routes = [
         component: ProjectEditComponent,
         title: 'Modifier un projet - ProjectConnect',
         canActivate: [canEditGuard],
-      },
-
-      {
-        path: 'portfolio/create',
-        component: PortfolioformComponent,
-        title: 'Ajouter un Portfolio',
-        canActivate: [protectedGuard],
       },
 
       {
