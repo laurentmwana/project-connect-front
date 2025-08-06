@@ -1,23 +1,35 @@
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { CommonModule, NgFor } from '@angular/common';
 import { Portfolio } from '@/model/portfolio';
 import { PortfolioService } from '@/services/portfolio.service';
-import { NgFor } from '@angular/common';
-import { Component } from '@angular/core';
-import {RouterLink} from '@angular/router';
+import { PortfolioformComponent } from '../portfolioform/portfolioform.component';
 
 @Component({
   selector: 'app-portfolio',
-  imports: [NgFor, RouterLink],
+  standalone: true,
+  imports: [NgFor, RouterLink, PortfolioformComponent,CommonModule],
   templateUrl: './portfolio.component.html',
-  styleUrl: './portfolio.component.css'
+  styleUrl: './portfolio.component.css',
 })
 export class PortfolioComponent {
-   constructor(private portofolioService: PortfolioService,  ) {}
-
   portfolios!: Portfolio[];
+  showPortfolioModal = false;
+
+  constructor(private portofolioService: PortfolioService) {}
+
   ngOnInit() {
     this.getMyPortofolios();
   }
 
+  toggleModal(open: boolean) {
+    this.showPortfolioModal = open;
+  }
+
+  onPortfolioAdded() {
+    this.getMyPortofolios();
+    this.toggleModal(false); // Ferme le modal après ajout
+  }
 
   getMyPortofolios() {
     this.portofolioService.getMyPortofolios().subscribe({

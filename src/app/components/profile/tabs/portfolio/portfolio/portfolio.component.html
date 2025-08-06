@@ -15,7 +15,7 @@
           Portfolio Projects
         </div>
         <button
-          [routerLink]="['/portfolio/create']"
+          (click)="toggleModal(true)"
           class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2"
         >
           Ajouter un Portfolio
@@ -24,23 +24,22 @@
 
       <div class="p-6 pt-0">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Debut blog =============================================== -->
+          <!-- Card Portfolio -->
           <div
             class="rounded-lg overflow-hidden border"
-            *ngFor="let portfolio of portfolios; let i = index"
+            *ngFor="let portfolio of portfolios"
           >
             <div
               class="h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center"
             >
-              <span class="text-white font-bold text-xl">{{
-                portfolio.name
-              }}</span>
+              <span class="text-white font-bold text-xl">
+                {{ portfolio.name }}
+              </span>
             </div>
             <div class="p-4">
               <h3 class="font-medium" [routerLink]="portfolio.link">
                 {{ portfolio.name }}
               </h3>
-
               <p class="text-sm text-muted-foreground mt-1">
                 {{ portfolio.description }}
               </p>
@@ -49,15 +48,23 @@
                   *ngFor="let skill of portfolio.skills"
                   class="text-xs bg-orange-100 dark:bg-orange-950/30 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full"
                 >
-                  {{ skill.name }}</span
-                >
+                  {{ skill.name }}
+                </span>
               </div>
             </div>
           </div>
-
-          <!-- Debut blog =============================================== -->
+          <!-- Fin Card Portfolio -->
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Modal d'ajout d'un portfolio -->
+  <app-portfolioform
+    *ngIf="showPortfolioModal"
+    [isOpen]="showPortfolioModal"
+    (closeModal)="toggleModal(false)"
+    (refreshPortfolios)="onPortfolioAdded()"
+  ></app-portfolioform>
 </div>
+<!-- Fin PORTFOLIO -->
