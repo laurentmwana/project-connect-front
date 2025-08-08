@@ -74,7 +74,7 @@
 }
 
 :root {
-  --background: hsl(0, 0%, 100%);
+  --background: hsl(0, 1%, 100%);
   --foreground: hsl(20, 14.3%, 4.1%);
   --muted: hsl(60, 4.8%, 95.9%);
   --muted-foreground: hsl(25, 5.3%, 44.7%);
@@ -92,8 +92,22 @@
   --accent-foreground: hsl(24, 9.8%, 10%);
   --destructive: hsl(0, 84.2%, 60.2%);
   --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --success: hsl(142.1, 76.2%, 36.3%); /* Added success color */
+  --success-foreground: hsl(60, 9.1%, 97.8%); /* Added success foreground */
+  --warning: hsl(48, 96%, 50%); /* Added warning color */
+  --warning-foreground: hsl(20, 14.3%, 4.1%); /* Added warning foreground */
+  --info: hsl(210, 90%, 48%); /* Added info color */
+  --info-foreground: hsl(60, 9.1%, 97.8%); /* Added info foreground */
   --ring: hsl(24.6, 95%, 53.1%);
+  --ring-offset-color: hsl(0, 0%, 100%); /* Added ring offset color */
   --radius: 0.5rem;
+
+  /* Chart colors */
+  --chart-1: hsl(24.6, 95%, 53.1%);
+  --chart-2: hsl(60, 4.8%, 95.9%);
+  --chart-3: hsl(180, 70%, 50%);
+  --chart-4: hsl(270, 70%, 50%);
+  --chart-5: hsl(90, 70%, 50%);
 }
 
 .dark {
@@ -115,7 +129,21 @@
   --accent-foreground: hsl(60, 9.1%, 97.8%);
   --destructive: hsl(0, 72.2%, 50.6%);
   --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --success: hsl(142.1, 70.6%, 45.3%);
+  --success-foreground: hsl(60, 9.1%, 97.8%);
+  --warning: hsl(48, 96%, 60%);
+  --warning-foreground: hsl(20, 14.3%, 4.1%);
+  --info: hsl(210, 80%, 60%);
+  --info-foreground: hsl(60, 9.1%, 97.8%);
   --ring: hsl(20.5, 90.2%, 48.2%);
+  --ring-offset-color: hsl(20, 14.3%, 4.1%);
+
+  /* Chart colors for dark mode */
+  --chart-1: hsl(20.5, 90.2%, 48.2%);
+  --chart-2: hsl(12, 6.5%, 15.1%);
+  --chart-3: hsl(180, 60%, 60%);
+  --chart-4: hsl(270, 60%, 60%);
+  --chart-5: hsl(90, 60%, 60%);
 }
 
 * {
@@ -131,16 +159,24 @@ body {
 }
 
 .input-field {
-  @apply file:text-foreground placeholder:text-muted-foreground
-      selection:bg-primary selection:text-primary-foreground
-      dark:bg-input/30 border-input flex h-9 w-full min-w-0
-      rounded-md border bg-transparent px-3 py-1 text-base shadow-xs
-      transition-[color,box-shadow] outline-none file:inline-flex file:h-7
-      file:border-0 file:bg-transparent file:text-sm file:font-medium
-      disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-80
-      md:text-sm focus-visible:border-ring focus-visible:ring-ring/50
-      focus-visible:ring-[3px] aria-invalid:ring-destructive/20
-      dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive;
+  @apply file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 flex h-9 w-full min-w-0 border shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:bg-transparent text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border-accent-foreground/20 bg-accent focus-visible:ring-gray-100 dark:focus-visible:ring-border rounded-lg px-4 py-5;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-md text-sm font-medium
+           ring-offset-background transition-colors focus-visible:outline-none
+           focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+           disabled:pointer-events-none disabled:opacity-50
+           bg-primary text-white hover:bg-primary/60
+           h-10 px-4 py-2 cursor-pointer;
+}
+
+/* Specific styles for radio buttons to match the theme */
+input[type="radio"].text-primary-600 {
+  accent-color: #2563eb; /* Corresponds to orange-600 */
+}
+input[type="radio"].focus\:ring-primary:focus {
+  box-shadow: 0 0 0 2px #3b82f6; /* Corresponds to orange-500 */
 }
 
 .label-form {
