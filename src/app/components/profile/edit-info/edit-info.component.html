@@ -1,0 +1,375 @@
+<div class="max-w-7xl py-8">
+  <!-- Skeleton loader -->
+  <div
+    *ngIf="isPendingProfile"
+    class="rounded-lg border shadow-sm overflow-hidden"
+  >
+    <div class="p-6 md:p-8 space-y-6">
+      <!-- Titre -->
+      <div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+      <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+
+      <!-- Photo de profil -->
+      <div class="space-y-4">
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
+        <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+      </div>
+
+      <!-- Groupe 1 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+        <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+      </div>
+
+      <!-- Groupe 2 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+        <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+      </div>
+
+      <!-- À propos -->
+      <div class="h-24 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+
+      <!-- Groupe 3 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+        <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+      </div>
+
+      <!-- Disponibilité -->
+      <div class="flex gap-4">
+        <div class="h-4 w-4 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+        <div class="h-4 w-4 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+      </div>
+
+      <!-- Bouton -->
+      <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded w-32"></div>
+    </div>
+  </div>
+
+  <!-- Formulaire réel -->
+  <div
+    *ngIf="!isPendingProfile"
+    class="rounded-lg border shadow-sm overflow-hidden"
+  >
+    <div class="p-6 md:p-8">
+      <div class="mb-8">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+          Modifier vos informations personnelles
+        </h2>
+        <p class="text-muted-foreground text-sm">
+          Mettez à jour vos informations personnelles ci-dessous.
+        </p>
+      </div>
+
+      <!-- Message de succès -->
+      <div
+        *ngIf="success"
+        class="mb-6 p-3 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-sm font-medium rounded-md"
+      >
+        {{ success }}
+      </div>
+
+      <form
+        class="space-y-6"
+        enctype="multipart/form-data"
+        [formGroup]="editInfoForm"
+        (ngSubmit)="onSubmit()"
+      >
+        <!-- Photo de profil -->
+        <div class="space-y-4">
+          <label
+            for="profile_photo"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >Photo de profil</label
+          >
+          <input
+            id="profile_photo"
+            type="file"
+            accept="image/*"
+            formControlName="profile_photo"
+            (change)="onFileChange($event)"
+            class="border rounded bg-background"
+          />
+          <div
+            *ngIf="isSubmit && f['profile_photo'].errors"
+            class="text-red-500 text-sm mt-1"
+          >
+            <div *ngIf="f['profile_photo'].errors?.['required']">
+              Champ requis.
+            </div>
+            <div *ngIf="f['profile_photo'].errors?.['serverError']">
+              {{ f["profile_photo"].errors["serverError"] }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Groupe 1 : Nom + Email -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label
+              for="name"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Nom</label
+            >
+            <input
+              id="name"
+              type="text"
+              class="input-field"
+              formControlName="name"
+            />
+            <div
+              *ngIf="isSubmit && f['name'].errors"
+              class="text-red-500 text-sm mt-1"
+            >
+              <div *ngIf="f['name'].errors?.['required']">Champ requis.</div>
+              <div *ngIf="f['name'].errors?.['minlength']">
+                Minimum 2 caractères.
+              </div>
+              <div *ngIf="f['name'].errors?.['maxlength']">
+                Maximum 50 caractères.
+              </div>
+              <div *ngIf="f['name'].errors?.['serverError']">
+                {{ f["name"].errors["serverError"] }}
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label
+              for="email"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Email</label
+            >
+            <input
+              id="email"
+              type="email"
+              class="input-field"
+              formControlName="email"
+            />
+            <div
+              *ngIf="isSubmit && f['email'].errors"
+              class="text-red-500 text-sm mt-1"
+            >
+              <div *ngIf="f['email'].errors?.['required']">Champ requis.</div>
+              <div *ngIf="f['email'].errors?.['email']">Format invalide.</div>
+              <div *ngIf="f['email'].errors?.['maxlength']">
+                Maximum 255 caractères.
+              </div>
+              <div *ngIf="f['email'].errors?.['serverError']">
+                {{ f["email"].errors["serverError"] }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Groupe 2 : Titre de poste + Téléphone -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label
+              for="job_title"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Titre de poste</label
+            >
+            <input
+              id="job_title"
+              type="text"
+              class="input-field"
+              formControlName="job_title"
+            />
+            <div
+              *ngIf="isSubmit && f['job_title'].errors"
+              class="text-red-500 text-sm mt-1"
+            >
+              <div *ngIf="f['job_title'].errors?.['maxlength']">
+                Maximum 255 caractères.
+              </div>
+              <div *ngIf="f['job_title'].errors?.['serverError']">
+                {{ f["job_title"].errors["serverError"] }}
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label
+              for="phone"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Téléphone</label
+            >
+            <input
+              id="phone"
+              type="text"
+              class="input-field"
+              formControlName="phone"
+            />
+            <div
+              *ngIf="isSubmit && f['phone'].errors"
+              class="text-red-500 text-sm mt-1"
+            >
+              <div *ngIf="f['phone'].errors?.['minlength']">
+                Minimum 10 caractères.
+              </div>
+              <div *ngIf="f['phone'].errors?.['maxlength']">
+                Maximum 13 caractères.
+              </div>
+              <div *ngIf="f['phone'].errors?.['serverError']">
+                {{ f["phone"].errors["serverError"] }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- À propos -->
+        <div class="space-y-2">
+          <label
+            for="about"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >À propos</label
+          >
+          <textarea
+            id="about"
+            class="input-field min-h-[120px]"
+            rows="4"
+            formControlName="about"
+          ></textarea>
+          <div
+            *ngIf="isSubmit && f['about'].errors"
+            class="text-red-500 text-sm mt-1"
+          >
+            <div *ngIf="f['about'].errors?.['maxlength']">
+              Maximum 1000 caractères.
+            </div>
+            <div *ngIf="f['about'].errors?.['serverError']">
+              {{ f["about"].errors["serverError"] }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Groupe 3 : Localisation + URL Portfolio -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label
+              for="location"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Localisation</label
+            >
+            <input
+              id="location"
+              type="text"
+              class="input-field"
+              formControlName="location"
+            />
+            <div
+              *ngIf="isSubmit && f['location'].errors"
+              class="text-red-500 text-sm mt-1"
+            >
+              <div *ngIf="f['location'].errors?.['maxlength']">
+                Maximum 255 caractères.
+              </div>
+              <div *ngIf="f['location'].errors?.['serverError']">
+                {{ f["location"].errors["serverError"] }}
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label
+              for="portfolio_url"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >URL Portfolio</label
+            >
+            <input
+              id="portfolio_url"
+              type="url"
+              class="input-field"
+              formControlName="portfolio_url"
+            />
+            <div
+              *ngIf="isSubmit && f['portfolio_url'].errors"
+              class="text-red-500 text-sm mt-1"
+            >
+              <div *ngIf="f['portfolio_url'].errors?.['maxlength']">
+                Maximum 255 caractères.
+              </div>
+              <div *ngIf="f['portfolio_url'].errors?.['serverError']">
+                {{ f["portfolio_url"].errors["serverError"] }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Disponibilité -->
+        <div class="space-y-2">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >Disponibilité</label
+          >
+          <div class="flex items-center space-x-4">
+            <label class="inline-flex items-center">
+              <input
+                type="radio"
+                formControlName="is_availability"
+                [value]="true"
+                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600"
+              />
+              <span class="ml-2 text-gray-700 dark:text-gray-300"
+                >Disponible</span
+              >
+            </label>
+            <label class="inline-flex items-center">
+              <input
+                type="radio"
+                formControlName="is_availability"
+                [value]="false"
+                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600"
+              />
+              <span class="ml-2 text-gray-700 dark:text-gray-300"
+                >Non disponible</span
+              >
+            </label>
+          </div>
+        </div>
+
+        <!-- Erreur globale -->
+        <div
+          *ngIf="error"
+          class="p-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-sm font-medium rounded-md"
+        >
+          {{ error }}
+        </div>
+
+        <!-- Bouton -->
+        <div class="pt-4">
+          <button type="submit" [disabled]="isPending" class="btn-primary">
+            <span *ngIf="!isPending">Mettre à jour</span>
+            <span *ngIf="isPending" class="flex items-center gap-2">
+              <svg
+                class="animate-spin h-4 w-4 text-white dark:text-gray-800"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                role="status"
+                aria-label="Chargement"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8z"
+                ></path>
+              </svg>
+              Chargement...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
