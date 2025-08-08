@@ -10,14 +10,15 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 
-import { ProjectService } from '../../../services/project.service';
-import { Project } from '../../../model/project';
+import { ProjectService } from '@/services/project.service';
+import { Project } from '@/model/project';
 import { NgFor, NgIf } from '@angular/common';
 import { Router } from '@angular/router';
+import { GoBackComponent } from '@/components/go-back/go-back.component';
 
 @Component({
   selector: 'app-create',
-  imports: [ReactiveFormsModule, FormsModule, NgIf, NgFor],
+  imports: [ReactiveFormsModule, FormsModule, NgIf, NgFor, GoBackComponent],
   templateUrl: './create.component.html',
   styleUrl: './create.component.css',
 })

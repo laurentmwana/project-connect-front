@@ -61,7 +61,7 @@
             <textarea
               id="description"
               formControlName="description"
-              class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm min-h-[120px] bg-background text-foreground"
+              class="input-field min-h-[120px]"
               placeholder="Décrivez votre projet"
               required
             ></textarea>
@@ -83,7 +83,7 @@
                 id="date_start"
                 type="date"
                 formControlName="date_start"
-                class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
+                class="input-field"
                 required
               />
               <div
@@ -102,7 +102,7 @@
                 id="date_end"
                 type="date"
                 formControlName="date_end"
-                class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
+                class="input-field"
                 required
               />
               <div
@@ -131,7 +131,7 @@
                 id="budget"
                 type="number"
                 formControlName="budget"
-                class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
+                class="input-field"
                 required
               />
               <div
@@ -150,7 +150,7 @@
                 id="location"
                 type="text"
                 formControlName="location"
-                class="w-full border-border focus:border-primary focus:ring-primary rounded-md shadow-sm bg-background text-foreground"
+                class="input-field"
                 placeholder="Ex: Remote, Paris, etc."
                 required
               />
@@ -173,7 +173,7 @@
                   type="radio"
                   value="public"
                   formControlName="visibility"
-                  class="text-primary border-border focus:ring-primary"
+                  class="text-primary border focus:ring-primary"
                 />
                 <label for="public" class="text-foreground">Public</label>
               </div>
@@ -183,7 +183,7 @@
                   type="radio"
                   value="private"
                   formControlName="visibility"
-                  class="text-primary border-border focus:ring-primary"
+                  class="text-primary border focus:ring-primary"
                 />
                 <label for="private" class="text-foreground">Privé</label>
               </div>
@@ -193,29 +193,37 @@
 
         <!-- Domaines -->
         <div>
-          <label class="block text-foreground font-medium">Domaines</label>
-          <div
-            class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mt-2"
-          >
+          <label class="block text-sm font-medium text-foreground mb-3">
+            Domaines
+          </label>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             <div
               *ngFor="let domain of availableDomains"
-              class="flex items-center space-x-2"
+              class="flex items-center"
             >
-              <input
-                [id]="'domain-' + domain"
-                type="checkbox"
-                [checked]="isDomainSelected(domain)"
-                (change)="toggleDomain(domain)"
-                class="text-primary border-border focus:ring-primary rounded"
-              />
-              <label [for]="'domain-' + domain" class="text-foreground">{{
-                domain
-              }}</label>
+              <div
+                class="p-2 border rounded-xl flex items-center gap-2 justify-center hover:shadow-md"
+                (click)="toggleDomain(domain)"
+              >
+                <input
+                  [id]="'domain-' + domain"
+                  type="checkbox"
+                  [checked]="isDomainSelected(domain)"
+                  (change)="toggleDomain(domain)"
+                  class="h-4 w-4 text-primary border-input rounded focus:ring-gray-50 dark:focus:ring-gray-600 bg-accent"
+                />
+                <label
+                  [for]="'domain-' + domain"
+                  class="ml-2 text-sm text-foreground"
+                >
+                  {{ domain }}
+                </label>
+              </div>
             </div>
           </div>
           <div
             *ngIf="projectForm.get('domains')?.errors?.['atLeastOneDomain'] && formSubmitted"
-            class="text-destructive text-sm mt-1"
+            class="mt-2 text-sm text-destructive"
           >
             Veuillez sélectionner au moins un domaine.
           </div>
@@ -381,11 +389,7 @@
 
         <!-- Boutons d'action -->
         <div class="pt-4 flex gap-4">
-          <button
-            type="button"
-            (click)="onCancel()"
-            class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-4 text-lg rounded-md shadow-md"
-          >
+          <button type="button" (click)="onCancel()" class="btn-primary">
             Annuler
           </button>
           <button
