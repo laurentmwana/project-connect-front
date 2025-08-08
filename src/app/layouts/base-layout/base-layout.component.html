@@ -1,12 +1,8 @@
-<div class="w-[80vw] mx-auto">
+<div class="relative">
   <app-navbar />
-
+  <main class="container">
     <router-outlet />
-
-
-  <main class="container py-12">
-    <ng-content>
-    </ng-content>
+    <ng-content> </ng-content>
   </main>
+  <app-footer />
 </div>
-<app-footer/>
