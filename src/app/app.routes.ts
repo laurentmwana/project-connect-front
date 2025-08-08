@@ -1,16 +1,13 @@
 import { Routes } from '@angular/router';
 import { CreateComponent } from './pages/project/create/create.component';
 import { DisplayComponent } from './pages/project/display/display.component';
-
 import { LoginComponent } from './pages/auth/login/login.component';
 import { ForgotComponent } from './pages/auth/forgot/forgot.component';
 import { PasswordResetComponent } from './pages/auth/password-reset/password-reset.component';
 import { RegisterComponent } from './pages/auth/register/register.component';
 import { VerifyEmailComponent } from './pages/auth/verify-email/verify-email.component';
-
 import { BaseLayoutComponent } from './layouts/base-layout/base-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
-
 import { guestGuard } from './guards/auth/guest.guard';
 import { ProjectDetailComponent } from './pages/project/project-detail/project-detail.component';
 import { protectedGuard } from './guards/protected.guard';
@@ -22,6 +19,7 @@ import { AdminComponent } from './pages/admin/admin/admin.component';
 import { adminGuard } from './guards/admin.guard';
 import { NotificationDetailComponent } from './pages/notification/notification-detail/notification-detail.component';
 import { NotificationListComponent } from './pages/notification/notification-list/notification-list.component';
+import { EditComponent } from './pages/profile/edit/edit.component';
 
 export const routes: Routes = [
   {
@@ -72,15 +70,27 @@ export const routes: Routes = [
       },
       {
         path: 'profile',
-        component: ProfileComponent,
-        title: 'Mon profil - ProjectConnect',
         canActivate: [protectedGuard],
-      },
-      {
-        path: 'profile/:id',
-        component: ProfileComponent,
-        title: 'Profil utilisateur - ProjectConnect',
-        canActivate: [protectedGuard],
+        children: [
+          {
+            path: '',
+            component: ProfileComponent,
+            title: 'Mon profil - ProjectConnect',
+          },
+
+          {
+            path: 'edit',
+            component: EditComponent,
+            title: 'Edition du profil - ProjectConnect',
+          },
+
+          {
+            path: ':id',
+            component: ProfileComponent,
+            title: 'Profil utilisateur - ProjectConnect',
+            canActivate: [protectedGuard],
+          },
+        ],
       },
 
       {
