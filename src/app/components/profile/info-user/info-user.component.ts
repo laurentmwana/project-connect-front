@@ -7,13 +7,15 @@ import {
   inject,
 } from '@angular/core';
 import { FollowService } from '@/services/follow.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { UserProfile } from '@/model/profile';
+import { TextInitialPipe } from '@/pipe/textInitial.pipe';
 
 @Component({
   selector: 'app-info-user',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TextInitialPipe],
   templateUrl: './info-user.component.html',
   styleUrl: './info-user.component.css',
 })
@@ -21,18 +23,10 @@ export class InfoUserComponent implements OnInit {
   @Input() userId: number = 0;
   @Input() initialIsFollowing: boolean = false;
   @Input() isOwnProfile: boolean = false;
+  isPending = true;
 
-  @Input() userProfile?: {
-    name: string;
-    profile_photo?: string;
-    job_title?: string;
-    location?: string;
-    email?: string;
-    phone?: string;
-    portfolio_url?: string;
-    availability?: string;
-    about?: string;
-  };
+  @Input() userProfile: UserProfile | null = null;
+  @Input() userProfileLoading: boolean = true;
 
   @Output() followChange = new EventEmitter<boolean>();
   @Output() messageClick = new EventEmitter<string>();
@@ -42,16 +36,6 @@ export class InfoUserComponent implements OnInit {
   followersCount: number = 0;
   followingCount: number = 0;
   totalConnections: number = 0;
-
-  get userInitials(): string {
-    if (this.userProfile?.name) {
-      return this.userProfile.name
-        .split(' ')
-        .map((n) => n[0])
-        .join('');
-    }
-    return 'JD';
-  }
 
   private followService = inject(FollowService);
   private router = inject(Router);
