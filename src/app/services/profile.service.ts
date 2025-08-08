@@ -4,20 +4,7 @@ import { Observable, map } from 'rxjs';
 import { UserLocalService } from './user-local.service';
 import { Environment } from 'environments/environment';
 import { Skill } from '@/model/skill';
-
-export interface UserProfile {
-  id: number;
-  name: string;
-  email: string;
-  phone?: string;
-  location?: string;
-  job_title?: string;
-  portfolio_url?: string;
-  availability?: string;
-  profile_photo?: string;
-  about?: string;
-  skills?: Skill[];
-}
+import { UserChangePassword, UserProfile } from '@/model/profile';
 
 @Injectable({
   providedIn: 'root',
@@ -39,14 +26,14 @@ export class ProfileService {
 
   getProfile(): Observable<UserProfile> {
     return this.http
-      .get<{ user: UserProfile }>(`${this.apiUrl}/profile`, {
+      .get<{ data: UserProfile }>(`${this.apiUrl}/profile`, {
         headers: this.getAuthHeaders(),
       })
       .pipe(
         map((response) => {
-          const user = response.user;
+          const user = response.data;
           if (user && user.profile_photo) {
-            const baseUrl = Environment.apiUrl.replace('/api', '');
+            const baseUrl = Environment.apiBaseUrl;
             user.profile_photo = `${baseUrl}/storage/${user.profile_photo}`;
           }
           return user;
@@ -54,10 +41,26 @@ export class ProfileService {
       );
   }
 
-  updateProfile(data: FormData): Observable<any> {
-    return this.http.post(`${this.apiUrl}/profile`, data, {
-      headers: this.getAuthHeaders(),
-    });
+  updateProfile(
+    data: FormData
+  ): Observable<{ message: string; state: 'success' | 'error' }> {
+    return this.http.post<{ message: string; state: 'success' | 'error' }>(
+      `${this.apiUrl}/profile`,
+      data,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+
+  changePassword(data: UserChangePassword): Observable<{ state: boolean }> {
+    return this.http.put<{ state: boolean }>(
+      `${this.apiUrl}/profile/change/password`,
+      data,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
   }
 
   getProfileById(id: number): Observable<UserProfile> {
